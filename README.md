@@ -1,0 +1,2 @@
+# IniciacaoCientifica_PensamentoComputacional
+Projeto de Iniciação científica.
