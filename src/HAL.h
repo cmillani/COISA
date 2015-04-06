@@ -18,7 +18,49 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-
+/*Description: HAL being developed in order to abstract the sensor hardware connected to a microprocessor.
+ *It's intended to be used with a VM to make possible an easier programming of a robot or device.
+ * 
+ * Possible sensors:
+ * 
+ * Encoder to count the rotations of the motor
+ * Ultrasonic distance sensor
+ * Infrared reflectance sensor
+ * Gyroscope
+ * Accelerometer
+ * */
+ 
+#ifdef HAS_PROCESSOR
 #include <inttypes.h>
-
 uint32_t hal_;
+
+uint8_t hal_call(uint8_t sensid, int16_t * retval)//Call to hardware I/O
+{
+	switch (sensid)
+	{
+		default:
+			*retval = -1;
+	}
+}
+
+#ifdef HAS_ULTRASONIC
+
+#endif
+
+#ifdef HAS_ENCODER
+
+#endif
+
+#ifdef HAS_INFRARED
+
+#endif
+
+#ifdef HAS_GYROSCOPE
+
+#endif
+
+#ifdef HAS_ACCELEROMETER
+
+#endif
+
+#endif

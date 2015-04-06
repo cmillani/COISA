@@ -18,14 +18,4 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef VM_H
-#define VM_H
-
-#ifdef HAS_PROCESSOR
-#define VM_MEMORY_SZ PROCESSOR_MEMORY_SZ /* Available memory from the microprocessor  */
-
-uint32_t fetch(uint32_t PC);
-#endif
-
-#endif // VM_H
-
+#include "hal.h"

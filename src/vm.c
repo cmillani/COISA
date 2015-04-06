@@ -22,7 +22,7 @@
 /*
  * Description: This file implements the virtual machine. 
  */
-
+#include "../processors/atmega328.h"
 #include "HAL.h"
 
 typedef struct decoded_instruction
@@ -74,30 +74,48 @@ void vm_cpu()
       uint8_t funct = (instr >> 0) && 0x3F;
       
       switch (funct) {
-      case 0b100000: { // add	100000	ArithLog	$d = $s + $t
-	RF[rd] = RF[rs] + RF[rt];
-	break;
-      }
-      case 0b100001: { // addu	100001	ArithLog	$d = $s + $t
-	RF[rd] = RF[rs] + RF[rt];
-	break;
-      }
-      case 0b100100: { // and	100100	ArithLog	$d = $s & $t
-	RF[rd] = RF[rs] & RF[rt];
-	break;
-      }
-      case ...
-	// Other instructions...
+		  case 0b100000: { // add	100000	ArithLog	$d = $s + $t
+			RF[rd] = RF[rs] + RF[rt];
+			break;
+		  }
+		  case 0b100001: { // addu	100001	ArithLog	$d = $s + $t
+			RF[rd] = RF[rs] + RF[rt];
+			break;
+		  }
+		  case 0b100100: { // and	100100	ArithLog	$d = $s & $t
+			RF[rd] = RF[rs] & RF[rt];
+			break;
+		  }
+		  case 0b011010: { // div     011010  DivMult lo = $s / $t; hi = $s % $t
+			  
+			  break;
+		  }
+		  case 0b011011: { //divu    011011  DivMult lo = $s / $t; hi = $s % $t
+			  
+			  break;
+		  }
+		  case 0b011000: { //mult    011000  DivMult hi:lo = $s * $t
+
+			  break;
+		  }
+
+
+		  //case ...
+		  // Other instructions...
       }
       break; // case 0x0
     }
-    case : // and	100100	ArithLog	$d = $s & $t
-
+    //case :
+	
       
       uint8_t op = (instr >> 26) && 0x3F;
     }
   }
 
+}
+uint32_t fetch(uint32_t PC)
+{
+	return 0;
 }
 
 
