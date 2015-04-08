@@ -29,8 +29,12 @@
  * Gyroscope
  * Accelerometer
  * */
- 
-#ifdef HAS_PROCESSOR
+#ifndef HAL
+#define HAL
+
+#include "config.h" 
+
+#ifdef CONFIG
 #include <inttypes.h>
 uint32_t hal_;
 
@@ -43,24 +47,25 @@ uint8_t hal_call(uint8_t sensid, int16_t * retval)//Call to hardware I/O
 	}
 }
 
-#ifdef HAS_ULTRASONIC
+#if HAS_ULTRASONIC
 
 #endif
 
-#ifdef HAS_ENCODER
+#if HAS_ENCODER
 
 #endif
 
-#ifdef HAS_INFRARED
+#if HAS_INFRARED
 
 #endif
 
-#ifdef HAS_GYROSCOPE
+#if HAS_GYROSCOPE
 
 #endif
 
-#ifdef HAS_ACCELEROMETER
+#if HAS_ACCELEROMETER
 
 #endif
 
-#endif
+#endif /*CONFIG*/
+#endif /*HAL*/

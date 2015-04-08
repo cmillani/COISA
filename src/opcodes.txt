@@ -40,7 +40,8 @@ Instruction Syntax
 This is a table of all the different types of instruction as they appear in the assembly listing. Note that each syntax is associated with exactly one encoding which is used to encode all instructions which use that syntax.
 
 Encoding	Syntax	Template	Comments
-Register	ArithLog	f $d, $s, $t
+Register	
+ArithLog	f $d, $s, $t
 DivMult	f $s, $t
 Shift	f $d, $t, a
 ShiftV	f $d, $t, $s
@@ -70,69 +71,69 @@ The address must always be aligned; that is, a must be divisible by n, which mus
 
 Arithmetic and Logical Instructions
 Instruction	Opcode/Function	Syntax	Operation
-add	100000	ArithLog	$d = $s + $t
-addu	100001	ArithLog	$d = $s + $t
-addi	001000	ArithLogI	$t = $s + SE(i)
-addiu	001001	ArithLogI	$t = $s + SE(i)
-and	100100	ArithLog	$d = $s & $t
-andi	001100	ArithLogI	$t = $s & ZE(i)
-div	011010	DivMult	lo = $s / $t; hi = $s % $t
-divu	011011	DivMult	lo = $s / $t; hi = $s % $t
-mult	011000	DivMult	hi:lo = $s * $t
-multu	011001	DivMult	hi:lo = $s * $t
-nor	100111	ArithLog	$d = ~($s | $t)
-or	100101	ArithLog	$d = $s | $t
-ori	001101	ArithLogI	$t = $s | ZE(i)
-sll	000000	Shift	$d = $t << a
-sllv	000100	ShiftV	$d = $t << $s
-sra	000011	Shift	$d = $t >> a
-srav	000111	ShiftV	$d = $t >> $s
-srl	000010	Shift	$d = $t >>> a
-srlv	000110	ShiftV	$d = $t >>> $s
-sub	100010	ArithLog	$d = $s - $t
-subu	100011	ArithLog	$d = $s - $t
-xor	100110	ArithLog	$d = $s ^ $t
-xori	001110	ArithLogI	$d = $s ^ ZE(i)
+add	100000	ArithLog	$d = $s + $t //ok
+addu	100001	ArithLog	$d = $s + $t //ok
+addi	001000	ArithLogI	$t = $s + SE(i) //ok
+addiu	001001	ArithLogI	$t = $s + SE(i) //ok
+and	100100	ArithLog	$d = $s & $t //ok
+andi	001100	ArithLogI	$t = $s & ZE(i) //ok
+div	011010	DivMult	lo = $s / $t; hi = $s % $t //ok
+divu	011011	DivMult	lo = $s / $t; hi = $s % $t //ok
+mult	011000	DivMult	hi:lo = $s * $t //ok
+multu	011001	DivMult	hi:lo = $s * $t //ok
+nor	100111	ArithLog	$d = ~($s | $t) //ok
+or	100101	ArithLog	$d = $s | $t //ok
+ori	001101	ArithLogI	$t = $s | ZE(i) //ok
+sll	000000	Shift	$d = $t << a //ok
+sllv	000100	ShiftV	$d = $t << $s //ok
+sra	000011	Shift	$d = $t >> a //ok
+srav	000111	ShiftV	$d = $t >> $s //ok
+srl	000010	Shift	$d = $t >>> a //ok
+srlv	000110	ShiftV	$d = $t >>> $s //ok
+sub	100010	ArithLog	$d = $s - $t //ok
+subu	100011	ArithLog	$d = $s - $t //ok
+xor	100110	ArithLog	$d = $s ^ $t //ok
+xori	001110	ArithLogI	$d = $s ^ ZE(i) //ok
 Constant-Manipulating Instructions
 Instruction	Opcode/Function	Syntax	Operation
-lhi	011001	LoadI	HH ($t) = i
-llo	011000	LoadI	LH ($t) = i
+lhi	011001	LoadI	HH ($t) = i //ok
+llo	011000	LoadI	LH ($t) = i //ok
 Comparison Instructions
 Instruction	Opcode/Function	Syntax	Operation
-slt	101010	ArithLog	$d = ($s < $t)
-sltu	101001	ArithLog	$d = ($s < $t)
-slti	001010	ArithLogI	$t = ($s < SE(i))
-sltiu	001001	ArithLogI	$t = ($s < SE(i))
+slt	101010	ArithLog	$d = ($s < $t) //ok
+sltu	101001	ArithLog	$d = ($s < $t) //ok
+slti	001010	ArithLogI	$t = ($s < SE(i)) //ok
+sltiu	001001	ArithLogI	$t = ($s < SE(i)) //ok
 Branch Instructions
 Instruction	Opcode/Function	Syntax	Operation
-beq	000100	Branch	if ($s == $t) pc += i << 2
-bgtz	000111	BranchZ	if ($s > 0) pc += i << 2
-blez	000110	BranchZ	if ($s <= 0) pc += i << 2
-bne	000101	Branch	if ($s != $t) pc += i << 2
+beq	000100	Branch	if ($s == $t) pc += i << 2 //ok
+bgtz	000111	BranchZ	if ($s > 0) pc += i << 2 //ok
+blez	000110	BranchZ	if ($s <= 0) pc += i << 2 //ok
+bne	000101	Branch	if ($s != $t) pc += i << 2 //ok
 Jump Instructions
 Instruction	Opcode/Function	Syntax	Operation
 j	000010	Jump	pc += i << 2
 jal	000011	Jump	$31 = pc; pc += i << 2
-jalr	001001	JumpR	$31 = pc; pc = $s
-jr	001000	JumpR	pc = $s
+jalr	001001	JumpR	$31 = pc; pc = $s //ok
+jr	001000	JumpR	pc = $s //ok
 Load Instructions
 Instruction	Opcode/Function	Syntax	Operation
-lb	100000	LoadStore	$t = SE (MEM [$s + i]:1)
-lbu	100100	LoadStore	$t = ZE (MEM [$s + i]:1)
-lh	100001	LoadStore	$t = SE (MEM [$s + i]:2)
-lhu	100101	LoadStore	$t = ZE (MEM [$s + i]:2)
-lw	100011	LoadStore	$t = MEM [$s + i]:4
+lb	100000	LoadStore	$t = SE (MEM [$s + i]:1) //ok
+lbu	100100	LoadStore	$t = ZE (MEM [$s + i]:1) //ok
+lh	100001	LoadStore	$t = SE (MEM [$s + i]:2) //ok
+lhu	100101	LoadStore	$t = ZE (MEM [$s + i]:2) //ok
+lw	100011	LoadStore	$t = MEM [$s + i]:4 //ok
 Store Instructions
 Instruction	Opcode/Function	Syntax	Operation
-sb	101000	LoadStore	MEM [$s + i]:1 = LB ($t)
-sh	101001	LoadStore	MEM [$s + i]:2 = LH ($t)
-sw	101011	LoadStore	MEM [$s + i]:4 = $t
+sb	101000	LoadStore	MEM [$s + i]:1 = LB ($t) //ok
+sh	101001	LoadStore	MEM [$s + i]:2 = LH ($t) //ok
+sw	101011	LoadStore	MEM [$s + i]:4 = $t //ok
 Data Movement Instructions
 Instruction	Opcode/Function	Syntax	Operation
-mfhi	010000	MoveFrom	$d = hi
-mflo	010010	MoveFrom	$d = lo
-mthi	010001	MoveTo	hi = $s
-mtlo	010011	MoveTo	lo = $s
+mfhi	010000	MoveFrom	$d = hi //ok
+mflo	010010	MoveFrom	$d = lo //ok
+mthi	010001	MoveTo	hi = $s //ok
+mtlo	010011	MoveTo	lo = $s //ok
 Exception and Interrupt Instructions
 Instruction	Opcode/Function	Syntax	Operation
 trap	011010	Trap	Dependent on operating system; different values for immed26 specify different operations. See the list of traps for information on what the different trap codes do.

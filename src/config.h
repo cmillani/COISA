@@ -18,19 +18,15 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef VM_H
-#define VM_H
+#ifndef CONFIG
+#define CONFIG
 
-#include "config.h"
-#include <inttypes.h>
+#include "../ARCH/atmega328.h"
 
-#ifdef CONFIG
-#define VM_MEMORY_SZ PROCESSOR_MEMORY_SZ /* Available memory from the microprocessor  */
+#define HAS_ACCELEROMETER 0
+#define HAS_GYROSCOPE 0
+#define HAS_INFRARED 0
+#define HAS_ENCODER 0
+#define HAS_ULTRASONIC 0
 
-uint32_t fetch(uint32_t PC);
-void vm_cpu();
-
-#endif
-
-#endif // VM_H
-
+#endif /*CONFIG*/
