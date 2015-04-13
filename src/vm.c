@@ -53,15 +53,16 @@ uint8_t VM_memory[VM_MEMORY_SZ];
  */
 void vm_cpu()
 {
-	  /* Register file. */
-	  uint32_t RF[32];
+	/*DUVIDA: Utilizar setjmp e longjmp para tratamento de erros? Programa receberá sinais? Onde colocar setjmp se for usar?*/
+	/* Register file. */
+	uint32_t RF[32];
+	uint32_t HI = 0, LO = 0;  
+	uint32_t PC = 0;
+	uint8_t halted = 0;
 
-	  uint32_t PC = 0;
-	  uint8_t halted = 0;
 
-
-	  while (!halted) 
-	  {
+	while (!halted) 
+	{
 
 		uint32_t instr = fetch(PC);
 		uint8_t op = (instr >> 26) && 0x3F;
@@ -69,143 +70,153 @@ void vm_cpu()
 
 		switch (op) 
 		{
+			uint8_t rs = (instr >> 21)   && 0x1F;
+			uint8_t rt = (instr >> 16)   && 0x1F;
+			uint8_t rd = (instr >> 11)   && 0x1F;
 			case 0x0: { // 000000 => Register encoding.
-				uint8_t rs = (instr >> 21)   && 0x1F;
-				uint8_t rt = (instr >> 16)   && 0x1F;
-				uint8_t rd = (instr >> 11)   && 0x1F;
+				//uint8_t rs = (instr >> 21)   && 0x1F;
+				//uint8_t rt = (instr >> 16)   && 0x1F;
+				//uint8_t rd = (instr >> 11)   && 0x1F;
 				uint8_t shamt = (instr >> 6) && 0x1F;
 				uint8_t funct = (instr >> 0) && 0x3F;
 			  
 				switch (funct) {
-					case 0b100000: { // add	100000	ArithLog	$d = $s + $t
+					case 0b100000: { // add		100000	ArithLog	$d = $s + $t
 						RF[rd] = RF[rs] + RF[rt];
 						break;
 					}
-					case 0b100001: { // addu	100001	ArithLog	$d = $s + $t
+					case 0b100001: { // addu	100001	ArithLog	$d = $s + $t ///////////Unsigned?
 						RF[rd] = RF[rs] + RF[rt];
 						break;
 					}
-					case 0b100100: { // and	100100	ArithLog	$d = $s & $t
+					case 0b100100: { // and		100100	ArithLog	$d = $s & $t
 						RF[rd] = RF[rs] & RF[rt];
 						break;
 					}
-					case 0b011010: { // div	011010  DivMult		lo = $s / $t; hi = $s % $t
-						  
-						  break;
+					case 0b011010: { // div		011010  DivMult		lo = $s / $t; hi = $s % $t
+						LO = RF[rs] / RF[rt];
+						HI = RF[rs] % RF[rt];
+						break;
 					}
 					case 0b011011: { // divu	011011  DivMult		lo = $s / $t; hi = $s % $t
-						  
-						  break;
+						LO = RF[rs] / RF[rt];
+						HI = RF[rs] % RF[rt];  
+						break;
 					}
 					case 0b011000: { // mult	011000  DivMult		hi:lo = $s * $t
-
-						  break;
+						uint64_t mult = (uint64_t)RF[rs] * (uint64_t) RF[rt];//Melho desempenho que efetuar o calculo duas vezes mas ocupa mais memoria, possivel gordura
+						HI = (mult >> 32) | 0xFFFFFFFF;
+						LO = mult | 0xFFFFFFFF;
+						break;
 					}
 					case 0b011001: { // multu	011001	DivMult		hi:lo = $s * $t
-						  
-						  break;
+						uint64_t mult = (uint64_t)RF[rs] * (uint64_t) RF[rt];
+						HI = (mult >> 32) | 0xFFFFFFFF;
+						LO = mult | 0xFFFFFFFF;  
+						break;
 					}
-					case 0b100111: { // nor	100111	ArithLog	$d = ~($s | $t)
-						  
-						  break;
+					case 0b100111: { // nor		100111	ArithLog	$d = ~($s | $t)
+						RF[rd] = ~(RF[rs] | RF[rt]);
+						break;
 					}
-					case 0b100101: { // or	100101	ArithLog	$d = $s | $t
-						  
-						  break;
+					case 0b100101: { // or		100101	ArithLog	$d = $s | $t
+						RF[rd] = RF[rs] | RF[rt];
+						break;
 					}
-					case 0b000000: { // sll	000000	Shift		$d = $t << a
-						  
-						  break;
+					case 0b000000: { // sll		000000	Shift		$d = $t << a
+						RF[rd] = RF[rt] << shamt;
+						break;
 					}
 					case 0b000100: { // sllv	000100	ShiftV		$d = $t << $s
-						  
-						  break;
+						RF[rd] = RF[rt] << RF[rs];
+						break;
 					}
-					case 0b000011: { // sra	000011	Shift		$d = $t >> a
-						  
-						  break;
+					case 0b000011: { // sra		000011	Shift		$d = $t >> a /////////////Duvida
+						RF[rd] = RF[rs] >> shamt;
+						break;
 					}
 					case 0b000111: { // srav	000111	ShiftV		$d = $t >> $s
-						  
-						  break;
+						RF[rd] = RF[rt] >> RF[rs];
+						break;
 					}
-					case 0b000010: { // srl	000010	Shift		$d = $t >>> a
-						  
-						  break;
+					case 0b000010: { // srl		000010	Shift		$d = $t >>> a ////////////Duvida
+						RF[rd] = RF[rt] >> shamt;
+						break;
 					}
 					case 0b000110: { // srlv	000110	ShiftV		$d = $t >>> $s
-						  
-						  break;
+						RF[rd] = RF[rt] >> RF[rs];  
+						break;
 					}
-					case 0b100010: { // sub	100010	ArithLog	$d = $s - $t
-						  
-						  break;
+					case 0b100010: { // sub		100010	ArithLog	$d = $s - $t
+						RF[rd] = RF[rs] - RF[rt];  
+						break;
 					}
 					case 0b100011: { // subu	100011	ArithLog	$d = $s - $t
-						  
-						  break;
+						RF[rd] = RF[rs] - RF[rt];    
+						break;
 					}
-					case 0b100110: { // xor	100110  ArithLog	$d = $s ^ $t
-						  
-						  break;
+					case 0b100110: { // xor		100110  ArithLog	$d = $s ^ $t
+						RF[rd] = RF[rs] ^ RF[rt];    
+						break;
 					}
-					case 0b101010: { // slt	101010	ArithLog	$d = ($s < $t)
-						  
-						  break;
+					case 0b101010: { // slt		101010	ArithLog	$d = ($s < $t)
+						RF[rd] = (RF[rs] < RF[rt]);
+						break;
 					}
 					case 0b101001: { // sltu	101001	ArithLog	$d = ($s < $t)
-						  
-						  break;
+						RF[rd] = (RF[rs] < RF[rt]);
+						break;
 					}
 					case 0b001001: { // jalr	001001	JumpR		$31 = pc; pc = $s
-						  
-						  break;
+						RF[31] = PC;
+						PC = RF[rs];
+						break;
 					}
-					case 0b001000: { // jr	001000	JumpR		pc = $s 
-						  
-						  break;
+					case 0b001000: { // jr		001000	JumpR		pc = $s 
+						PC = RF[rs];
+						break;
 					}
 					case 0b010000: { // mfhi	010000	MoveFrom	$d = hi
-						  
-						  break;
+						RF[rd] = HI;
+						break;
 					}
 					case 0b010010: { // mflo	010010	MoveFrom	$d = lo
-						  
-						  break;
+						RF[rd] = LO;
+						break;
 					}
 					case 0b010001: { // mthi	010001	MoveTo		hi = $s
-						  
-						  break;
+						HI = RF[rs];
+						break;
 					}
 					case 0b010011: { // mtlo	010011	MoveTo		lo = $s
-						  
-						  break;
+						LO = RF[rs];
+						break;
 					}
 					break;
-					//case ...
-					// Other instructions...
 				}      
 				break; // case 0x0
 			}
+			
 			//Immediate encoding
+			uint16_t immediate = (instr >> 0) && 0xFFFF;
 			case 0b001000: { //addi    001000  ArithLogI       $t = $s + SE(i)
-				  
+				RF[rt] = RF[rs] + immediate;
 				break;
 			}
 			case 0b001001: { //addiu   001001  ArithLogI       $t = $s + SE(i)
-			  
+				RF[rt] = RF[rs] + immediate;
 				break;
 			}
 			case 0b001100: { //andi    001100  ArithLogI       $t = $s & ZE(i)
-			  
+			    RF[rt] = RF[rs] & immediate;
 				break;
 			}
 			case 0b001101: { //ori     001101  ArithLogI       $t = $s | ZE(i)
-			  
+				RF[rt] = RF[rs] | immediate;
 				break;
 			}
 			case 0b001110: { //xori    001110  ArithLogI       $d = $s ^ ZE(i)
-			  
+				RF[rd] = RF[rs] ^ immediate;
 				break;
 			}
 			case 0b011001: { //lhi     011001  LoadI   HH ($t) = i
@@ -272,9 +283,24 @@ void vm_cpu()
 			  
 				break;
 			}
+			uint32_t address = (instr >> 0) && 0x3FFFFFF;
 			//Jump encoding
-			//case :
+			
+			case 0b000010: { //j       000010  Jump    pc += i << 2
+				
+				break;
+			}
+			case 0b000011: { //jal     000011  Jump    $31 = pc; pc += i << 2
+				
+				break;
+			}
+			case 0b011010: { //trap    011010  Trap    Dependent on operating system; different values for immed26 specify different operations. See the list of traps for information on what the different trap codes do.
+				
+				break;
+			}
+			
 			uint8_t op = (instr >> 26) && 0x3F;
+			break; //op
 		}
 	}
 }
@@ -282,8 +308,3 @@ uint32_t fetch(uint32_t PC)
 {
 	return 0;
 }
-
-
-
-
-
