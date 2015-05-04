@@ -22,10 +22,17 @@
 /*
  * Description: This file implements the virtual machine. 
  */
+
+#define DEBUGING 1
+
 #include "HAL.h"
 #include "vm.h"
 #include "syscall.h"
 #include <inttypes.h>
+
+#if DEBUGING
+#include <stdio.h>
+#endif
 
 typedef struct decoded_instruction
 {
@@ -55,29 +62,44 @@ void vm_cpu()
 	/*DUVIDA: Utilizar setjmp e longjmp para tratamento de erros? Programa receberá sinais? Onde colocar setjmp se for usar?*/
 	/* Register file. */
 	uint32_t RF[32];
+	RF[29] = VM_MEMORY_SZ -1; //Aloca pilha -> temporario!, tratar codigo vs data
+	RF[30] = RF[29]; //FP = SP
+	RF[0] = 0; //Register $zero must always be zero
+	RF[31] = 0; //Return addr
 	uint32_t HI = 0, LO = 0;  
 	uint32_t PC = 0;
 	uint8_t halted = 0;
-
+	
+	uint8_t first_time = 1;
+#if DEBUGING
+		printf("<>SP:%x FP:%x\n", RF[29], RF[30]);
+#endif
 
 	while (!halted) 
 	{
 
 		uint32_t instr = fetch(PC);
+		if (PC == 0 && !first_time) break;
+		if (PC == 0) first_time = 0; //Evitar loop infinito -Jeito melhor? Pensar pra amanha
 		uint8_t op = (instr >> 26) & 0x3F;
-
-
+#if DEBUGING
+		printf("\n<Instr:%x op:%x\n\n", instr, op);
+#endif
+		
+		if (instr == 0) halted = 1;
+		uint8_t rs = (instr >> 21) & 0x1F;
+		uint8_t rt = (instr >> 16) & 0x1F;
+		uint8_t rd = (instr >> 11) & 0x1F;
+		uint16_t immediate = (instr >> 0) & 0xFFFF;
+		uint32_t address = (instr >> 0) & 0x3FFFFFF;
 		switch (op) 
 		{
-			uint8_t rs = (instr >> 21) & 0x1F;
-			uint8_t rt = (instr >> 16) & 0x1F;
-			uint8_t rd = (instr >> 11) & 0x1F;
 			case 0x0: { // 000000 => Register encoding.
-				//uint8_t rs = (instr >> 21)   && 0x1F;
-				//uint8_t rt = (instr >> 16)   && 0x1F;
-				//uint8_t rd = (instr >> 11)   && 0x1F;
 				uint8_t shamt = (instr >> 6) & 0x1F;
 				uint8_t funct = (instr >> 0) & 0x3F;
+#if DEBUGING
+				printf("Funct:%x Shamt:%x\n", funct, shamt);
+#endif
 			  
 				switch (funct) {
 					case 0b100000: { // add		100000	ArithLog	$d = $s + $t
@@ -85,6 +107,10 @@ void vm_cpu()
 						break;
 					}
 					case 0b100001: { // addu	100001	ArithLog	$d = $s + $t ///////////Unsigned?
+#if DEBUGING
+						printf(">>>ADDU\t\t&D = %x RS = %x RT = %x (d = RS + RT)\n", rd, RF[rs], RF[rt]);
+						printf(">>>&RD = %x &RS = %x &RT = %x \n", rd, rs, rt);
+#endif
 						RF[rd] = RF[rs] + RF[rt];
 						break;
 					}
@@ -167,13 +193,13 @@ void vm_cpu()
 						break;
 					}
 					case 0b001001: { // jalr	001001	JumpR		$31 = pc; pc = $s
-						RF[31] = PC;
+						RF[31] = PC+8;
 						PC = RF[rs];
-						break;
+						continue;
 					}
 					case 0b001000: { // jr		001000	JumpR		pc = $s 
 						PC = RF[rs];
-						break;
+						continue;
 					}
 					case 0b010000: { // mfhi	010000	MoveFrom	$d = hi
 						RF[rd] = HI;
@@ -197,13 +223,15 @@ void vm_cpu()
 			}
 			
 			//Immediate encoding
-			uint16_t immediate = (instr >> 0) & 0xFFFF;
 			case 0b001000: { //addi    001000  ArithLogI       $t = $s + SE(i)
-				RF[rt] = RF[rs] + immediate;
+				RF[rt] = RF[rs] + immediate; //Implementar trap!
 				break;
 			}
 			case 0b001001: { //addiu   001001  ArithLogI       $t = $s + SE(i)
-				RF[rt] = RF[rs] + immediate;
+#if DEBUGING
+				printf(">>>ADDIU\t&RT = %x RS = %x I = %x (T = RS + I)\n", rt, RF[rs], immediate);
+#endif
+				RF[rt] = (RF[rs] + ((immediate & (0x8000))?(immediate | 0xFFFF0000):(immediate))); //TODO Tirar duvida -> reg eh 32bits mas teoricamente a soma unsigned de fee8 com 1ff deveria dar E7
 				break;
 			}
 			case 0b001100: { //andi    001100  ArithLogI       $t = $s & ZE(i)
@@ -227,6 +255,9 @@ void vm_cpu()
 				break;
 			}
 			case 0b001010: { //slti    001010  ArithLogI       $t = ($s < SE(i))
+#if DEBUGING
+				printf(">>>SLTI\t\t&RT: %x RS: %x I: %x(t = RS < I)\n\n", rt, RF[rs], immediate);
+#endif
 			  	RF[rt] = RF[rs] < immediate;
 				break;
 			}
@@ -235,20 +266,23 @@ void vm_cpu()
 				break;
 			}
 			case 0b000100: { //beq     000100  Branch  if ($s == $t) pc += i << 2
-			  	PC = (RF[rs] == RF[rt])?PC+(immediate << 2):PC;
-				break;
+			  	PC = (RF[rs] == RF[rt])?PC+(immediate << 2)+4:PC+8;//Jump by offset and if not, delay slot!
+				continue;
 			}
 			case 0b000111: { //bgtz    000111  BranchZ if ($s > 0) pc += i << 2
-			  	PC = (RF[rs] > 0)?PC+(immediate << 2):PC;
-				break;
+			  	PC = (RF[rs] > 0)?PC+(immediate << 2)+4:PC+8;
+				continue;
 			}
 			case 0b000110: { //blez    000110  BranchZ if ($s <= 0) pc += i << 2
-			  	PC = (RF[rs] <= 0)?PC+(immediate << 2):PC;
-				break;
+			  	PC = (RF[rs] <= 0)?PC+(immediate << 2)+4:PC+8;
+				continue;
 			}
 			case 0b000101: { //bne     000101  Branch  if ($s != $t) pc += i << 2
-			  	PC = (RF[rs] != RF[rt])?PC+(immediate << 2):PC;
-				break;
+#if DEBUGING
+				printf(">>>BNE\t\tRS: %x RT: %x I: %x(if RS != RT PC += I<<2)\n", RF[rs], RF[rt], immediate);
+#endif
+			  	PC = (RF[rs] != RF[rt])?PC+(immediate << 2)+4:PC+8;
+				continue;
 			}
 			case 0b100000: { //lb      100000  LoadStore       $t = SE (MEM [$s + i]:1)
 			  	RF[rt] = (VM_memory[RF[rs] + immediate]& 0x7F)  | (uint32_t)(VM_memory[RF[rs] + immediate] & 0x80)<<24;
@@ -267,6 +301,9 @@ void vm_cpu()
 				break;
 			}
 			case 0b100011: { //lw      100011  LoadStore       $t = MEM [$s + i]:4
+#if DEBUGING 
+				printf(">>>LW\t\t&RT: %x RS: %x I: %x(t = mem[RS + I])\n", rt, RF[rs], immediate);
+#endif
 			  	RF[rt] = (VM_memory[RF[rs] + immediate]) | (VM_memory[RF[rs] + immediate + 1]) | (VM_memory[RF[rs] + immediate + 2])| (VM_memory[RF[rs] + immediate + 3]);
 				break;
 			}
@@ -280,23 +317,29 @@ void vm_cpu()
 				break;
 			}
 			case 0b101011: { //sw      101011  LoadStore       MEM [$s + i]:4 = $t
+#if DEBUGING
+				printf(">>>SW\t\tRS%x IMM%x RT:%x (MEM[RS+i] = RT)\n", rs, immediate, rt);
+#endif
 			  	VM_memory[RF[rs] + immediate] = (uint8_t)((RF[rt] & 0xFF000000) >> 24);
 				VM_memory[RF[rs] + immediate + 1] = (uint8_t)((RF[rt] & 0xFF0000) >> 16);
 			  	VM_memory[RF[rs] + immediate + 2] = (uint8_t)((RF[rt] & 0xFF00) >> 8);
 				VM_memory[RF[rs] + immediate + 3] = (uint8_t)(RF[rt] & 0xFF);
 				break;
 			}
-			uint32_t address = (instr >> 0) & 0x3FFFFFF;
+	
 			//Jump encoding
 			
-			case 0b000010: { //j       000010  Jump    pc += i << 2
-				PC += address << 2;
-				break;
+			case 0b000010: { //j       000010  Jump    pc = i << 2
+#if DEBUGING
+				printf(">>>J\t\t I:%x(PC = I<<2)\n", address);
+#endif
+				PC = address << 2;
+				continue;
 			}
-			case 0b000011: { //jal     000011  Jump    $31 = pc; pc += i << 2
-				RF[31] = PC;
-				PC += address << 2;
-				break;
+			case 0b000011: { //jal     000011  Jump    $31 = pc; pc = i << 2
+				RF[31] = PC + 8;
+				PC = address << 2; //TODO verificar o que acontece no jump, se precisa do + 4
+				continue;
 			}
 			case 0b011010: { //trap    011010  Trap    Dependent on operating system; different values for immed26 specify different operations. See the list of traps for information on what the different trap codes do.
 				syscall((uint8_t)(address&0xFF));
@@ -306,10 +349,16 @@ void vm_cpu()
 			uint8_t op = (instr >> 26) & 0x3F;
 			break; //op
 		}
-		PC++;//Increments PC to fetch the next instruction
+#if DEBUGING
+						printf("<End of switch\n");
+#endif
+		PC+=4;//Increments PC to fetch the next instruction
 	}
 }
 uint32_t fetch(uint32_t PC)
 {
-	return (VM_memory[PC] >> 26) & 0x3F;
+#if DEBUGING
+	printf("<Will fetch %x\n", PC);
+#endif	
+	return ((VM_memory[PC] <<24) | (VM_memory[PC+1] <<16) | (VM_memory[PC+2] <<8) | (VM_memory[PC+3]));
 }

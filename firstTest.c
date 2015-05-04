@@ -4,6 +4,6 @@ extern void _start()
 	char c[267] ;
 	while ( 1 ) {
 		a++;
-		if (a > 597) break;
+		if (a > 2) break;
 	}
 }
