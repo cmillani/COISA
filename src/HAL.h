@@ -38,14 +38,7 @@
 #include <inttypes.h>
 uint32_t hal_;
 
-uint8_t hal_call(uint8_t sensid, int16_t * retval)//Call to hardware I/O
-{
-	switch (sensid)
-	{
-		default:
-			*retval = -1;
-	}
-}
+uint8_t hal_call(uint8_t sensid, int16_t * retval);//Call to hardware I/O
 
 #if HAS_ULTRASONIC
 

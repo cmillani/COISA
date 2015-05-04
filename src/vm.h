@@ -27,6 +27,8 @@
 #ifdef CONFIG
 #define VM_MEMORY_SZ PROCESSOR_MEMORY_SZ /* Available memory from the microprocessor  */
 
+uint8_t VM_memory[VM_MEMORY_SZ];
+
 uint32_t fetch(uint32_t PC);
 void vm_cpu();
 

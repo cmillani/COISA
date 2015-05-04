@@ -18,14 +18,16 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#include "hal.h"
 
-uint8_t hal_call(uint8_t sensid, int16_t * retval)//Call to hardware I/O
-{
-	switch (sensid)
-	{
-		default:
-			*retval = -1;
-	}
-	return 0;
-}
+/*
+ * Description: This file implements the available syscalls.
+ */
+#include "vm.h"
+#include <inttypes.h>
+
+#ifndef SYSCALL
+#define SYSCALL
+
+void syscall(uint8_t trap_code);
+
+#endif
