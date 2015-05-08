@@ -5,6 +5,7 @@ SECTIONS {
 	. = 0;
 
 	.text : {
+		*(.crto0)
 		*(.text)
 	}=0
 

@@ -21,7 +21,20 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-    
+	
+#ifndef CONFIG
+#define CONFIG
+
+#include "atmega328.h"
+
+#define HAS_ACCELEROMETER 0
+#define HAS_GYROSCOPE 0
+#define HAS_INFRARED 0
+#define HAS_ENCODER 0
+#define HAS_ULTRASONIC 0
+
+#endif /*CONFIG*/
+
 #ifdef __cplusplus
 }
 #endif

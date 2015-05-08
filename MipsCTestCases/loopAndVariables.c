@@ -1,4 +1,7 @@
-extern void _start()
+int global_b = 12;
+int global_a;
+
+int main()
 {
 	int  a = 0;
 	char c[267] ;
@@ -6,4 +9,6 @@ extern void _start()
 		a++;
 		if (a > 2) break;
 	}
+	global_a += a;
+	return 0;
 }

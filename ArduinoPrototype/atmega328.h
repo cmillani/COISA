@@ -18,10 +18,19 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
+/*Definitions for a atmega328 based device*/
+
+/* Is processor already defined? */
 #ifdef __cplusplus
 extern "C" {
 #endif
-    
+	
+#ifndef ATMEGA328
+#define ATMEGA328
+
+#define PROCESSOR_MEMORY_SZ 512 /* (1/2)k */
+
+#endif /*ATMEGA328*/
 #ifdef __cplusplus
 }
 #endif

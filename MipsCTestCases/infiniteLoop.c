@@ -1,4 +1,4 @@
-extern void _start()
+int main()
 {
 	while ( 1 ) {
 

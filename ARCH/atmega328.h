@@ -20,6 +20,10 @@
  ***************************************************************************/
 /*Definitions for a atmega328 based device*/
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /* Is processor already defined? */
 #ifndef ATMEGA328
 #define ATMEGA328
@@ -27,3 +31,7 @@
 #define PROCESSOR_MEMORY_SZ 512 /* (1/2)k */
 
 #endif /*ATMEGA328*/
+
+#ifdef __cplusplus
+}
+#endif

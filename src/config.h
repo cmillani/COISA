@@ -18,6 +18,11 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
+#ifdef __cplusplus
+extern "C" {
+#endif
+    
+
 #ifndef CONFIG
 #define CONFIG
 
@@ -30,3 +35,7 @@
 #define HAS_ULTRASONIC 0
 
 #endif /*CONFIG*/
+    
+#ifdef __cplusplus
+}
+#endif
