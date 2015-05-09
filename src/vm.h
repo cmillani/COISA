@@ -30,7 +30,9 @@ extern "C" {
 
 #ifdef CONFIG
 #define VM_MEMORY_SZ PROCESSOR_MEMORY_SZ /* Available memory from the microprocessor  */
-
+/* Register file. */
+uint32_t RF[32];
+/*VM memory vector*/
 uint8_t VM_memory[VM_MEMORY_SZ];
 
 uint32_t fetch(uint32_t PC);

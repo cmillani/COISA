@@ -35,7 +35,7 @@ extern "C" {
 #ifndef SYSCALL
 #define SYSCALL
 
-void syscall(uint8_t trap_code);
+uint8_t syscall(uint8_t trap_code);
 
 #endif
 

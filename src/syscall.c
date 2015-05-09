@@ -29,15 +29,26 @@ extern "C" {
 
 
 #include "syscall.h"
+#include "vm.h"
  
-void syscall(uint8_t trap_code)
+uint8_t syscall(uint8_t trap_code)
 {
 	switch (trap_code)
 	{
+		case 10: { //Exit
+			return 1; //The vm cpu should stop
+			break;
+		}
+		case 11: { //Stack alloc
+			RF[29] = VM_MEMORY_SZ -1; //Aloca pilha para dado microcontrolador
+			RF[30] = RF[29]; //FP = SP
+			break;
+		}
 		default: {
 			break;
 		}
 	}
+	return 0;
 }
     
 #ifdef __cplusplus

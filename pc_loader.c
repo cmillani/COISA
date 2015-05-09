@@ -7,8 +7,8 @@ int main(int argc, char * argv[])
 	FILE * binary;
 	int i = 0;
 	uint8_t byte;
-	
-	binary = fopen("binary.bin", "rb");
+	if (argc < 2) return 1;
+	binary = fopen(argv[1], "rb");
 	
 	while(fread(&byte,sizeof(uint8_t),1,binary))
 	{
