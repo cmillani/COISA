@@ -22,16 +22,31 @@
 extern "C" {
 #endif    
 
-#include "hal.h"
+#include "HAL.h"
+#if DEBUGING
+#include <stdio.h>
+#endif
 
-uint8_t hal_call(uint8_t sensid, int16_t * retval)//Call to hardware I/O
+/*Defined peripherals ids:
+	Ultrasonic		0
+	RX/TX			1
+	Encoder			2
+*/
+
+uint8_t hal_call(uint32_t sensid)//Call to hardware I/O
 {
+	uint8_t retval = -1;
 	switch (sensid)
 	{
+		case 0: { //Read Ultrasonic
+#if DEBUGING
+			printf("Hal read called\n");
+#endif
+		}
 		default:
-			*retval = -1;
+			break;
 	}
-	return 0;
+	return retval;
 }
 
 #ifdef __cplusplus

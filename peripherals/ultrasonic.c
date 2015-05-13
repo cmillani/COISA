@@ -21,7 +21,18 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+#include <inttypes.h>
+#include "ultrasonic.h"
     
+uint8_t conversion_factor = 58;
+
+void configure_ultrassonic(uint8_t mode)
+{
+	if(mode == CM) conversion_factor = 58;
+	else if (mode == IN) conversion_factor = 148;
+}
+
 #ifdef __cplusplus
 }
 #endif

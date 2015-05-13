@@ -18,10 +18,39 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
+/*Implementation for an atmega328 based device*/
+
 #ifdef __cplusplus
 extern "C" {
 #endif
-    
+
+#include "atmega328.h"
+#include "../src/HAL.h"
+
+void pinState(uint8_t pin_number, uint8_t state)
+{
+	
+}
+
+void pinMode(uint8_t pin_number, uint8_t mode)
+{
+	
+}
+
+void pinRead(uint8_t pin_number)
+{
+	
+}
+
+uint8_t read_ultrassonic(void)
+{
+	uint8_t microsecs = 0;
+	
+	//TODO read distance!
+	
+	return (uint8_t)(microsecs/conversion_factor);
+};
+
 #ifdef __cplusplus
 }
 #endif

@@ -21,40 +21,18 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-    
+#ifndef ULTRASONIC	
+#define ULTRASONIC
+	
+#define CM 1 //Used to configure the ultrassonic read
+#define IN 0
 
-#ifndef CONFIG
-#define CONFIG
-	
-#define DEBUGING 1
+extern uint8_t conversion_factor; //Default: convert to cm (29/2), in is 148 (74/2)
 
-#include "../ARCH/atmega328.h"
+uint8_t read_ultrassonic(void); //Defined on ARCH
+void configure_ultrassonic(uint8_t mode); //Inches or centimeters
 
-#define HAS_ACCELEROMETER 0 //  TODO Definir pinos se estiver definido
-	
-#define HAS_GYROSCOPE 0
-	
-#define HAS_INFRARED 0
-	
-#define HAS_ENCODER 0
-#if HAS_ENCODER
-#define PIN_ENCODER
-#endif
-	
-#define HAS_ULTRASONIC 1
-#if HAS_ULTRASONIC
-#define PIN_ECHO
-#define PIN_TRIG
-#endif
-	
-#define HAS_STDOUT 0
-#if HAS_STDOUT
-#define RX
-#define TX
-#endif 
-
-#endif /*CONFIG*/
-    
+#endif //ULTRASONIC
 #ifdef __cplusplus
 }
 #endif

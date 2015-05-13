@@ -29,7 +29,7 @@ extern "C" {
 
 
 #include "syscall.h"
-#include "vm.h"
+#include "HAL.h"
  
 uint8_t syscall(uint8_t trap_code)
 {
@@ -44,6 +44,12 @@ uint8_t syscall(uint8_t trap_code)
 			RF[30] = RF[29]; //FP = SP
 			break;
 		}
+		case 12: { //Hall Call
+			RF[2] = hal_call(RF[4]);
+		}
+		
+		// TODO Insert hall 
+		
 		default: {
 			break;
 		}

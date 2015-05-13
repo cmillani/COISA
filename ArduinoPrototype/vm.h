@@ -28,17 +28,15 @@ extern "C" {
 #include "config.h"
 #include <inttypes.h>
 
-#ifdef CONFIG
 #define VM_MEMORY_SZ PROCESSOR_MEMORY_SZ /* Available memory from the microprocessor  */
 /* Register file. */
-uint32_t RF[32];
+extern uint32_t RF[32];
 /*VM memory vector*/
-uint8_t VM_memory[VM_MEMORY_SZ];
+extern uint8_t VM_memory[VM_MEMORY_SZ];
 
 uint32_t fetch(uint32_t PC);
 void vm_cpu();
 
-#endif
 
 #endif // VM_H
 

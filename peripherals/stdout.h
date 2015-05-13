@@ -21,40 +21,9 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-    
 
-#ifndef CONFIG
-#define CONFIG
-	
-#define DEBUGING 1
 
-#include "../ARCH/atmega328.h"
 
-#define HAS_ACCELEROMETER 0 //  TODO Definir pinos se estiver definido
-	
-#define HAS_GYROSCOPE 0
-	
-#define HAS_INFRARED 0
-	
-#define HAS_ENCODER 0
-#if HAS_ENCODER
-#define PIN_ENCODER
-#endif
-	
-#define HAS_ULTRASONIC 1
-#if HAS_ULTRASONIC
-#define PIN_ECHO
-#define PIN_TRIG
-#endif
-	
-#define HAS_STDOUT 0
-#if HAS_STDOUT
-#define RX
-#define TX
-#endif 
-
-#endif /*CONFIG*/
-    
 #ifdef __cplusplus
 }
 #endif
