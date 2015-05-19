@@ -37,12 +37,6 @@ extern "C" {
 #ifndef HAL
 #define HAL
 
-#define HIGH 1
-#define LOW 0
-
-#define INPUT 0
-#define OUTPUT 1
-
 #include "config.h" 
 
 #include <inttypes.h>
@@ -59,7 +53,7 @@ uint8_t register_handler(); //TODO Improve definition, just to remember!
 uint8_t remove_handler();
 
 #if HAS_ULTRASONIC
-#include "../peripherals/ultrasonic.h"
+#include "peripherals/ultrasonic/ultrasonic.h"
 #endif
 
 #if HAS_ENCODER
@@ -78,20 +72,9 @@ uint8_t remove_handler();
 
 #endif
 
-#if HAS_STDOUT
+#if HAS_SERIAL
 
 #endif
-
-
-/**************************************************************************/
-/**********************Micro processor dependent code**********************/
-/**************************************************************************/
-
-void pinState(uint8_t pin_number, uint8_t state);
-
-void pinMode(uint8_t pin_number, uint8_t mode);
-
-void pinRead(uint8_t pin_number);
 
 #endif /*HAL*/
 

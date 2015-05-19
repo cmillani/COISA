@@ -24,5 +24,6 @@ SECTIONS {
 		*(.eh_frame)
 		*(.MIPS.*)
 		*(.reginfo)
+		*(.gnu.*)
 	}
 }

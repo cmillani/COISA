@@ -1,4 +1,4 @@
-#include "extras/stdthing.h"
+#include "extras/THING_ultrasonic.h"
 void test();
 int main()
 {

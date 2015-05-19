@@ -29,7 +29,7 @@ extern "C" {
 
 /*Defined peripherals ids:
 	Ultrasonic		0
-	RX/TX			1
+	Serial			1
 	Encoder			2
 */
 

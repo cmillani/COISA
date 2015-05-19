@@ -28,9 +28,9 @@ extern "C" {
 	
 #define DEBUGING 1
 
-#include "../ARCH/atmega328.h"
+#include "ARCH/atmega328/atmega328.h"
 
-#define HAS_ACCELEROMETER 0 //  TODO Definir pinos se estiver definido
+#define HAS_ACCELEROMETER 0 //  TODO Define pins
 	
 #define HAS_GYROSCOPE 0
 	
@@ -47,8 +47,8 @@ extern "C" {
 #define PIN_TRIG
 #endif
 	
-#define HAS_STDOUT 0
-#if HAS_STDOUT
+#define HAS_SERIAL 0
+#if HAS_SERIAL
 #define RX
 #define TX
 #endif 
