@@ -40,7 +40,7 @@ uint8_t syscall(uint8_t trap_code)
 			break;
 		}
 		case 11: { //Stack alloc
-			RF[29] = VM_MEMORY_SZ -1; //Aloca pilha para dado microcontrolador
+			RF[29] = VM_MEMORY_SZ; //Aloca pilha para dado microcontrolador -> pilha vazia, apontando para o fim, tentativa de store sem alocar causara erros
 			RF[30] = RF[29]; //FP = SP
 			break;
 		}

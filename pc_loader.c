@@ -50,5 +50,5 @@ int manifest_state_machine(FILE * manifest)
 	
 	State machine : opening tag -> respective handler for the tag -> closing tag
 	Only 1 tag <per> up to date.*/
-	return 0;
+	return 1;
 }

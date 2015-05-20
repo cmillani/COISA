@@ -85,16 +85,20 @@ void vm_cpu()
 		uint32_t instr = fetch(PC);
 		uint8_t op = (instr >> 26) & 0x3F;
 #if DEBUGING
-		switch (getchar())
+		char a;
+		while ((a = getchar()) != 'c')
 		{
-			case 'a':
-			print_memory();
-			break;
-			case 'b':
-			print_registers();
-			break;
-			default:
-			break;
+			switch (a)
+			{
+				case 'a':
+				print_memory();
+				break;
+				case 'b':
+				print_registers();
+				break;
+				default:
+				break;
+			}
 		}
 		printf("\n<Instr:%x op:%x\n\n", instr, op);
 #endif
@@ -310,7 +314,7 @@ void vm_cpu()
 				continue;
 			}
 			case 0b100000: { //lb      100000  LoadStore       $t = SE (MEM [$s + i]:1)
-			  	RF[rt] = (VM_memory[RF[rs] + immediate]& 0x7F)  | (uint32_t)(VM_memory[RF[rs] + immediate] & 0x80)<<24;
+			  	RF[rt] = (VM_memory[RF[rs] + immediate]& 0x7F)  | (uint32_t)(VM_memory[RF[rs] + immediate] & 0x80)<<24; //Load byte carrying signal to the register
 				break;
 			}
 			case 0b100100: { //lbu     100100  LoadStore       $t = ZE (MEM [$s + i]:1)
@@ -318,18 +322,18 @@ void vm_cpu()
 				break;
 			}
 			case 0b100001: { //lh      100001  LoadStore       $t = SE (MEM [$s + i]:2)
-			  	RF[rt] = (((VM_memory[RF[rs] + immediate]) | (VM_memory[RF[rs] + immediate + 1])) & 0x7FFF) | ((VM_memory[RF[rs] + immediate + 1]) & 0x8000) << 16;
+			  	RF[rt] = ((((VM_memory[RF[rs] + immediate])<< 16) | (VM_memory[RF[rs] + immediate + 1])) & 0x7FFF) | ((VM_memory[RF[rs] + immediate + 1]) & 0x8000) << 16;
 				break;
 			}
 			case 0b100101: { //lhu     100101  LoadStore       $t = ZE (MEM [$s + i]:2)
-				RF[rt] = (((VM_memory[RF[rs] + immediate]) | (VM_memory[RF[rs] + immediate + 1])) & 0xFFFF);
+				RF[rt] = ((((VM_memory[RF[rs] + immediate])<<16) | (VM_memory[RF[rs] + immediate + 1])) & 0xFFFF);
 				break;
 			}
 			case 0b100011: { //lw      100011  LoadStore       $t = MEM [$s + i]:4
 #if DEBUGING 
 				printf(">>>LW\t\t&RT: %x RS: %x I: %x(t = mem[RS + I])\n", rt, RF[rs], immediate);
 #endif
-			  	RF[rt] = (VM_memory[RF[rs] + immediate]) | (VM_memory[RF[rs] + immediate + 1]) | (VM_memory[RF[rs] + immediate + 2])| (VM_memory[RF[rs] + immediate + 3]);
+			  	RF[rt] = ((VM_memory[RF[rs] + immediate]) << 24) | ((VM_memory[RF[rs] + immediate + 1]) << 16) | ((VM_memory[RF[rs] + immediate + 2]) << 8)| (VM_memory[RF[rs] + immediate + 3]);
 				break;
 			}
 			case 0b101000: { //sb      101000  LoadStore       MEM [$s + i]:1 = LB ($t)
@@ -400,9 +404,9 @@ void print_memory(void)
 void print_registers(void)
 {
 	int i;
-	for (i = 0; i < 31; i++)
+	for (i = 0; i < 32; i++)
 	{
-		printf ("%x\n", RF[i]);
+		printf ("%d:%x\n",i+1 ,RF[i]);
 	}
 }
 #endif
