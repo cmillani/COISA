@@ -22,7 +22,13 @@
 extern "C" {
 #endif
 
-
+#import "CONFIG_serial.h"
+#import "ARCH_serial.h"
+	
+#ifndef SERIAL
+#define SERIAL
+	
+#endif
 
 #ifdef __cplusplus
 }

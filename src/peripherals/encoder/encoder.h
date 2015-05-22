@@ -21,6 +21,14 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+	
+#include "ARCH_encoder.h"
+#include "CONFIG_encoder.h"
+	
+#ifndef ENCODER
+#define ENCODER
+	
+#endif
     
 #ifdef __cplusplus
 }

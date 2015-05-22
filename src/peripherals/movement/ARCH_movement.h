@@ -21,15 +21,16 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+	
+#ifndef ARCH_MOVEMENT
+#define ARCH_MOVEMENT
+	
+void ahead(void);
+void turn_left(void);
+void turn_right(void);
 
-#include "ARCH_ultrasonic.h"
-#include "CONFIG_ultrasonic.h"	
+#endif ARCH_MOVEMENT
 
-#ifndef ULTRASONIC	
-#define ULTRASONIC
-
-
-#endif //ULTRASONIC
 #ifdef __cplusplus
 }
 #endif

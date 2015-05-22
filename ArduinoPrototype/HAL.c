@@ -23,7 +23,7 @@ extern "C" {
 #endif    
 
 #include "HAL.h"
-#if DEBUGING
+#if PRINTING
 #include <stdio.h>
 #endif
 
@@ -39,11 +39,63 @@ uint8_t hal_call(uint32_t sensid)//Call to hardware I/O
 	switch (sensid)
 	{
 		case 0: { //Read Ultrasonic
-#if DEBUGING
-			printf("Hal read called\n");
+#if PRINTING
+			printf("(HAL)Read Ultra called\n");
 #endif
+			break;
+		}
+		case 1: {
+#if PRINTING
+			printf("(HAL)Config Ultra called\n");
+#endif
+			break;
+		}
+		case 5 : {
+#if PRINTING
+			printf("(HAL)Read Encoder Cound called\n");
+#endif			
+			break;
+		}
+		case 6 : {
+#if PRINTING
+			printf("(HAL)Read Encoder Time called\n");
+#endif			
+			break;
+		}
+		case 10: {
+#if PRINTING
+			printf("(HAL)Send Byte called\n");
+#endif			
+			break;
+		}
+		case 11: {
+#if PRINTING
+			printf("(HAL)Read Byte called\n");
+#endif		
+			break;	
+		}
+		case 15: {
+#if PRINTING
+			printf("(HAL)Ahead called\n");
+#endif		
+			break;
+		}
+		case 16: { 
+#if PRINTING
+			printf("(HAL)Right called\n");
+#endif		
+			break;
+		}
+		case 17: {
+#if PRINTING
+			printf("(HAL)Left called\n");
+#endif		
+			break;
 		}
 		default:
+#if PRINTING
+			printf("(HAL) error - Unknown Hal Call number\n");
+#endif		
 			break;
 	}
 	return retval;

@@ -1,0 +1,20 @@
+Syscall & Halcall Info:
+
+Syscalls:
+	10: Exit
+	11: System Startup
+	12: Hal Call
+
+Halcalls:
+	0: Ultrasonic Read
+	1: Ultrasonic Configure
+	
+	5: Read encoder count
+	6: Read encoder time between "holes""
+	
+	10:Serial send byte
+	11:Serial read byte
+	
+	15:Go ahead
+	16:Turn Right
+	17:Turn Left

@@ -26,7 +26,9 @@ extern "C" {
 #ifndef CONFIG
 #define CONFIG
 	
-#define DEBUGING 1
+#define DEBUGING 0
+	
+#define PRINTING 1
 
 #include "ARCH/atmega328/atmega328.h"
 
@@ -36,7 +38,7 @@ extern "C" {
 	
 #define HAS_INFRARED 0
 	
-#define HAS_ENCODER 0
+#define HAS_ENCODER 1
 #if HAS_ENCODER
 #define PIN_ENCODER
 #endif
@@ -47,7 +49,7 @@ extern "C" {
 #define PIN_TRIG
 #endif
 	
-#define HAS_SERIAL 0
+#define HAS_SERIAL 1
 #if HAS_SERIAL
 #define RX
 #define TX

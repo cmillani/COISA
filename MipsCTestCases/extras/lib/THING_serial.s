@@ -1,16 +1,16 @@
 .text
 .align 2
-.globl read_ultrassonic
+.globl send_byte
 .globl configure_ultrassonic
 
-read_ultrassonic:
+send_byte:
 	li		$v0, 12		# $v0 = 11
-	li		$a0, 0		# $a0 = 1
+	li		$a0, 10		# $a0 = 1
 	syscall 
 	jr		$31					# jump to $31
 	
-configure_ultrassonic:
+read_byte:
 	li		$v0, 12		# $v0 = 11
-	li		$a0, 1		# $a0 = 1
+	li		$a0, 11		# $a0 = 1
 	syscall 
 	jr		$31					# jump to $31

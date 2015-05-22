@@ -13,7 +13,7 @@ AS=/opt/cross/mips-binutils/bin/mips-unknown-elf-as
 	$(HOME)/ellcc/bin/ecc -target mips-linux-eng -S $< -O0 -nostdlib -fno-exceptions -fno-rtti -static -o $@
 
 %.o: %.s
-	$(AS) $< extras/crt0.s extras/THING_ultrasonic.s -o $@
+	$(AS) $< extras/crt0.s extras/lib/THING_ultrasonic.s extras/lib/THING_serial.s extras/lib/THING_encoder.s extras/lib/THING_movement.s -o $@
 
 %.bin: %.o
 	$(LD) -T $(LD_SCRIPT) $< -o $@
