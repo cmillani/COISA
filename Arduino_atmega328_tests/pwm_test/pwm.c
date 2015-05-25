@@ -22,10 +22,40 @@
 extern "C" {
 #endif
 	
-#ifndef ARCH_ULTRASONIC
-#define ARCH_ULTRASONIC
-uint8_t read_ultrassonic(void); //Defined on ARCH
-#endif //ARCH_ULTRASONIC
+#include "pwm.h"
+    
+void set_PWM(int pin, int duty_cycle)
+{
+  switch (pin)
+  {
+    case 1: // OC2B
+    {
+      break;
+    }
+    case 2: // OC0B
+    {
+      break;
+    }
+    case 3: // OC0A
+    {
+      break;
+    }
+    case 19:// OC1A
+    {
+      break;
+    }
+    case 21:// OC1B
+    {
+      break;
+    }
+    case 22:// OC2A
+    {
+      TCCR0A |= (1 << COM0A1) | (1 << WGM01) | (1 << WGM00) | (1 << CS01);
+      OCR0A = duty_cycle;
+      break;
+    }
+  }
+}
 
 #ifdef __cplusplus
 }

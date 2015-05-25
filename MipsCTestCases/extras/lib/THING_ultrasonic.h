@@ -3,6 +3,3 @@
 #define IN 0
 int read_ultrasonic(void); //Defined on ARCH
 void configure_ultrasonic(unsigned int mode);
-/*RX/TX Comm*/
-
-/*Encoder*/

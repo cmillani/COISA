@@ -18,15 +18,20 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
+#include <avr/io.h>
+#include <stdint.h> 
+
 #ifdef __cplusplus
 extern "C" {
 #endif
-	
-#ifndef ARCH_ULTRASONIC
-#define ARCH_ULTRASONIC
-uint8_t read_ultrassonic(void); //Defined on ARCH
-#endif //ARCH_ULTRASONIC
+#ifndef SERIAL
+#define SERIAL
+    
+void serial_init(unsigned int baudrate);
+void serial_send(char a);
+char serial_read(void);
 
+#endif
 #ifdef __cplusplus
 }
 #endif

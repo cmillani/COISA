@@ -22,11 +22,13 @@
 extern "C" {
 #endif
 	
-#ifndef ARCH_ULTRASONIC
-#define ARCH_ULTRASONIC
-uint8_t read_ultrassonic(void); //Defined on ARCH
-#endif //ARCH_ULTRASONIC
+#ifndef ARCH_PWM	
+#define ARCH_PWM
 
+void set_PWM(int pin, int duty_cycle);
+
+#endif
+	
 #ifdef __cplusplus
 }
 #endif

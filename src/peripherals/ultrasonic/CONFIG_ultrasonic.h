@@ -22,11 +22,16 @@
 extern "C" {
 #endif
 	
+#ifndef CONFIG_ULTRASONIC
+#define CONFIG_ULTRASONIC
+
 #define CM 1 //Used to configure the ultrassonic read
 #define IN 0
 
 extern uint8_t conversion_factor; //Default: convert to cm (29/2), in is 148 (74/2)
 void configure_ultrassonic(uint8_t mode); //Inches or centimeters
+
+#endif
 
 #ifdef __cplusplus
 }

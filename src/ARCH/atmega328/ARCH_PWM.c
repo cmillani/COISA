@@ -21,11 +21,11 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+void set_PWM(int pin, int duty_cycle)
+{
 	
-#ifndef ARCH_ULTRASONIC
-#define ARCH_ULTRASONIC
-uint8_t read_ultrassonic(void); //Defined on ARCH
-#endif //ARCH_ULTRASONIC
+}
 
 #ifdef __cplusplus
 }

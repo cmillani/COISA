@@ -74,6 +74,11 @@ uint8_t hal_call(uint32_t sensid)//Call to hardware I/O
 #endif		
 			break;	
 		}
+		case 12: {
+#if PRINTING
+			printf("(HAL)Configure serial called\n");
+#endif		
+		}
 		case 15: {
 #if PRINTING
 			printf("(HAL)Ahead called\n");
@@ -91,6 +96,11 @@ uint8_t hal_call(uint32_t sensid)//Call to hardware I/O
 			printf("(HAL)Left called\n");
 #endif		
 			break;
+		}
+		case 20: {
+#if PRINTING
+			printf("(HAL)PWM called\n");
+#endif		
 		}
 		default:
 #if PRINTING

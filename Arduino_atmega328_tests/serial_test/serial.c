@@ -22,10 +22,25 @@
 extern "C" {
 #endif
 	
-#ifndef ARCH_ULTRASONIC
-#define ARCH_ULTRASONIC
-uint8_t read_ultrassonic(void); //Defined on ARCH
-#endif //ARCH_ULTRASONIC
+#include "serial.h"
+    
+void serial_init(unsigned int baudrate)
+{
+	UBRR0H = (16000000/16/baudrate -1 >> 8);
+	UBRR0L = (16000000/16/baudrate -1);
+	
+	UCSR0B |= (1 << RXEN0) | (1 << TXEN0);
+}
+void serial_send(char a)
+{
+  while (!(UCSR0A & (1 << UDRE0))); // Wait until buffer is empty
+  UDR0 = a;
+}
+char serial_read(void)
+{
+  while (!(UCSR0A & (1 << RXC0)));
+  return UDR0;
+}
 
 #ifdef __cplusplus
 }

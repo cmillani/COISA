@@ -27,7 +27,7 @@ extern "C" {
 #ifndef MOVEMENT
 #define MOVEMENT
 	
-#endif MOVEMENT//movement.h
+#endif //movement.h
     
 #ifdef __cplusplus
 }

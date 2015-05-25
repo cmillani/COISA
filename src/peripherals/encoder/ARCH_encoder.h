@@ -27,8 +27,9 @@ extern "C" {
 	
 unsigned int read_encoder_counter(void); //Defined on ARCH
 unsigned int read_encoder_time(void);
+void start_encoder(void);
 
-#endif ARCH_ENCODER
+#endif //ARCH_ENCODER
 	
 #ifdef __cplusplus
 }

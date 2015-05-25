@@ -18,15 +18,18 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
+#include <avr/io.h>
+#include <stdint.h> 
+
 #ifdef __cplusplus
 extern "C" {
 #endif
-	
-#ifndef ARCH_ULTRASONIC
-#define ARCH_ULTRASONIC
-uint8_t read_ultrassonic(void); //Defined on ARCH
-#endif //ARCH_ULTRASONIC
+#ifndef PWM
+#define PWM
+    
+void set_PWM(int pin, int duty_cycle);
 
+#endif
 #ifdef __cplusplus
 }
 #endif

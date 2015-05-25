@@ -25,7 +25,7 @@ extern "C" {
 #ifndef CONFIG_ENCODER
 #define CONFIG_ENCODER
 	
-#endif CONFIG_ENCODER
+#endif //CONFIG_ENCODER
 	
 #ifdef __cplusplus
 }

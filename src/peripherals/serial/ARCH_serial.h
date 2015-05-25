@@ -27,8 +27,9 @@ extern "C" {
 	
 void send_byte(unsigned char byte);
 char read_byte(void);	
+void serial_configure(unsigned int baudrate); //Allow user to enable and disable interruptions later
 
-#endif ARCH_SERIAL
+#endif //ARCH_SERIAL
 	
 #ifdef __cplusplus
 }

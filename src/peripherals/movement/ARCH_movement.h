@@ -29,7 +29,7 @@ void ahead(void);
 void turn_left(void);
 void turn_right(void);
 
-#endif ARCH_MOVEMENT
+#endif
 
 #ifdef __cplusplus
 }
