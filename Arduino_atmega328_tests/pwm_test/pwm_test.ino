@@ -7,9 +7,13 @@ void setup() {
   pinMode(9, OUTPUT);
   pinMode(10, OUTPUT);
   pinMode(11, OUTPUT);
-  set_PWM(22, 255);
+  //set_PWM(1, 255);
+  set_PWM(3, 255);
+  set_PWM(2, 255);
   delay(1000);
-  set_PWM(22, 10);
+  //set_PWM(1, 10);
+  set_PWM(3, 10);
+  set_PWM(2, 10);
 }
 
 void loop() {

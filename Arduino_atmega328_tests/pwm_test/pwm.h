@@ -26,7 +26,14 @@ extern "C" {
 #endif
 #ifndef PWM
 #define PWM
-    
+
+#define ARDUINO_3  19
+#define ARDUINO_5  21
+#define ARDUINO_6  22
+#define ARDUINO_9  1
+#define ARDUINO_10 2
+#define ARDUINO_11 3
+
 void set_PWM(int pin, int duty_cycle);
 
 #endif

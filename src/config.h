@@ -40,7 +40,8 @@ extern "C" {
 	
 #define HAS_ENCODER 1
 #if HAS_ENCODER
-#define PIN_ENCODER
+#define PIN_ENCODER1
+#define PIN_ENCODER2
 #endif
 	
 #define HAS_ULTRASONIC 1
@@ -51,8 +52,6 @@ extern "C" {
 	
 #define HAS_SERIAL 1
 #if HAS_SERIAL
-#define RX
-#define TX
 #endif 
 
 #endif /*CONFIG*/
