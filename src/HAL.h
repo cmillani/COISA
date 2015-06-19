@@ -57,7 +57,7 @@ uint8_t remove_handler();
 #endif
 
 #if HAS_ENCODER
-
+#include "peripherals/encoder/encoder.h"
 #endif
 
 #if HAS_INFRARED
@@ -73,7 +73,7 @@ uint8_t remove_handler();
 #endif
 
 #if HAS_SERIAL
-
+#include "peripherals/serial/serial.h"
 #endif
 
 #endif /*HAL*/

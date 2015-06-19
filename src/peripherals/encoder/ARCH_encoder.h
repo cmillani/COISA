@@ -25,8 +25,11 @@ extern "C" {
 #ifndef ARCH_ENCODER
 #define ARCH_ENCODER
 	
-unsigned int read_encoder_counter(void); //Defined on ARCH
-unsigned int read_encoder_time(void);
+#define RIGHT 1
+#define LEFT 0
+	
+uint32_t read_encoder_counter(int side); //Defined on ARCH
+uint32_t read_encoder_time(int side);
 void start_encoder(void);
 
 #endif //ARCH_ENCODER

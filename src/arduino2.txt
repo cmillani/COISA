@@ -1,0 +1,106 @@
+
+/Applications/NewArduino.app/Contents/Java/hardware/tools/avr/bin/avr-g++ -c -g -Os -w -fno-exceptions -ffunction-sections -fdata-sections -fno-threadsafe-statics -MMD -mmcu=atmega328p -DF_CPU=16000000L -DARDUINO=10603 -DARDUINO_AVR_UNO -DARDUINO_ARCH_AVR -I/Applications/NewArduino.app/Contents/Java/hardware/arduino/avr/cores/arduino -I/Applications/NewArduino.app/Contents/Java/hardware/arduino/avr/variants/standard /var/folders/r8/j6rlt24n47vb95h4dygn6j7h0000gn/T/build1096331398648253434.tmp/Blink.cpp -o /var/folders/r8/j6rlt24n47vb95h4dygn6j7h0000gn/T/build1096331398648253434.tmp/Blink.cpp.o 
+Using previously compiled file: /var/folders/r8/j6rlt24n47vb95h4dygn6j7h0000gn/T/build1096331398648253434.tmp/hooks.c.o
+Using previously compiled file: /var/folders/r8/j6rlt24n47vb95h4dygn6j7h0000gn/T/build1096331398648253434.tmp/WInterrupts.c.o
+Using previously compiled file: /var/folders/r8/j6rlt24n47vb95h4dygn6j7h0000gn/T/build1096331398648253434.tmp/wiring.c.o
+Using previously compiled file: /var/folders/r8/j6rlt24n47vb95h4dygn6j7h0000gn/T/build1096331398648253434.tmp/wiring_analog.c.o
+Using previously compiled file: /var/folders/r8/j6rlt24n47vb95h4dygn6j7h0000gn/T/build1096331398648253434.tmp/wiring_digital.c.o
+Using previously compiled file: /var/folders/r8/j6rlt24n47vb95h4dygn6j7h0000gn/T/build1096331398648253434.tmp/wiring_pulse.c.o
+Using previously compiled file: /var/folders/r8/j6rlt24n47vb95h4dygn6j7h0000gn/T/build1096331398648253434.tmp/wiring_shift.c.o
+Using previously compiled file: /var/folders/r8/j6rlt24n47vb95h4dygn6j7h0000gn/T/build1096331398648253434.tmp/abi.cpp.o
+Using previously compiled file: /var/folders/r8/j6rlt24n47vb95h4dygn6j7h0000gn/T/build1096331398648253434.tmp/CDC.cpp.o
+Using previously compiled file: /var/folders/r8/j6rlt24n47vb95h4dygn6j7h0000gn/T/build1096331398648253434.tmp/HardwareSerial.cpp.o
+Using previously compiled file: /var/folders/r8/j6rlt24n47vb95h4dygn6j7h0000gn/T/build1096331398648253434.tmp/HardwareSerial0.cpp.o
+Using previously compiled file: /var/folders/r8/j6rlt24n47vb95h4dygn6j7h0000gn/T/build1096331398648253434.tmp/HardwareSerial1.cpp.o
+Using previously compiled file: /var/folders/r8/j6rlt24n47vb95h4dygn6j7h0000gn/T/build1096331398648253434.tmp/HardwareSerial2.cpp.o
+Using previously compiled file: /var/folders/r8/j6rlt24n47vb95h4dygn6j7h0000gn/T/build1096331398648253434.tmp/HardwareSerial3.cpp.o
+Using previously compiled file: /var/folders/r8/j6rlt24n47vb95h4dygn6j7h0000gn/T/build1096331398648253434.tmp/HID.cpp.o
+Using previously compiled file: /var/folders/r8/j6rlt24n47vb95h4dygn6j7h0000gn/T/build1096331398648253434.tmp/IPAddress.cpp.o
+Using previously compiled file: /var/folders/r8/j6rlt24n47vb95h4dygn6j7h0000gn/T/build1096331398648253434.tmp/main.cpp.o
+Using previously compiled file: /var/folders/r8/j6rlt24n47vb95h4dygn6j7h0000gn/T/build1096331398648253434.tmp/new.cpp.o
+Using previously compiled file: /var/folders/r8/j6rlt24n47vb95h4dygn6j7h0000gn/T/build1096331398648253434.tmp/Print.cpp.o
+Using previously compiled file: /var/folders/r8/j6rlt24n47vb95h4dygn6j7h0000gn/T/build1096331398648253434.tmp/Stream.cpp.o
+Using previously compiled file: /var/folders/r8/j6rlt24n47vb95h4dygn6j7h0000gn/T/build1096331398648253434.tmp/Tone.cpp.o
+Using previously compiled file: /var/folders/r8/j6rlt24n47vb95h4dygn6j7h0000gn/T/build1096331398648253434.tmp/USBCore.cpp.o
+Using previously compiled file: /var/folders/r8/j6rlt24n47vb95h4dygn6j7h0000gn/T/build1096331398648253434.tmp/WMath.cpp.o
+Using previously compiled file: /var/folders/r8/j6rlt24n47vb95h4dygn6j7h0000gn/T/build1096331398648253434.tmp/WString.cpp.o
+Using previously compiled file: /var/folders/r8/j6rlt24n47vb95h4dygn6j7h0000gn/T/build1096331398648253434.tmp/core.a
+/Applications/NewArduino.app/Contents/Java/hardware/tools/avr/bin/avr-gcc -w -Os -Wl,--gc-sections -mmcu=atmega328p -o /var/folders/r8/j6rlt24n47vb95h4dygn6j7h0000gn/T/build1096331398648253434.tmp/Blink.cpp.elf /var/folders/r8/j6rlt24n47vb95h4dygn6j7h0000gn/T/build1096331398648253434.tmp/Blink.cpp.o /var/folders/r8/j6rlt24n47vb95h4dygn6j7h0000gn/T/build1096331398648253434.tmp/core.a -L/var/folders/r8/j6rlt24n47vb95h4dygn6j7h0000gn/T/build1096331398648253434.tmp -lm 
+/Applications/NewArduino.app/Contents/Java/hardware/tools/avr/bin/avr-objcopy -O ihex -j .eeprom --set-section-flags=.eeprom=alloc,load --no-change-warnings --change-section-lma .eeprom=0 /var/folders/r8/j6rlt24n47vb95h4dygn6j7h0000gn/T/build1096331398648253434.tmp/Blink.cpp.elf /var/folders/r8/j6rlt24n47vb95h4dygn6j7h0000gn/T/build1096331398648253434.tmp/Blink.cpp.eep 
+/Applications/NewArduino.app/Contents/Java/hardware/tools/avr/bin/avr-objcopy -O ihex -R .eeprom /var/folders/r8/j6rlt24n47vb95h4dygn6j7h0000gn/T/build1096331398648253434.tmp/Blink.cpp.elf /var/folders/r8/j6rlt24n47vb95h4dygn6j7h0000gn/T/build1096331398648253434.tmp/Blink.cpp.hex 
+
+Sketch uses 1,030 bytes (3%) of program storage space. Maximum is 32,256 bytes.
+Global variables use 9 bytes (0%) of dynamic memory, leaving 2,039 bytes for local variables. Maximum is 2,048 bytes.
+/Applications/NewArduino.app/Contents/Java/hardware/tools/avr/bin/avrdude -C/Applications/NewArduino.app/Contents/Java/hardware/tools/avr/etc/avrdude.conf -v -patmega328p -carduino -P/dev/cu.usbmodem1411 -b115200 -D -Uflash:w:/var/folders/r8/j6rlt24n47vb95h4dygn6j7h0000gn/T/build1096331398648253434.tmp/Blink.cpp.hex:i 
+
+avrdude: Version 6.0.1, compiled on Mar 30 2015 at 12:15:29
+         Copyright (c) 2000-2005 Brian Dean, http://www.bdmicro.com/
+         Copyright (c) 2007-2009 Joerg Wunsch
+
+         System wide configuration file is "/Applications/NewArduino.app/Contents/Java/hardware/tools/avr/etc/avrdude.conf"
+         User configuration file is "/Users/carlos/.avrduderc"
+         User configuration file does not exist or is not a regular file, skipping
+
+         Using Port                    : /dev/cu.usbmodem1411
+         Using Programmer              : arduino
+         Overriding Baud Rate          : 115200
+         AVR Part                      : ATmega328P
+         Chip Erase delay              : 9000 us
+         PAGEL                         : PD7
+         BS2                           : PC2
+         RESET disposition             : dedicated
+         RETRY pulse                   : SCK
+         serial program mode           : yes
+         parallel program mode         : yes
+         Timeout                       : 200
+         StabDelay                     : 100
+         CmdexeDelay                   : 25
+         SyncLoops                     : 32
+         ByteDelay                     : 0
+         PollIndex                     : 3
+         PollValue                     : 0x53
+         Memory Detail                 :
+
+                                  Block Poll               Page                       Polled
+           Memory Type Mode Delay Size  Indx Paged  Size   Size #Pages MinW  MaxW   ReadBack
+           ----------- ---- ----- ----- ---- ------ ------ ---- ------ ----- ----- ---------
+           eeprom        65    20     4    0 no       1024    4      0  3600  3600 0xff 0xff
+           flash         65     6   128    0 yes     32768  128    256  4500  4500 0xff 0xff
+           lfuse          0     0     0    0 no          1    0      0  4500  4500 0x00 0x00
+           hfuse          0     0     0    0 no          1    0      0  4500  4500 0x00 0x00
+           efuse          0     0     0    0 no          1    0      0  4500  4500 0x00 0x00
+           lock           0     0     0    0 no          1    0      0  4500  4500 0x00 0x00
+           calibration    0     0     0    0 no          1    0      0     0     0 0x00 0x00
+           signature      0     0     0    0 no          3    0      0     0     0 0x00 0x00
+
+         Programmer Type : Arduino
+         Description     : Arduino
+         Hardware Version: 3
+         Firmware Version: 4.4
+         Vtarget         : 0.3 V
+         Varef           : 0.3 V
+         Oscillator      : 28.800 kHz
+         SCK period      : 3.3 us
+
+avrdude: AVR device initialized and ready to accept instructions
+
+Reading | ################################################## | 100% 0.01s
+
+avrdude: Device signature = 0x1e950f
+avrdude: reading input file "/var/folders/r8/j6rlt24n47vb95h4dygn6j7h0000gn/T/build1096331398648253434.tmp/Blink.cpp.hex"
+avrdude: writing flash (1030 bytes):
+
+Writing | ################################################## | 100% 0.18s
+
+avrdude: 1030 bytes of flash written
+avrdude: verifying flash memory against /var/folders/r8/j6rlt24n47vb95h4dygn6j7h0000gn/T/build1096331398648253434.tmp/Blink.cpp.hex:
+avrdude: load data flash data from input file /var/folders/r8/j6rlt24n47vb95h4dygn6j7h0000gn/T/build1096331398648253434.tmp/Blink.cpp.hex:
+avrdude: input file /var/folders/r8/j6rlt24n47vb95h4dygn6j7h0000gn/T/build1096331398648253434.tmp/Blink.cpp.hex contains 1030 bytes
+avrdude: reading on-chip flash data:
+
+Reading | ################################################## | 100% 0.15s
+
+avrdude: verifying ...
+avrdude: 1030 bytes of flash verified
+
+avrdude done.  Thank you.

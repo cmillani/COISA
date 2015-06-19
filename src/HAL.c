@@ -52,8 +52,9 @@ uint8_t hal_call(uint32_t sensid)//Call to hardware I/O
 		}
 		case 5 : {
 #if PRINTING
-			printf("(HAL)Read Encoder Cound called\n");
+			printf("(HAL)Read Encoder Count called\n");
 #endif			
+			read_encoder_counter(coisa4);
 			break;
 		}
 		case 6 : {

@@ -18,98 +18,24 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
+#include <avr/io.h>
+#include <stdint.h> 
+
 #ifdef __cplusplus
 extern "C" {
-#endif    
-
-#include "HAL.h"
-#if PRINTING
-#include <stdio.h>
 #endif
 
-/*Defined peripherals ids:
-	Ultrasonic		0
-	Serial			1
-	Encoder			2
-*/
+#ifndef ENCODER
+#define ENCODER
 
-uint8_t hal_call(uint32_t sensid)//Call to hardware I/O
-{
-	uint8_t retval = -1;
-	switch (sensid)
-	{
-		case 0: { //Read Ultrasonic
-#if PRINTING
-			printf("(HAL)Read Ultra called\n");
+#define RIGHT 1
+#define LEFT 0
+
+uint32_t read_encoder_counter(int side); //Defined on ARCH
+uint32_t read_encoder_time(int side);
+void start_encoder(void);
+
 #endif
-			break;
-		}
-		case 1: {
-#if PRINTING
-			printf("(HAL)Config Ultra called\n");
-#endif
-			break;
-		}
-		case 5 : {
-#if PRINTING
-			printf("(HAL)Read Encoder Cound called\n");
-#endif			
-			break;
-		}
-		case 6 : {
-#if PRINTING
-			printf("(HAL)Read Encoder Time called\n");
-#endif			
-			break;
-		}
-		case 10: {
-#if PRINTING
-			printf("(HAL)Send Byte called\n");
-#endif			
-			break;
-		}
-		case 11: {
-#if PRINTING
-			printf("(HAL)Read Byte called\n");
-#endif		
-			break;	
-		}
-		case 12: {
-#if PRINTING
-			printf("(HAL)Configure serial called\n");
-#endif		
-		}
-		case 15: {
-#if PRINTING
-			printf("(HAL)Ahead called\n");
-#endif		
-			break;
-		}
-		case 16: { 
-#if PRINTING
-			printf("(HAL)Right called\n");
-#endif		
-			break;
-		}
-		case 17: {
-#if PRINTING
-			printf("(HAL)Left called\n");
-#endif		
-			break;
-		}
-		case 20: {
-#if PRINTING
-			printf("(HAL)PWM called\n");
-#endif		
-		}
-		default:
-#if PRINTING
-			printf("(HAL) error - Unknown Hal Call number\n");
-#endif		
-			break;
-	}
-	return retval;
-}
 
 #ifdef __cplusplus
 }
