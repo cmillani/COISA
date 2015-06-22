@@ -24,7 +24,7 @@ extern "C" {
 
 #include <avr/interrupt.h>
 #include <avr/io.h>
-#include "../../peripherals/serial/ARCH_serial.h"
+#include "../../peripherals/encoder/ARCH_encoder.h"
 #include <stdint.h>
 #include <stdbool.h>
 

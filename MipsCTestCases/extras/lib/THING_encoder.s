@@ -6,18 +6,18 @@
 
 read_encoder_counter:
 	li		$v0, 12		# $v0 = 11
-	li		$a0, 5		# $a0 = 0
+	li		$v1, 5		# $a0 = 0
 	syscall 
 	jr		$31					# jump to $31
 	
 read_encoder_time:
 	li		$v0, 12		# $v0 = 11
-	li		$a0, 6		# $a0 = 0
+	li		$v1, 6		# $a0 = 0
 	syscall 
 	jr		$31					# jump to $31
 
 start_encoder:
 	li		$v0, 12		# $v0 = 11
-	li		$a0, 7		# $a0 = 0
+	li		$v1, 7		# $a0 = 0
 	syscall 
 	jr		$31					# jump to $31

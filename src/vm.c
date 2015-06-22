@@ -42,7 +42,7 @@ void print_registers(void);
 #include <stdio.h>
 #endif
 
-typedef struct decoded_instruction
+/*typedef struct decoded_instruction
 {
   uint8_t op;
   union {
@@ -58,7 +58,7 @@ typedef struct decoded_instruction
       uint32_t address;
     } J;
   };
-} decoded_instruction_t;
+} decoded_instruction_t;*/
 
 
 /*
@@ -85,7 +85,6 @@ void vm_cpu()
 
 	while (!halted) 
 	{
-
 		uint32_t instr = fetch(PC);
 		uint8_t op = (instr >> 26) & 0x3F;
 #if DEBUGING

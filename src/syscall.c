@@ -45,7 +45,7 @@ uint8_t syscall(uint8_t trap_code)
 			break;
 		}
 		case 12: { //Hall Call
-			RF[2] = hal_call(RF[4]);
+			RF[2] = hal_call(RF[3]);
 		}
 		
 		// TODO Insert hall 

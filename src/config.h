@@ -26,6 +26,8 @@ extern "C" {
 #ifndef CONFIG
 #define CONFIG
 	
+#define IS_ARDUINO 1
+	
 #define DEBUGING 0
 	
 #define PRINTING 0
@@ -44,7 +46,7 @@ extern "C" {
 #define PIN_ENCODER2
 #endif
 	
-#define HAS_ULTRASONIC 1
+#define HAS_ULTRASONIC 0
 #if HAS_ULTRASONIC
 #define PIN_ECHO
 #define PIN_TRIG
