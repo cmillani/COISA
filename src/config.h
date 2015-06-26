@@ -28,7 +28,7 @@ extern "C" {
 	
 #define DEBUGING 0
 	
-#define PRINTING 0
+#define PRINTING 1
 
 #include "ARCH/atmega328/atmega328.h"
 

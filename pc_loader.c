@@ -22,16 +22,16 @@ int main(int argc, char * argv[])
 	int i = 0;
 	uint8_t byte;
 	
-	if (argc < 3) return 1;
-	printf("reading %s\n",argv[2]);
-	manifest = fopen(argv[2], "r");
+	if (argc < 2) return 1;
+	// printf("reading %s\n",argv[2]);
+	// manifest = fopen(argv[2], "r");
 	
-	if (!manifest_state_machine(manifest)) return 1; //TODO print error log
+	// if (!manifest_state_machine(manifest)) return 1; //TODO print error log
 	
-	fclose(manifest);
+	// fclose(manifest);
 	
 	binary = fopen(argv[1], "rb");
-	
+	printf("Loading...\n");
 	while(fread(&byte,sizeof(uint8_t),1,binary))
 	{
 		printf("%2x", byte);
@@ -40,6 +40,7 @@ int main(int argc, char * argv[])
 	}
 	printf("\n");
 	fclose(binary);
+	printf("Starting VM:\n");
 	vm_cpu();
 	
 	return 0;
