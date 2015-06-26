@@ -42,6 +42,8 @@ void print_registers(void);
 #include <stdio.h>
 #endif
 
+#include "HAL.h"
+
 /*typedef struct decoded_instruction
 {
   uint8_t op;
@@ -82,7 +84,6 @@ void vm_cpu()
 #if PRINTING
 		printf("<>SP:%x FP:%x\n", RF[29], RF[30]);
 #endif
-
 	while (!halted) 
 	{
 		uint32_t instr = fetch(PC);
@@ -113,7 +114,6 @@ void vm_cpu()
 		uint32_t address = (instr >> 0) & 0x3FFFFFF;
 		
 		//TODO Handle events here!
-		
 		switch (op) 
 		{
 			case 0x0: { // 000000 => Register encoding.
@@ -325,18 +325,18 @@ void vm_cpu()
 				break;
 			}
 			case 0b100001: { //lh      100001  LoadStore       $t = SE (MEM [$s + i]:2)
-			  	RF[rt] = ((((VM_memory[RF[rs] + immediate])<< 16) | (VM_memory[RF[rs] + immediate + 1])) & 0x7FFF) | ((VM_memory[RF[rs] + immediate + 1]) & 0x8000) << 16;
+			  	RF[rt] = ((((uint32_t)(VM_memory[RF[rs] + immediate])<< 16) | (VM_memory[RF[rs] + immediate + 1])) & 0x7FFF) | (uint32_t)((VM_memory[RF[rs] + immediate + 1]) & 0x8000) << 16;
 				break;
 			}
 			case 0b100101: { //lhu     100101  LoadStore       $t = ZE (MEM [$s + i]:2)
-				RF[rt] = ((((VM_memory[RF[rs] + immediate])<<16) | (VM_memory[RF[rs] + immediate + 1])) & 0xFFFF);
+				RF[rt] = ((((uint32_t)(VM_memory[RF[rs] + immediate])<<16) | (VM_memory[RF[rs] + immediate + 1])) & 0xFFFF);
 				break;
 			}
 			case 0b100011: { //lw      100011  LoadStore       $t = MEM [$s + i]:4
 #if PRINTING 
 				printf(">>>LW\t\t&RT: %x RS: %x I: %x(t = mem[RS + I])\n", rt, RF[rs], immediate);
 #endif
-			  	RF[rt] = ((VM_memory[RF[rs] + immediate]) << 24) | ((VM_memory[RF[rs] + immediate + 1]) << 16) | ((VM_memory[RF[rs] + immediate + 2]) << 8)| (VM_memory[RF[rs] + immediate + 3]);
+			  	RF[rt] = ((uint32_t)(VM_memory[RF[rs] + immediate]) << 24) | ((uint32_t)(VM_memory[RF[rs] + immediate + 1]) << 16) | ((uint32_t)(VM_memory[RF[rs] + immediate + 2]) << 8)| (VM_memory[RF[rs] + immediate + 3]);
 				break;
 			}
 			case 0b101000: { //sb      101000  LoadStore       MEM [$s + i]:1 = LB ($t)
@@ -392,7 +392,8 @@ uint32_t fetch(uint32_t PC)
 #if PRINTING
 	printf("<Will fetch %x\n", PC);
 #endif	
-	return ((VM_memory[PC] <<24) | (VM_memory[PC+1] <<16) | (VM_memory[PC+2] <<8) | (VM_memory[PC+3]));
+	uint32_t ret_val = (((uint32_t)VM_memory[PC] <<24) | ((uint32_t)VM_memory[PC+1] <<16) | ((uint32_t)VM_memory[PC+2] <<8) | ((uint32_t)VM_memory[PC+3]));
+	return ret_val;
 }
     
 #if PRINTING

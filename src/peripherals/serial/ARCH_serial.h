@@ -24,10 +24,12 @@ extern "C" {
 	
 #ifndef ARCH_SERIAL	
 #define ARCH_SERIAL
+#include <stdint.h>
 	
 void send_byte(unsigned char byte);
 char read_byte(void);	
 void serial_configure(unsigned int baudrate); //Allow user to enable and disable interruptions later
+void print_int(uint32_t number);
 
 #endif //ARCH_SERIAL
 	
