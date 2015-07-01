@@ -18,17 +18,20 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
+/*Definitions for an atmega328 based device*/
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#include "CONFIG_serial.h"
-#include "ARCH_serial.h"
-	
-#ifndef SERIAL
-#define SERIAL
-	
-#endif
+
+/* Is processor already defined? */
+#ifndef PROCESSOR
+#define PROCESSOR "i386"
+
+#define PROCESSOR_MEMORY_SZ 1024*1024 /* (1/2)k */
+
+#endif /*PROCESSOR*/
 
 #ifdef __cplusplus
 }

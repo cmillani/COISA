@@ -81,9 +81,6 @@ void vm_cpu()
 	uint32_t PC = 0;
 	uint8_t halted = 0;
 
-#if PRINTING
-		printf("<>SP:%x FP:%x\n", RF[29], RF[30]);
-#endif
 	while (!halted) 
 	{
 		uint32_t instr = fetch(PC);
@@ -119,9 +116,6 @@ void vm_cpu()
 			case 0x0: { // 000000 => Register encoding.
 				uint8_t shamt = (instr >> 6) & 0x1F;
 				uint8_t funct = (instr >> 0) & 0x3F;
-#if PRINTING
-				printf("Funct:%x Shamt:%x\n", funct, shamt);
-#endif
 			  
 				switch (funct) {
 					case 0b100000: { // add		100000	ArithLog	$d = $s + $t
@@ -129,10 +123,6 @@ void vm_cpu()
 						break;
 					}
 					case 0b100001: { // addu	100001	ArithLog	$d = $s + $t ///////////Unsigned?
-#if PRINTING
-						printf(">>>ADDU\t\t&D = %x RS = %x RT = %x (d = RS + RT)\n", rd, RF[rs], RF[rt]);
-						printf(">>>&RD = %x &RS = %x &RT = %x \n", rd, rs, rt);
-#endif
 						RF[rd] = RF[rs] + RF[rt];
 						break;
 					}
@@ -260,9 +250,6 @@ void vm_cpu()
 				break;
 			}
 			case 0b001001: { //addiu   001001  ArithLogI       $t = $s + SE(i)
-#if PRINTING
-				printf(">>>ADDIU\t&RT = %x RS = %x I = %x (T = RS + I)\n", rt, RF[rs], immediate);
-#endif
 				RF[rt] = (RF[rs] + ((immediate & (0x8000))?(immediate | 0xFFFF0000):(immediate))); //TODO Tirar duvida -> reg eh 32bits mas teoricamente a soma unsigned de fee8 com 1ff deveria dar E7
 				break;
 			}
@@ -287,9 +274,6 @@ void vm_cpu()
 				break;
 			}
 			case 0b001010: { //slti    001010  ArithLogI       $t = ($s < SE(i))
-#if PRINTING
-				printf(">>>SLTI\t\t&RT: %x RS: %x I: %x(t = RS < I)\n\n", rt, RF[rs], immediate);
-#endif
 			  	RF[rt] = RF[rs] < immediate;
 				break;
 			}
@@ -310,9 +294,6 @@ void vm_cpu()
 				continue;
 			}
 			case 0b000101: { //bne     000101  Branch  if ($s != $t) pc += i << 2
-#if PRINTING
-				printf(">>>BNE\t\tRS: %x RT: %x I: %x(if RS != RT PC += I<<2)\n", RF[rs], RF[rt], immediate);
-#endif
 			  	PC = (RF[rs] != RF[rt])?PC+(immediate << 2)+4:PC+8;
 				continue;
 			}
@@ -333,9 +314,6 @@ void vm_cpu()
 				break;
 			}
 			case 0b100011: { //lw      100011  LoadStore       $t = MEM [$s + i]:4
-#if PRINTING 
-				printf(">>>LW\t\t&RT: %x RS: %x I: %x(t = mem[RS + I])\n", rt, RF[rs], immediate);
-#endif
 			  	RF[rt] = ((uint32_t)(VM_memory[RF[rs] + immediate]) << 24) | ((uint32_t)(VM_memory[RF[rs] + immediate + 1]) << 16) | ((uint32_t)(VM_memory[RF[rs] + immediate + 2]) << 8)| (VM_memory[RF[rs] + immediate + 3]);
 				break;
 			}
@@ -349,9 +327,6 @@ void vm_cpu()
 				break;
 			}
 			case 0b101011: { //sw      101011  LoadStore       MEM [$s + i]:4 = $t
-#if PRINTING
-				printf(">>>SW\t\tRS%x IMM%x RT:%x (MEM[RS+i] = RT)\n", rs, immediate, rt);
-#endif
 			  	VM_memory[RF[rs] + immediate] = (uint8_t)((RF[rt] & 0xFF000000) >> 24);
 				VM_memory[RF[rs] + immediate + 1] = (uint8_t)((RF[rt] & 0xFF0000) >> 16);
 			  	VM_memory[RF[rs] + immediate + 2] = (uint8_t)((RF[rt] & 0xFF00) >> 8);
@@ -362,9 +337,6 @@ void vm_cpu()
 			//Jump encoding
 			
 			case 0b000010: { //j       000010  Jump    pc = i << 2
-#if PRINTING
-				printf(">>>J\t\t I:%x(PC = I<<2)\n", address);
-#endif
 				PC = address << 2;
 				continue;
 			}
@@ -381,22 +353,19 @@ void vm_cpu()
 			uint8_t op = (instr >> 26) & 0x3F;
 			break; //op
 		}
-#if PRINTING
-						printf("<End of switch\n");
-#endif
 		PC+=4;//Increments PC to fetch the next instruction
 	}
 }
 uint32_t fetch(uint32_t PC)
 {
-#if PRINTING
+#if DEBUGING
 	printf("<Will fetch %x\n", PC);
 #endif	
 	uint32_t ret_val = (((uint32_t)VM_memory[PC] <<24) | ((uint32_t)VM_memory[PC+1] <<16) | ((uint32_t)VM_memory[PC+2] <<8) | ((uint32_t)VM_memory[PC+3]));
 	return ret_val;
 }
     
-#if PRINTING
+#if DEBUGING
 void print_memory(void)
 {
 	int i;

@@ -23,6 +23,7 @@ extern "C" {
 #endif    
 
 #include "HAL.h"
+#include "vm.h"
 #if PRINTING
 #include <stdio.h>
 #endif
@@ -38,48 +39,61 @@ uint8_t hal_call(uint32_t sensid)//Call to hardware I/O
 	uint8_t retval = -1;
 	switch (sensid)
 	{
+#if HAS_ULTRASONIC // Verify if there is an ultrasonic sensor built
 		case 0: { //Read Ultrasonic
 #if PRINTING
 			printf("(HAL)Read Ultra called\n");
-#endif
+#endif // PRINTING
 			break;
 		}
 		case 1: {
 #if PRINTING
 			printf("(HAL)Config Ultra called\n");
-#endif
+#endif // PRINTING
 			break;
 		}
+#endif // HAS_ULTRASONIC
+		
+#if HAS_ENCODER // Verify if there is an encoder built
 		case 5 : {
 #if PRINTING
 			printf("(HAL)Read Encoder Count called\n");
-#endif			
+#endif // PRINTING	
 			// read_encoder_counter(0);
 			break;
 		}
 		case 6 : {
 #if PRINTING
 			printf("(HAL)Read Encoder Time called\n");
-#endif			
+#endif // PRINTING	
 			break;
 		}
+#endif // HAS_ENCODER
+		
+#if HAS_SERIAL // Verify if there is a Serial IO built
 		case 10: {
 #if PRINTING
 			printf("(HAL)Send Byte called\n");
-#endif			
+#endif // PRINTING	
+			send_byte(RF[4]);
 			break;
 		}
 		case 11: {
 #if PRINTING
 			printf("(HAL)Read Byte called\n");
-#endif		
+#endif // PRINTING
+			RF[2] = read_byte();	
 			break;	
 		}
 		case 12: {
 #if PRINTING
 			printf("(HAL)Configure serial called\n");
-#endif		
+#endif // PRINTING	
+			serial_configure(RF[4]); //Allow user to enable and disable interruptions later
 		}
+#endif // HAS_SERIAL
+
+#if HAS_MOTORS // Verify if there are configured motors output
 		case 15: {
 #if PRINTING
 			printf("(HAL)Ahead called\n");
@@ -103,6 +117,7 @@ uint8_t hal_call(uint32_t sensid)//Call to hardware I/O
 			printf("(HAL)PWM called\n");
 #endif		
 		}
+#endif // HAS_MOTORS
 		default:
 #if PRINTING
 			printf("(HAL) error - Unknown Hal Call number\n");

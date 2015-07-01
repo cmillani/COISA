@@ -21,47 +21,72 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-	
-#include "../../peripherals/serial/ARCH_serial.h"
-#include <avr/io.h>
 
-void send_byte(unsigned char byte)
+#include <avr/interrupt.h>
+#include <avr/io.h>
+#include "ARCH_encoder.h"
+#include <stdint.h>
+#include <stdbool.h>
+
+volatile uint32_t last_left;
+volatile uint32_t last_right;
+
+volatile uint32_t pulse_left = 0;
+volatile uint32_t pulse_right = 0;
+
+volatile uint32_t left_count = 0;
+volatile uint32_t right_count = 0;
+
+uint32_t read_encoder_counter(int side) //Defined on ARCH
 {
-	while (!(UCSR0A & (1 << UDRE0))); // Wait until buffer is empty (can send new data)
-	UDR0 = byte;
-}
-char read_byte(void)
-{
-	while (!(UCSR0A & (1 << RXC0))); // Wait until there is something to read
-	return UDR0;
-}
-void serial_configure(unsigned int baudrate)
-{
-	UBRR0H = (16000000/16/baudrate -1 >> 8); //Configure baudrate generator
-	UBRR0L = (16000000/16/baudrate -1); //Configure baudrate generator
-	
-	UCSR0B |= (1 << RXEN0) | (1 << TXEN0);
-}
-void print_int(uint32_t number)
-{
-	uint32_t temp = number;
-	uint32_t max = 10;
-	uint32_t counter = 0;
-	do
+	switch (side)
 	{
-		temp /= 10;
-		counter++;
-	} while(temp > 0);
-	for(temp = 0; temp < counter-1; temp++)
-	{
-		max *= 10;
-	}
-	for (; max > 1; max/=10)
-	{
-		send_byte((number%(max))/(max/10) + '0');
+		case RIGHT:
+		return right_count;
+		case LEFT:
+		return left_count;
+		default:
+		return 0;
+		break;
 	}
 }
-	
+uint32_t read_encoder_time(int side)
+{
+	switch (side)
+	{
+		case RIGHT:
+		return pulse_right;
+		case LEFT:
+		return pulse_left;
+		default:
+		return 0;
+		break;
+	}
+}
+void start_encoder(void)
+{
+	EICRA |= (1 << ISC01) | (1 << ISC11); //Configures interrupt on the falling edge
+	EIMSK |= (1 << INT0) | (1 << INT1); //Enables interrupt
+	sei();
+}
+
+ISR(INT0_vect)
+{
+  //encoder_right();
+	register uint32_t time_now = TCNT0; 
+	pulse_right = time_now - last_right;
+	last_right = time_now;
+	right_count++;
+}
+ISR(INT1_vect)
+{
+  //encoder_left();
+	register uint32_t time_now = TCNT0; 
+	pulse_left = time_now - last_left;
+	last_left = time_now;
+	left_count++;
+}
+
 #ifdef __cplusplus
 }
 #endif

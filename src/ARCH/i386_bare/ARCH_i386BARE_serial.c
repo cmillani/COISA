@@ -21,15 +21,29 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-#include "CONFIG_serial.h"
+	
+#include <stdio.h>
 #include "ARCH_serial.h"
-	
-#ifndef SERIAL
-#define SERIAL
-	
-#endif
 
+void send_byte(unsigned char byte)
+{
+	printf("%c", byte);
+}
+char read_byte(void)
+{
+	char c;
+	scanf ("%c", &c);
+	return c;
+}
+void serial_configure(unsigned int baudrate)
+{
+
+}
+void print_int(uint32_t number)
+{
+
+}
+	
 #ifdef __cplusplus
 }
 #endif

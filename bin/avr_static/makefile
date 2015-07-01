@@ -14,7 +14,7 @@ all: link
 	$(CC) $(FLAGS) $(INCLUDES) $^ -o $@
 
 link: $(OBJFILES)
-	$(CC) -w -Os -Wl,--gc-sections -mmcu=atmega328p  -o ArduinoLoader.elf $^ -L. -lm
+	$(CC) -w -Os -Wl,--gc-sections -mmcu=atmega328p  -o $^ -L. -lm
 	/Applications/NewArduino.app/Contents/Java/hardware/tools/avr/bin/avr-objcopy -O ihex -j .eeprom --set-section-flags=.eeprom=alloc,load --no-change-warnings --change-section-lma .eeprom=0 ArduinoLoader.elf ArduinoLoader.eep
 	/Applications/NewArduino.app/Contents/Java/hardware/tools/avr/bin/avr-objcopy -O ihex -R .eeprom ArduinoLoader.elf ArduinoLoader.hex
 

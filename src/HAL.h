@@ -53,11 +53,11 @@ uint8_t register_handler(); //TODO Improve definition, just to remember!
 uint8_t remove_handler();
 
 #if HAS_ULTRASONIC
-#include "peripherals/ultrasonic/ultrasonic.h"
+#include "ultrasonic.h"
 #endif
 
 #if HAS_ENCODER
-#include "peripherals/encoder/encoder.h"
+#include "encoder.h"
 #endif
 
 #if HAS_INFRARED
@@ -73,7 +73,7 @@ uint8_t remove_handler();
 #endif
 
 #if HAS_SERIAL
-#include "peripherals/serial/serial.h"
+#include "serial.h"
 #endif
 
 #endif /*HAL*/

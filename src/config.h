@@ -25,12 +25,18 @@ extern "C" {
 
 #ifndef CONFIG
 #define CONFIG
-	
+
 #define DEBUGING 0
 	
 #define PRINTING 1
 
+#if ARCH
+#include "ARCH/i386_OS/i386_OS.h"
+#else
 #include "ARCH/atmega328/atmega328.h"
+#endif
+
+#define HAS_MOTORS 0
 
 #define HAS_ACCELEROMETER 0 //  TODO Define pins
 	
@@ -38,18 +44,18 @@ extern "C" {
 	
 #define HAS_INFRARED 0
 	
-#define HAS_ENCODER 0
+#define HAS_ENCODER 1
 #if HAS_ENCODER
 #define PIN_ENCODER1
 #define PIN_ENCODER2
 #endif
 	
-#define HAS_ULTRASONIC 0
+#define HAS_ULTRASONIC 1
 #if HAS_ULTRASONIC
 #define PIN_ECHO
 #define PIN_TRIG
 #endif
-	
+
 #define HAS_SERIAL 1
 #if HAS_SERIAL
 #endif 
