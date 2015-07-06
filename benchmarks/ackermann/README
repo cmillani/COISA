@@ -1,0 +1,5 @@
+A chamada "Ack(3, n)" pode ser modificada a vontade para aumentar o
+tempo de execucao. Voce pode mudar tanto o primeiro quanto o segundo
+parametro. Note que a funcao de ackermann (ver wikipedia) cresce muito
+rapidamente a medida que voce aumenta os parametros. Na verdade e uma
+das funcoes que mais crescem na matematica (fun fact do dia).

@@ -103,11 +103,15 @@ void vm_cpu()
 		}
 		printf("\n<Instr:%x op:%x\n\n", instr, op);
 #endif
-		
+#if DEBUGING
+		printf("|-----------------------------------------------|\n");
+		printf("|PC:%x\tInstr:%x\tOp:%x\n", PC, instr,op);
+		printf("|-----------------------------------------------|\n");
+#endif
 		uint8_t rs = (instr >> 21) & 0x1F;
 		uint8_t rt = (instr >> 16) & 0x1F;
 		uint8_t rd = (instr >> 11) & 0x1F;
-		uint16_t immediate = (instr >> 0) & 0xFFFF;
+		int16_t immediate = (instr >> 0) & 0xFFFF;
 		uint32_t address = (instr >> 0) & 0x3FFFFFF;
 		
 		//TODO Handle events here!
@@ -205,7 +209,7 @@ void vm_cpu()
 						break;
 					}
 					case 0b001001: { // jalr	001001	JumpR		$31 = pc; pc = $s
-						RF[31] = PC+8;
+						RF[31] = PC+4;
 						PC = RF[rs];
 						continue;
 					}
@@ -250,7 +254,7 @@ void vm_cpu()
 				break;
 			}
 			case 0b001001: { //addiu   001001  ArithLogI       $t = $s + SE(i)
-				RF[rt] = (RF[rs] + ((immediate & (0x8000))?(immediate | 0xFFFF0000):(immediate))); //TODO Tirar duvida -> reg eh 32bits mas teoricamente a soma unsigned de fee8 com 1ff deveria dar E7
+				RF[rt] = (RF[rs] + immediate);
 				break;
 			}
 			case 0b001100: { //andi    001100  ArithLogI       $t = $s & ZE(i)
@@ -265,12 +269,13 @@ void vm_cpu()
 				RF[rd] = RF[rs] ^ immediate;
 				break;
 			}
+			case 0b001111: 	 //lui	   001111
 			case 0b011001: { //lhi     011001  LoadI   HH ($t) = i /////////////// Duvida + o que eh SE e ZE sinal e sem sinal?
-			  	RF[rt] = immediate;
+			  	RF[rt] = ((uint32_t)immediate) << 16;
 				break;
 			}
 			case 0b011000: { //llo     011000  LoadI   LH ($t) = i
-			  	RF[rt] = immediate;			  
+			  	RF[rt] = immediate;
 				break;
 			}
 			case 0b001010: { //slti    001010  ArithLogI       $t = ($s < SE(i))
@@ -282,19 +287,22 @@ void vm_cpu()
 				break;
 			}
 			case 0b000100: { //beq     000100  Branch  if ($s == $t) pc += i << 2
-			  	PC = (RF[rs] == RF[rt])?PC+(immediate << 2)+4:PC+8;//Jump by offset and if not, delay slot!
+			  	PC = (RF[rs] == RF[rt])?PC+(immediate << 2)+4:PC+4;//Jump by offset and if not, delay slot!
 				continue;
 			}
 			case 0b000111: { //bgtz    000111  BranchZ if ($s > 0) pc += i << 2
-			  	PC = (RF[rs] > 0)?PC+(immediate << 2)+4:PC+8;
+			  	PC = (RF[rs] > 0)?PC+(immediate << 2)+4:PC+4;
 				continue;
 			}
 			case 0b000110: { //blez    000110  BranchZ if ($s <= 0) pc += i << 2
-			  	PC = (RF[rs] <= 0)?PC+(immediate << 2)+4:PC+8;
+			  	PC = (RF[rs] <= 0)?PC+(immediate << 2)+4:PC+4;
 				continue;
 			}
 			case 0b000101: { //bne     000101  Branch  if ($s != $t) pc += i << 2
-			  	PC = (RF[rs] != RF[rt])?PC+(immediate << 2)+4:PC+8;
+			  	PC = (RF[rs] != RF[rt])?PC+(immediate << 2)+4:PC+4;
+#if DEBUGING
+				printf(">>RA:%x\tAddress:%x\n", RF[31], immediate<<2);
+#endif
 				continue;
 			}
 			case 0b100000: { //lb      100000  LoadStore       $t = SE (MEM [$s + i]:1)
@@ -341,7 +349,10 @@ void vm_cpu()
 				continue;
 			}
 			case 0b000011: { //jal     000011  Jump    $31 = pc; pc = i << 2
-				RF[31] = PC + 8;
+#if DEBUGING
+				printf(">>RA:%x\tAddress:%x\n", RF[31], address<<2);
+#endif
+				RF[31] = PC + 4;
 				PC = address << 2; //TODO verificar o que acontece no jump, se precisa do + 4
 				continue;
 			}
@@ -352,6 +363,12 @@ void vm_cpu()
 			
 			uint8_t op = (instr >> 26) & 0x3F;
 			break; //op
+			default:
+			{
+#if PRINTING
+				if (instr != 0)	printf("\n(ERROR)Invalid instruction %x at PC: %x\n",instr, PC);
+#endif
+			}
 		}
 		PC+=4;//Increments PC to fetch the next instruction
 	}

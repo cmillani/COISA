@@ -18,6 +18,8 @@ Halcalls:
 	10:Serial send byte
 	11:Serial read byte
 	12:Serial configure 
+	13:Print Number
+	14:Print String
 	
 	15:Go ahead
 	16:Turn Right

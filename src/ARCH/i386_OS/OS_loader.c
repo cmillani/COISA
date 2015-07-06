@@ -9,7 +9,7 @@ int main(int argc, char * argv[])
 {
 	FILE * manifest;
 	FILE * binary;
-	int i = 0;
+	int i = 0, j = 0;
 	uint8_t byte;
 	
 	if (argc < 2) 
@@ -25,6 +25,11 @@ int main(int argc, char * argv[])
 	{
 		VM_memory[i] = byte;
 		i++;
+	}
+	while (j < i)
+	{
+		printf("%2x: %2x%2x%2x%2x\n",j,VM_memory[j],VM_memory[j+1],VM_memory[j+2],VM_memory[j+3]);
+		j += 4;
 	}
 	printf("\n");
 	fclose(binary);

@@ -1,0 +1,2 @@
+Altere a macro SIZE para aumentar o tamanho do workload. Mesmas observacoes
+de "lists" sobre  "my_malloc" valem aqui tambem.

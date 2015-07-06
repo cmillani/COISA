@@ -39,9 +39,13 @@ void serial_configure(unsigned int baudrate)
 {
 
 }
-void print_int(uint32_t number)
+void printnum(uint32_t number)
 {
-
+	printf("%d",number);
+}
+void print(const char *str)
+{
+	printf("%s", str);
 }
 	
 #ifdef __cplusplus

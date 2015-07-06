@@ -89,7 +89,23 @@ uint8_t hal_call(uint32_t sensid)//Call to hardware I/O
 #if PRINTING
 			printf("(HAL)Configure serial called\n");
 #endif // PRINTING	
-			serial_configure(RF[4]); //Allow user to enable and disable interruptions later
+			serial_configure(RF[4]); //TODO: Allow user to enable and disable interruptions later
+			break;
+		}
+		case 13: {
+#if PRINTING
+			printf("(HAL)Print number called\n");
+#endif // PRINTING	
+			printnum(RF[4]); 
+			break;
+		}
+		case 14: {
+#if PRINTING
+			printf("(HAL)Print string called\n");
+			printf(">>%d\n",RF[4]);
+#endif // PRINTING	
+			print(&VM_memory[RF[4]]);
+			break;
 		}
 #endif // HAS_SERIAL
 
@@ -116,6 +132,7 @@ uint8_t hal_call(uint32_t sensid)//Call to hardware I/O
 #if PRINTING
 			printf("(HAL)PWM called\n");
 #endif		
+			break;
 		}
 #endif // HAS_MOTORS
 		default:

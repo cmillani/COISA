@@ -3,6 +3,8 @@
 .globl send_byte
 .globl configure_ultrassonic
 .globl serial_configure
+.globl printnum
+.globl print
 
 send_byte:
 	li		$v0, 12		# $v0 = 11
@@ -19,5 +21,15 @@ read_byte:
 serial_configure:
 	li		$v0, 12		# $v0 = 11
 	li		$v1, 12		# $a0 = 1
+	syscall 
+	jr		$31					# jump to $31
+printnum:
+	li		$v0, 12		# $v0 = 11
+	li		$v1, 13		# $a0 = 1
+	syscall 
+	jr		$31					# jump to $31
+print:
+	li		$v0, 12		# $v0 = 11
+	li		$v1, 14		# $a0 = 1
 	syscall 
 	jr		$31					# jump to $31

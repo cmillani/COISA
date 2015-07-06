@@ -1,7 +1,7 @@
-#include "extras/lib/THING_ultrasonic.h"
-#include "extras/lib/THING_encoder.h"
-#include "extras/lib/THING_serial.h"
-#include "extras/lib/THING_movement.h"
+#include "THING_ultrasonic.h"
+#include "THING_encoder.h"
+#include "THING_serial.h"
+#include "THING_movement.h"
 
 int main()
 {

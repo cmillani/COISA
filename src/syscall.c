@@ -27,9 +27,12 @@
 extern "C" {
 #endif
 
-
 #include "syscall.h"
 #include "HAL.h"
+	
+#if PRINTING
+#include <stdio.h>
+#endif
  
 uint8_t syscall(uint8_t trap_code)
 {
@@ -42,6 +45,9 @@ uint8_t syscall(uint8_t trap_code)
 		case 11: { //Stack alloc
 			RF[29] = VM_MEMORY_SZ; //Aloca pilha para dado microcontrolador -> pilha vazia, apontando para o fim, tentativa de store sem alocar causara erros
 			RF[30] = RF[29]; //FP = SP
+#if PRINTING
+			printf("Stack initialized\n");
+#endif
 			break;
 		}
 		case 12: { //Hall Call

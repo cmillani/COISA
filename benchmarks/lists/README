@@ -1,0 +1,6 @@
+Este programa tem o memory footprint bem intenso, entao tive que reduzir
+a macro SIZE para 10 (originalmente eh um valor bem alto) para caber no
+pool de 768 bytes de memoria. Esse pool implementa uma versao custom de
+malloc que simplesmente aloca tudo num vetor. Mude POOLMAX para aumentar
+o espaco disponivel para o malloc, e entao voce podera brincar com valores
+mais altos de SIZE.

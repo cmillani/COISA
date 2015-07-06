@@ -1,0 +1,9 @@
+Modificar a variavel local NUM para controlar o numero de repeticoes
+deste benchmark.
+
+Esse programa originalmente usa "bastante" memoria (8K) para o vetor "flags" para contar
+o numero de primos de 1 a 8192. Entao acho que nao eh um bom benchmark
+para uma plataforma com pouca memoria. Em todo caso, modifiquei para ele
+usar apenas 769 bytes nesse vetor, reduzindo o workload do benchmark.
+
+Se quiser restaurar o workload original, substitua 768 por 8192.
