@@ -1,0 +1,14 @@
+-lui Rdest, imm: Load Upper Immediate
+<bczt label: Branch Coprocessor z True -- COPROCESSOR!
+<bczf label: Branch Coprocessor z False -- COPROCESSOR!
+-bgez Rsrc, offset: Branch on Greater Than Equal Zero
+-bgezal Rsrc, offset: Branch on Greater Than Equal Zero And Link
+--bgezal Rsrc, offset: Branch on Greater Than Equal Zero And Link
+-bltzal Rsrc, offset: Branch on Less Than And Link
+-bltz Rsrc, offset: Branch on Less Than Zero
+<lwcz Rdest, imm(Rsrc): Load Word -- COPROCESSOR!
+*lwl Rdest, imm(Rsrc): Load Word Left
+*lwr Rdest, imm(Rsrc): Load Word Right
+<swcz Rsrc1, imm(Rsrc2): Store Word -- COPROCESSOR!
+*swl Rsrc1, imm(Rsrc2): Store Word Left
+*swr Rsrc1, imm(Rsrc2): Store Word Right

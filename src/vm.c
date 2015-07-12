@@ -269,7 +269,7 @@ void vm_cpu()
 				RF[rd] = RF[rs] ^ immediate;
 				break;
 			}
-			case 0b001111: 	 //lui	   001111
+			case 0b001111: 	 //lui	   001111          Rdest, imm: Load Upper Immediate
 			case 0b011001: { //lhi     011001  LoadI   HH ($t) = i /////////////// Duvida + o que eh SE e ZE sinal e sem sinal?
 			  	RF[rt] = ((uint32_t)immediate) << 16;
 				break;
@@ -286,16 +286,51 @@ void vm_cpu()
 				RF[rt] = RF[rs] < immediate;
 				break;
 			}
+			case 0b000001: {
+				if (RF[rt] == 0b00001) //bgez Rsrc, offset: Branch on Greater Than Equal Zero
+				{
+					PC = ((int32_t)RF[rs] >= 0)?PC+(immediate << 2)+4:PC+4;//Jump by offset and if not, next instruction
+				}
+				else if (RF[rt] == 0b10001) //bgezal Rsrc, offset: Branch on Greater Than Equal Zero And Link
+				{
+					if ((int32_t)RF[rs] >= 0)
+					{
+						RF[31] = PC + 4;
+						PC += (immediate << 2)+4;
+					}
+					else
+					{
+						PC += 4;
+					}
+				}
+				else if (RF[rt] == 0b00000) //bltz Rsrc, offset: Branch on Less Than Zero
+				{
+					PC = ((int32_t)RF[rs] < 0)?PC+(immediate << 2)+4:PC+4;//Jump by offset and if not, next instruction
+				}
+				else if (RF[rt] == 0b10000) //bltzal Rsrc, offset: Branch on Less Than And Link
+				{
+					if ((int32_t)RF[rs] < 0)
+					{
+						RF[31] = PC + 4;
+						PC += (immediate << 2)+4;
+					}
+					else
+					{
+						PC += 4;
+					}
+				}
+				continue;
+			}
 			case 0b000100: { //beq     000100  Branch  if ($s == $t) pc += i << 2
-			  	PC = (RF[rs] == RF[rt])?PC+(immediate << 2)+4:PC+4;//Jump by offset and if not, delay slot!
+			  	PC = (RF[rs] == RF[rt])?PC+(immediate << 2)+4:PC+4;//Jump by offset and if not, next instruction
 				continue;
 			}
 			case 0b000111: { //bgtz    000111  BranchZ if ($s > 0) pc += i << 2
-			  	PC = (RF[rs] > 0)?PC+(immediate << 2)+4:PC+4;
+			  	PC = ((int32_t)RF[rs] > 0)?PC+(immediate << 2)+4:PC+4;
 				continue;
 			}
 			case 0b000110: { //blez    000110  BranchZ if ($s <= 0) pc += i << 2
-			  	PC = (RF[rs] <= 0)?PC+(immediate << 2)+4:PC+4;
+			  	PC = ((int32_t)RF[rs] <= 0)?PC+(immediate << 2)+4:PC+4;
 				continue;
 			}
 			case 0b000101: { //bne     000101  Branch  if ($s != $t) pc += i << 2
@@ -306,23 +341,23 @@ void vm_cpu()
 				continue;
 			}
 			case 0b100000: { //lb      100000  LoadStore       $t = SE (MEM [$s + i]:1)
-			  	RF[rt] = (VM_memory[RF[rs] + immediate]& 0x7F)  | (uint32_t)(VM_memory[RF[rs] + immediate] & 0x80)<<24; //Load byte carrying signal to the register
+			  	RF[rt] = ((uint32_t)VM_memory[RF[rs] + immediate]& 0x7F)  | (uint32_t)(VM_memory[RF[rs] + immediate] & 0x80)<<24; //Load byte carrying signal to the register
 				break;
 			}
 			case 0b100100: { //lbu     100100  LoadStore       $t = ZE (MEM [$s + i]:1)
-			  	RF[rt] = (VM_memory[RF[rs] + immediate]) & 0xFF;
+			  	RF[rt] = ((uint32_t)VM_memory[RF[rs] + immediate]) & 0xFF;
 				break;
 			}
 			case 0b100001: { //lh      100001  LoadStore       $t = SE (MEM [$s + i]:2)
-			  	RF[rt] = ((((uint32_t)(VM_memory[RF[rs] + immediate])<< 16) | (VM_memory[RF[rs] + immediate + 1])) & 0x7FFF) | (uint32_t)((VM_memory[RF[rs] + immediate + 1]) & 0x8000) << 16;
+			  	RF[rt] = ((((uint32_t)(VM_memory[RF[rs] + immediate])<< 16) | ((uint32_t)VM_memory[RF[rs] + immediate + 1])) & 0x7FFF) | (uint32_t)((VM_memory[RF[rs] + immediate + 1]) & 0x8000) << 16;
 				break;
 			}
 			case 0b100101: { //lhu     100101  LoadStore       $t = ZE (MEM [$s + i]:2)
-				RF[rt] = ((((uint32_t)(VM_memory[RF[rs] + immediate])<<16) | (VM_memory[RF[rs] + immediate + 1])) & 0xFFFF);
+				RF[rt] = ((((uint32_t)(VM_memory[RF[rs] + immediate])<<16) | ((uint32_t)VM_memory[RF[rs] + immediate + 1])) & 0xFFFF);
 				break;
 			}
 			case 0b100011: { //lw      100011  LoadStore       $t = MEM [$s + i]:4
-			  	RF[rt] = ((uint32_t)(VM_memory[RF[rs] + immediate]) << 24) | ((uint32_t)(VM_memory[RF[rs] + immediate + 1]) << 16) | ((uint32_t)(VM_memory[RF[rs] + immediate + 2]) << 8)| (VM_memory[RF[rs] + immediate + 3]);
+			  	RF[rt] = ((uint32_t)(VM_memory[RF[rs] + immediate]) << 24) | ((uint32_t)(VM_memory[RF[rs] + immediate + 1]) << 16) | ((uint32_t)(VM_memory[RF[rs] + immediate + 2]) << 8)| ((uint32_t)VM_memory[RF[rs] + immediate + 3]);
 				break;
 			}
 			case 0b101000: { //sb      101000  LoadStore       MEM [$s + i]:1 = LB ($t)
@@ -358,6 +393,27 @@ void vm_cpu()
 			}
 			case 0b011010: { //trap    011010  Trap    Dependent on operating system; different values for immed26 specify different operations. See the list of traps for information on what the different trap codes do.
 				syscall((uint8_t)(address&0xFF));
+				break;
+			}
+			
+			
+			
+			case 0b101010: { //swl Rsrc1, imm(Rsrc2): Store Word Left
+				VM_memory[RF[rs] + immediate] = (uint8_t)((RF[rt] & 0xFF000000) >> 24);
+				VM_memory[RF[rs] + immediate + 1] = (uint8_t)((RF[rt] & 0xFF0000) >> 16);
+				break;
+			}
+			case 0b101110: { //swr Rsrc1, imm(Rsrc2): Store Word Right
+			  	VM_memory[RF[rs] + immediate] = (uint8_t)(RF[rt] & 0xFF);
+				VM_memory[RF[rs] + immediate - 1] = (uint8_t)(RF[rt] & 0xFF00) >> 8;
+				break;
+			}
+			case 0b100010: { //lwl Rdest, imm(Rsrc): Load Word Left
+				RF[rt] = ((uint32_t)(VM_memory[RF[rs] + immediate]) << 24) | ((uint32_t)(VM_memory[RF[rs] + immediate + 1]) << 16);
+				break;
+			}
+			case 0b100110: { //lwr Rdest, imm(Rsrc): Load Word Right
+				RF[rt] = ((uint32_t)(VM_memory[RF[rs] + immediate -1]) << 8) | ((uint32_t)VM_memory[RF[rs] + immediate]);
 				break;
 			}
 			

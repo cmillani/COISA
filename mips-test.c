@@ -11,20 +11,12 @@
  * I added free() to deallocate memory.
  */
 
-void *memset(void *s, int c, int n)
-{
-    unsigned char* p=s;
-    while(n--)
-        *p++ = (unsigned char)c;
-    return s;
-}
-
-//#include <stdio.h>
-//#include <stdlib.h>
-#include "stdthing.h"
+#include <stdio.h>
+#include <stdlib.h>
 
 
-//#define X86
+
+#define X86
 
 #ifdef X86
 void print(const char *str) {
@@ -40,7 +32,6 @@ int
 main(int argc, char *argv[]) {
   int n = 250;
   int i, k, x[250], y[250];
-    send_byte('2');
   printnum(2);
   print("Ola\n");
 

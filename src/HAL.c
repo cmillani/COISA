@@ -104,7 +104,7 @@ uint8_t hal_call(uint32_t sensid)//Call to hardware I/O
 			printf("(HAL)Print string called\n");
 			printf(">>%d\n",RF[4]);
 #endif // PRINTING	
-			print(&VM_memory[RF[4]]);
+			print((char *)&VM_memory[RF[4]]);
 			break;
 		}
 #endif // HAS_SERIAL

@@ -1,0 +1,149 @@
+-add Rdest, Rsrc1, Rsrc2: Addition (with overflow)
+-addi Rdest, Rsrc1, Imm: Addition immediate (with overflow)
+-addu Rdest, Rsrc1, Rsrc2: Addition (without overflow)
+-addiu Rdest, Rsrc1, Imm: Addition immediate (without overflow)
+Put the sum of the integers from register Rsrc1 and Rsrc2 (or Imm) into register Rdest.
+
+-and Rdest, Rsrc1, Src2: AND
+-andi Rdest, Rsrc1, Imm: AND Immediate
+Put the logical AND of the integers from register Rsrc1 and Src2 (or Imm) into register Rdest.
+
+-div Rsrc1, Rsrc2: Divide(with overflow)
+-divu Rsrc1, Rsrc2: Divide(without overflow)
+Divide the contents of the two registers. Leave the quotient in register lo and the remainder in register hi. Note that if an operand is negative, the remainder is nspecified by the MIPS architecture and depends on the conventions of the machine on which the simulator is run.
+
+-mult Rsrc1, Rsrc2: Multiply
+-multu Rsrc1, Rsrc2: Unsigned Multiply
+Multiply the contents of the two registers. Leave the low-order word of the product in register lo and the high-word in register hi.
+
+-nor Rdest, Rsrc1, Src2: NOR
+Put the logical NOR of the integer from register Rsrc1 and Src2 into register Rdest.
+
+-or Rdest, Rsrc1, Src2: OR
+-ori Rdest, Rsrc1, Src2: OR Immediate
+Put the logic OR of the integers from register Rsrc1 and Src2 (or Imm) into register Rdest.
+
+-sll Rdest, Rsrc1, Src2: Shift Left Logical
+-sllv Rdest, Rsrc1, Rsrc2: Shift Left Logical Variable
+-sra Rdest, Rsrc1, Src2: Shift Right Arithmetic
+-srav Rdest, Rsrc1, Rsrc2: Shift Right Arithmetic Variable
+-srl Rdest, Rsrc1, Src2: Shift Right Logical
+-srlv Rdest, Rsrc1, Rsrc2: Shift Right Logical Variable
+Shift the contents of register Rsrc1 left (right) by the distance indicated by Src2 (Rsrc2) and put the result in register Rdest.
+
+-sub Rdest, Rsrc1, Rsrc2: Subtract (with overflow)
+-subu Rdest, Rsrc1, Rsrc2: Subtract (without overflow)
+Put Rsrc1 - Rsrc2 into register Rdest.
+
+-xor Rdest, Rsrc1, Src2: XOR
+-xori Rdest, Rsrc1, Imm: XOR Immediate
+Put the logical XOR of the integers from register Rsrc1 and Src2 (or Imm) into register Rdest.
+
+Constant-Manipulating Instructions
+
+**lui Rdest, imm: Load Upper Immediate
+Load the lower halfword of the immediate imm into the upper halfword of register Rdest. The lower bits of the register are set to 0.
+
+Comparison Instructions
+
+In all instructions below, Src2 can either be a register or an immediate value (a 16-bit integer).
+-slt Rdest, Rsrc1, Src2: Set Less Than
+-slti Rdest, Rsrc2, Imm: Set Less Than Immediate
+-sltu Rdest, Rsrc1, Src2: Set Less Than Unsigned
+-sltiu Rdest, Rsrc1, Imm: Set Less Than Unsigned Immediate
+Set register Rdest to 1 if register Rsrc1 is less than Src2 (or Imm) and to 0 otherwise.
+
+Branch and Jump Instructions
+
+In all instructions below, Src2 can either be a register or an immediate value (integer). Branch instructions use a signed 16-bit offset field; hence they can jump 2^15 -1 instructions (not bytes) forward or 2^15 instructions backward. The jump instruction contains a 26-bit address field.
+**bczt label: Branch Coprocessor z True
+**bczf label: Branch Coprocessor z False
+Conditionally branch to the instruction at the label if coprocessor z's condition flag is true(false).
+
+beq Rsrc1, Rsrc2, offset: Branch on Equal
+Conditionally branch to the instruction at the label if the contents of register Rsrc1 equals Src2.
+
+**bgez Rsrc, offset: Branch on Greater Than Equal Zero
+Conditionally branch to the instruction at the label if the contents of Rsrc are greater than or equal to 0.
+
+**bgezal Rsrc, offset: Branch on Greater Than Equal Zero And Link
+Conditionally branch to the instruction at the label if the contents of Rsrc are greater than or equal to 0. Save the address of the next instruction in register 31.
+
+-bgtz Rsrc, offset: Branch on Greater Than Zero
+Conditionally branch to the instruction at the label if the contents of Rsrc are greater than 0.
+
+-blez Rsrc, offset: Branch on Less Than Equal Zero
+Conditionally branch to the instruction at the label if the contents of Rsrc are less than or equal to 0.
+
+**bgezal Rsrc, offset: Branch on Greater Than Equal Zero And Link
+**bltzal Rsrc, offset: Branch on Less Than And Link
+Conditionally branch to the instruction at the label if the contents of Rsrc are greater or equal to 0 or less than 0. Save the address of the next instruction in register 31.
+
+**bltz Rsrc, offset: Branch on Less Than Zero
+Conditionally branch to the instruction at the label if the contents of Rsrc are less than 0.
+
+-bne Rsrc1, Src2, offset: Branch on Not Equal
+Conditionally branch to the instruction at the label if the contents of Rsrc1 are not equal to Src2.
+
+-j label: Jump
+Unconditionally jump to the instruction at the label.
+
+-jal label: Jump and Link
+-jalr Rsrc: Jump and Link Register
+Unconditionally jump to the instruction at the label or whose address id in register Rsrc. Save the address of the next instruction in register 31.
+
+-jr Rsrc: Jump Register
+Unconditionally jump to the instruction whose address is in register Rsrc.
+
+Load Instructions
+
+-lb Rdest, imm(Rsrc): Load Byte
+-lbu Rdest, imm(Rsrc): Load Unsigned Byte
+Load the byte at memory address Rsrc + imm into register Rdest. The byte is sign-extended by the lb, but not the lbu, instruction.
+
+-lh Rdest, imm(Rsrc): Load Halfword
+-lhu Rdest, imm(Rsrc): Load Unsigned Halfword
+Load the 16-bit quantity (halfword) at memory address Rsrc + imm into register Rdest. The halfword is sign-extended by the lh, but not the lhu, instruction.
+
+-lw Rdest, imm(Rsrc): Load Word
+Load the 32-bit quantity (word) at memory address Rsrc + imm into register Rdest.
+
+**lwcz Rdest, imm(Rsrc): Load Word
+Load the word at memory address Rsrc + imm into register Rdest of coprocessor z (0-3).
+
+**lwl Rdest, imm(Rsrc): Load Word Left
+**lwr Rdest, imm(Rsrc): Load Word Right
+Load the left (right) word at the possibly unaligned memory address Rsrc + imm into register Rdest.
+
+Store Instructions
+
+-sb Rsrc1, imm(Rsrc2): Store Byte
+Store the least significant byte of register Rsrc1 into memory address Rsrc2 + imm.
+
+-sh Rsrc1, imm(Rsrc2): Store Halfword
+Store the lower 16 bits (halfword) of register Rsrc1 into memory address Rsrc2 + imm.
+
+-sw Rsrc1, imm(Rsrc2): Store Word
+Store the word in register Rsrc1 into memory address Rsrc2 + imm.
+
+**swcz Rsrc1, imm(Rsrc2): Store Word
+Store the word in register Rsrc1 of coprocessor z (0-3) into memory address Rsrc2 + imm.
+
+**swl Rsrc1, imm(Rsrc2): Store Word Left
+**swr Rsrc1, imm(Rsrc2): Store Word Right
+Store the word in register Rsrc1 into the possibly unaligned memory address Rsrc2 + imm.
+
+Miscellaneous Instructions
+
+The multiply and divide unit produces its result in two additional registers, hi and lo. These instructions move values to and from these registers. The multiply, divide, and remainder instructions described above are pseudoinstructions that make it appear as if this unit operates on the general registers and detects error conditions such as divide by zero or overflow.
+-mfhi Rdest: Move From hi
+-mflo Rdest: Move From lo
+Move the contents of the hi(lo) register to register Rdest.
+
+-mthi Rdest: Move To hi
+-mtlo Rdest: Move To lo
+Move the contents of the register Rdest to the hi(lo) register.
+
+Coprocessors have their own register sets. These instructions move values between these registers and the CPU's registers.
+
+mfcz Rdest, CPsrc: Move From Coprocessor z
