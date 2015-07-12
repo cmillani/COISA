@@ -28,7 +28,7 @@ extern "C" {
 
 #define DEBUGING 0
 	
-#define PRINTING 1
+#define PRINTING 0
 
 #if ARCH
 #include "ARCH/i386_OS/i386_OS.h"

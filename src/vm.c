@@ -73,12 +73,21 @@ uint32_t RF[32];
 /*VM memory vector*/
 uint8_t VM_memory[VM_MEMORY_SZ];
 
+uint32_t PC = 0;
+uint32_t nPC = 4;
+
+void advance_pc(int32_t offset)
+{
+	PC  =  nPC;
+	nPC  += offset;
+}
+
 void vm_cpu()
 {
 	RF[0] = 0; //Register $zero must always be zero
 	RF[31] = 1; //Return default (if the program does not set to zero, should put error)
 	uint32_t HI = 0, LO = 0;  
-	uint32_t PC = 0;
+	uint32_t offset = 4;
 	uint8_t halted = 0;
 
 	while (!halted) 
@@ -114,6 +123,7 @@ void vm_cpu()
 		int16_t immediate = (instr >> 0) & 0xFFFF;
 		uint32_t address = (instr >> 0) & 0x3FFFFFF;
 		
+		offset = 4; //default offset for non-branching instructions
 		//TODO Handle events here!
 		switch (op) 
 		{
@@ -126,7 +136,7 @@ void vm_cpu()
 						RF[rd] = RF[rs] + RF[rt];
 						break;
 					}
-					case 0b100001: { // addu	100001	ArithLog	$d = $s + $t ///////////Unsigned?
+					case 0b100001: { // addu	100001	ArithLog	$d = $s + $t
 						RF[rd] = RF[rs] + RF[rt];
 						break;
 					}
@@ -209,12 +219,14 @@ void vm_cpu()
 						break;
 					}
 					case 0b001001: { // jalr	001001	JumpR		$31 = pc; pc = $s
-						RF[31] = PC+4;
-						PC = RF[rs];
+						RF[31] = PC+8;
+						PC = nPC;
+						nPC = RF[rs];
 						continue;
 					}
 					case 0b001000: { // jr		001000	JumpR		pc = $s 
-						PC = RF[rs];
+						PC = nPC;
+						nPC = RF[rs];
 						continue;
 					}
 					case 0b010000: { // mfhi	010000	MoveFrom	$d = hi
@@ -289,56 +301,106 @@ void vm_cpu()
 			case 0b000001: {
 				if (RF[rt] == 0b00001) //bgez Rsrc, offset: Branch on Greater Than Equal Zero
 				{
-					PC = ((int32_t)RF[rs] >= 0)?PC+(immediate << 2)+4:PC+4;//Jump by offset and if not, next instruction
+					if ((int32_t)RF[rs] >= 0)
+					{
+						advance_pc(immediate << 2);
+						continue;
+					}
+					else
+					{
+						break;
+					}
 				}
 				else if (RF[rt] == 0b10001) //bgezal Rsrc, offset: Branch on Greater Than Equal Zero And Link
 				{
 					if ((int32_t)RF[rs] >= 0)
 					{
-						RF[31] = PC + 4;
-						PC += (immediate << 2)+4;
+						RF[31] = PC + 8;
+						advance_pc(immediate << 2);
+						continue;
 					}
 					else
 					{
-						PC += 4;
+						break;
 					}
 				}
 				else if (RF[rt] == 0b00000) //bltz Rsrc, offset: Branch on Less Than Zero
 				{
-					PC = ((int32_t)RF[rs] < 0)?PC+(immediate << 2)+4:PC+4;//Jump by offset and if not, next instruction
+					if ((int32_t)RF[rs] < 0)
+					{
+						advance_pc(immediate << 2);
+						continue;
+					}
+					else
+					{
+						break;
+					}
 				}
 				else if (RF[rt] == 0b10000) //bltzal Rsrc, offset: Branch on Less Than And Link
 				{
 					if ((int32_t)RF[rs] < 0)
 					{
-						RF[31] = PC + 4;
-						PC += (immediate << 2)+4;
+						RF[31] = PC + 8;
+						advance_pc(immediate << 2);
+						continue;
 					}
 					else
 					{
-						PC += 4;
+						break;
 					}
 				}
-				continue;
+				break;
 			}
 			case 0b000100: { //beq     000100  Branch  if ($s == $t) pc += i << 2
-			  	PC = (RF[rs] == RF[rt])?PC+(immediate << 2)+4:PC+4;//Jump by offset and if not, next instruction
-				continue;
+				if (RF[rs] == RF[rt])
+				{
+					advance_pc(immediate << 2);
+					continue;
+				}
+				else
+				{
+					break;
+				}
+				break;
 			}
 			case 0b000111: { //bgtz    000111  BranchZ if ($s > 0) pc += i << 2
-			  	PC = ((int32_t)RF[rs] > 0)?PC+(immediate << 2)+4:PC+4;
-				continue;
+				if ((int32_t)RF[rs] > 0)
+				{
+					advance_pc(immediate << 2);
+					continue;
+				}
+				else
+				{
+					break;
+				}
+				break;
 			}
 			case 0b000110: { //blez    000110  BranchZ if ($s <= 0) pc += i << 2
-			  	PC = ((int32_t)RF[rs] <= 0)?PC+(immediate << 2)+4:PC+4;
-				continue;
+				if ((int32_t)RF[rs] <= 0)
+				{
+					advance_pc(immediate << 2);
+					continue;
+				}
+				else
+				{
+					break;
+				}
+				break;
 			}
 			case 0b000101: { //bne     000101  Branch  if ($s != $t) pc += i << 2
-			  	PC = (RF[rs] != RF[rt])?PC+(immediate << 2)+4:PC+4;
 #if DEBUGING
 				printf(">>RA:%x\tAddress:%x\n", RF[31], immediate<<2);
 #endif
-				continue;
+				if (RF[rs] != RF[rt])
+				{
+					advance_pc(immediate << 2);
+					continue;
+				}
+				else
+				{
+					break;
+				}
+				break;
 			}
 			case 0b100000: { //lb      100000  LoadStore       $t = SE (MEM [$s + i]:1)
 			  	RF[rt] = ((uint32_t)VM_memory[RF[rs] + immediate]& 0x7F)  | (uint32_t)(VM_memory[RF[rs] + immediate] & 0x80)<<24; //Load byte carrying signal to the register
@@ -380,15 +442,17 @@ void vm_cpu()
 			//Jump encoding
 			
 			case 0b000010: { //j       000010  Jump    pc = i << 2
-				PC = address << 2;
+				PC = nPC;
+				nPC = address << 2;
 				continue;
 			}
 			case 0b000011: { //jal     000011  Jump    $31 = pc; pc = i << 2
 #if DEBUGING
 				printf(">>RA:%x\tAddress:%x\n", RF[31], address<<2);
 #endif
-				RF[31] = PC + 4;
-				PC = address << 2; //TODO verificar o que acontece no jump, se precisa do + 4
+				RF[31] = PC + 8;
+				PC = nPC;
+				nPC = address << 2;
 				continue;
 			}
 			case 0b011010: { //trap    011010  Trap    Dependent on operating system; different values for immed26 specify different operations. See the list of traps for information on what the different trap codes do.
@@ -426,7 +490,7 @@ void vm_cpu()
 #endif
 			}
 		}
-		PC+=4;//Increments PC to fetch the next instruction
+		advance_pc(offset);//Advances the PC
 	}
 }
 uint32_t fetch(uint32_t PC)

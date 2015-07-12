@@ -12,7 +12,7 @@ LIBRARIES = extras/crt0.s extras/lib/THING_ultrasonic.s extras/lib/THING_serial.
 	extras/scribe $(MANIFESTFLAGS) -o $@
 
 %.s: %.c
-	$(HOME)/ellcc/bin/ecc -target mips-linux-eng -S $< $(INCLUDE) -O0 -nostdlib -fno-exceptions -fno-rtti -static -o $@
+	$(HOME)/ellcc/bin/ecc -target mips-linux-eng -S $< $(INCLUDE) -O3 -nostdlib -fno-exceptions -fno-rtti -static -o $@
 
 %.o: %.s
 	$(AS) $< $(LIBRARIES) -o $@
