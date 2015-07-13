@@ -3,7 +3,12 @@
  * http://www.bagley.org/~doug/shootout/
  */
 
-void *memset(void *s, int c, int n)
+// #include <stdio.h>
+// #include <stdlib.h>
+
+#include "stdthing.h"
+
+void *memset(void *s, int c, unsigned int n)
 {
     unsigned char* p=s;
     while(n--)
@@ -11,9 +16,7 @@ void *memset(void *s, int c, int n)
     return s;
 }
 
-#include "stdthing.h"
-
-//#define X86
+// #define X86
 
 #ifdef X86
 void print(const char *str) {

@@ -1,9 +1,11 @@
 int fib(int n);
 
+// #include <stdio.h>
+// #include <stdlib.h>
+
 #include "stdthing.h"
 
-
-//#define X86
+// #define X86
 
 #ifdef X86
 void print(const char *str) {

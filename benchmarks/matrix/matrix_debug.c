@@ -59,9 +59,43 @@ int main(int argc, char *argv[]) {
   int i;
     
   int **m1 = mkmatrix(SIZE, SIZE);
+  printnum(m1[0][0]);
+  print(" ");
+  printnum(m1[2][3]);
+  print(" ");
+  printnum(m1[3][2]);
+  print(" ");
+  printnum(m1[4][4]);
+  print("\n");
   int **m2 = mkmatrix(SIZE, SIZE);
+  printnum(m2[0][0]);
+  print(" ");
+  printnum(m2[2][3]);
+  print(" ");
+  printnum(m2[3][2]);
+  print(" ");
+  printnum(m2[4][4]);
+  print("\n");
   initialize(m1, m2);
   int **mm = mkmatrix(SIZE, SIZE);
+
+  printnum(m1[0][0]);
+  print(" ");
+  printnum(m1[2][3]);
+  print(" ");
+  printnum(m1[3][2]);
+  print(" ");
+  printnum(m1[4][4]);
+  print("\n");
+
+  printnum(m2[0][0]);
+  print(" ");
+  printnum(m2[2][3]);
+  print(" ");
+  printnum(m2[3][2]);
+  print(" ");
+  printnum(m2[4][4]);
+  print("\n");
 
   mm = mmult(SIZE, SIZE, m1, m2, mm);
   sum(SIZE, SIZE, m1, m2, mm);

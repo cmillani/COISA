@@ -3,9 +3,12 @@
  * http://www.bagley.org/~doug/shootout/
  */
 
-#include <math.h>
-#include <stdio.h>
-#include <stdlib.h>
+// #include <stdio.h>
+// #include <stdlib.h>
+// #include <unistd.h>
+// #include <math.h>
+
+// #include "stdthing.h"
 
 #define IM 139968
 #define IA 3877

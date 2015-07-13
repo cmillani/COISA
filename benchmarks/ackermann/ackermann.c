@@ -3,14 +3,15 @@
  * http://www.bagley.org/~doug/shootout/
  */
 
-//#include <stdio.h>
-//#include <stdlib.h>
+
+// #include <stdio.h>
+// #include <stdlib.h>
 
 #include "stdthing.h"
 
 int Ack(int M, int N);
 
-//#define X86
+// #define X86
 
 #ifdef X86
 void print(const char *str) {
@@ -25,8 +26,6 @@ void printnum(int n) {
 int
 main(int argc, char *argv[]) {
   int n = 2;
-  char c[] = "Starting";
-  print(c);
   int res = Ack(3, n);
   print("Ack(3,");
   printnum(n);

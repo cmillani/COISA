@@ -182,15 +182,18 @@ void vm_cpu()
 						RF[rd] = RF[rt] << RF[rs];
 						break;
 					}
-					case 0b000011: { // sra		000011	Shift		$d = $t >> a /////////////Duvida
-						RF[rd] = RF[rs] >> shamt;
+					case 0b000011: { // sra		000011	Shift		$d = $t >> a 
+						if ((int32_t)RF[rs] < 0 && shamt > 0)
+					        RF[rd] = (int32_t)RF[rs] | ~(~0U >> shamt);
+					    else
+					        RF[rd] = (int32_t)RF[rs] >> shamt;
 						break;
 					}
 					case 0b000111: { // srav	000111	ShiftV		$d = $t >> $s
 						RF[rd] = RF[rt] >> RF[rs];
 						break;
 					}
-					case 0b000010: { // srl		000010	Shift		$d = $t >>> a ////////////Duvida
+					case 0b000010: { // srl		000010	Shift		$d = $t >>> a
 						RF[rd] = RF[rt] >> shamt;
 						break;
 					}
@@ -262,23 +265,23 @@ void vm_cpu()
 			
 			//Immediate encoding
 			case 0b001000: { //addi    001000  ArithLogI       $t = $s + SE(i)
-				RF[rt] = RF[rs] + immediate; //Implementar trap!
+				RF[rt] = RF[rs] + (int32_t)immediate; //Implementar trap!
 				break;
 			}
 			case 0b001001: { //addiu   001001  ArithLogI       $t = $s + SE(i)
-				RF[rt] = (RF[rs] + immediate);
+				RF[rt] = (RF[rs] + (int32_t)immediate);
 				break;
 			}
 			case 0b001100: { //andi    001100  ArithLogI       $t = $s & ZE(i)
-			    RF[rt] = RF[rs] & immediate;
+			    RF[rt] = RF[rs] & (uint32_t)immediate;
 				break;
 			}
 			case 0b001101: { //ori     001101  ArithLogI       $t = $s | ZE(i)
-				RF[rt] = RF[rs] | immediate;
+				RF[rt] = RF[rs] | (uint32_t)immediate;
 				break;
 			}
 			case 0b001110: { //xori    001110  ArithLogI       $d = $s ^ ZE(i)
-				RF[rd] = RF[rs] ^ immediate;
+				RF[rd] = RF[rs] ^ (uint32_t)immediate;
 				break;
 			}
 			case 0b001111: 	 //lui	   001111          Rdest, imm: Load Upper Immediate
@@ -295,7 +298,7 @@ void vm_cpu()
 				break;
 			}
 			case 0b001011: { //sltiu   001011  ArithLogI       $t = ($s < SE(i)) //CORRIGIDO
-				RF[rt] = RF[rs] < immediate;
+				RF[rt] = RF[rs] < (uint16_t)immediate;
 				break;
 			}
 			case 0b000001: {
