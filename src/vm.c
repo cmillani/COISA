@@ -498,13 +498,14 @@ void vm_cpu()
 				break;
 			}
 			
-			uint8_t op = (instr >> 26) & 0x3F;
+			//uint8_t op = (instr >> 26) & 0x3F;
 			break; //op
 			default:
 			{
 #if PRINTING
 				if (instr != 0)	printf("\n(ERROR)Invalid instruction %x at PC: %x\n",instr, PC);
 #endif
+				break;
 			}
 		}
 		advance_pc(offset);//Advances the PC

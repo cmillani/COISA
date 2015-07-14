@@ -5,7 +5,10 @@ OBJDIR = bin
 SRCDIR = src
 BENCHDIR = benchmarks
 MIPSDIR = MipsCTestCases
+TESTSDIR = tests
+
 NAME = microvm
+
 GOLDENMODELS = $(BENCHDIR)/goldenmodels
 MODELS = $(BENCHDIR)/models
 
@@ -28,17 +31,20 @@ CC = gcc
 CFLAGS = 
 LFLAGS = 
 
-FOLDERS = $(OBJDIR) $(BENCHDIR) $(GOLDENMODELS) $(MODELS) $(BENCHDIR)/src
+FOLDERS = $(GOLDENMODELS) $(MODELS) $(TESTSDIR)
 
-.PHONY: results
+.PHONY: results clean data
 
 all: $(FOLDERS) i386 bench_files
+	
+data: mips_benchmarks $(OBJDIR)/$(NAME)
+	./tests.sh
 
 bench_files: goldenmodels mips_benchmarks results
 	
 goldenmodels: $(addprefix $(BENCHDIR)/goldenmodels/,$(addsuffix .o, $(BENCHMARK_FILES))) $(addprefix $(BENCHDIR)/goldenmodels/,$(addsuffix .out, $(BENCHMARK_FILES)))
 	
-mips_benchmarks:$(addprefix $(BENCHDIR)/models/,$(addsuffix .o, $(BENCHMARK_FILES))) $(addprefix $(BENCHDIR)/models/,$(addsuffix .out, $(BENCHMARK_FILES)))
+mips_benchmarks:$(addprefix $(BENCHDIR)/models/,$(addsuffix .x, $(BENCHMARK_FILES))) $(addprefix $(BENCHDIR)/models/,$(addsuffix .out, $(BENCHMARK_FILES)))
 
 results: $(addprefix $(BENCHDIR)/models/,$(addsuffix .out, $(BENCHMARK_FILES))) $(addprefix $(BENCHDIR)/goldenmodels/,$(addsuffix .out, $(BENCHMARK_FILES)))
 	@echo ">>>>>>>>>>Starting Output Tests<<<<<<<<<<"
@@ -109,4 +115,4 @@ $(OBJDIR)/%.o: $(SRCDIR)/%.c
 	$(CC_avr) $(FLAGS_avr) $(INCLUDE_avr) $^ -o $@
 
 clean:
-	rm $(OBJDIR)/*
+	rm -r $(OBJDIR)/*[!avr_static] $(FOLDERS)
