@@ -1,13 +1,10 @@
 int fib(int n);
 
-// #include <stdio.h>
-// #include <stdlib.h>
-
-#include "stdthing.h"
-
 // #define X86
 
 #ifdef X86
+#include <stdio.h>
+#include <stdlib.h>
 void print(const char *str) {
   printf("%s", str);
 }
@@ -15,6 +12,8 @@ void print(const char *str) {
 void printnum(int n) {
   printf("%d", n);
 }
+#else
+#include "stdthing.h"
 #endif
 
 int

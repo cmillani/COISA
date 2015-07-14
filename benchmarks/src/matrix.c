@@ -3,19 +3,11 @@
  * http://www.bagley.org/~doug/shootout/
  */
 
-void *memset(void *s, int c, unsigned int n)
-{
-    unsigned char* p=s;
-    while(n--)
-        *p++ = (unsigned char)c;
-    return s;
-}
 
-// #include <stdio.h>
 // #include <stdlib.h>
 // #include <unistd.h>
 
-#include "stdthing.h"
+
 
 #define SIZE 7
 
@@ -23,12 +15,22 @@ void *memset(void *s, int c, unsigned int n)
 // #define X86
 
 #ifdef X86
+#include <stdio.h>
 void print(const char *str) {
   printf("%s", str);
 }
 
 void printnum(int n) {
   printf("%d", n);
+}
+#else
+#include "stdthing.h"
+void *memset(void *s, int c, unsigned int n)
+{
+    unsigned char* p=s;
+    while(n--)
+        *p++ = (unsigned char)c;
+    return s;
 }
 #endif
 //// my malloc implementation

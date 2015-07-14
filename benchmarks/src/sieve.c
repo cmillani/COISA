@@ -2,29 +2,27 @@
  * $Id: sieve.gcc,v 1.7 2001/05/06 04:37:45 doug Exp $
  * http://www.bagley.org/~doug/shootout/
  */
-
-// #include <stdio.h>
 // #include <stdlib.h>
-
-#include "stdthing.h"
-
-void *memset(void *s, int c, unsigned int n)
-{
-    unsigned char* p=s;
-    while(n--)
-        *p++ = (unsigned char)c;
-    return s;
-}
 
 // #define X86
 
 #ifdef X86
+#include <stdio.h>
 void print(const char *str) {
   printf("%s", str);
 }
 
 void printnum(int n) {
   printf("%d", n);
+}
+#else
+#include "stdthing.h"
+void *memset(void *s, int c, unsigned int n)
+{
+    unsigned char* p=s;
+    while(n--)
+        *p++ = (unsigned char)c;
+    return s;
 }
 #endif
 

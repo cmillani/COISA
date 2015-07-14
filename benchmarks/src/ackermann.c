@@ -3,8 +3,6 @@
  * http://www.bagley.org/~doug/shootout/
  */
 
-#include "stdthing.h"
-
 int Ack(int M, int N);
 
 // #define X86
@@ -21,6 +19,10 @@ void print(const char *str) {
 void printnum(int n) {
   printf("%d", n);
 }
+#else
+
+#include "stdthing.h"
+
 #endif
 
 int

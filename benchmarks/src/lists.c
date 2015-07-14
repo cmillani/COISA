@@ -9,15 +9,12 @@
 // #include <string.h>
 // #include <unistd.h>
 
-#define NULL 0
-
-#include "stdthing.h"
-
 #define SIZE 10
 
 // #define X86
 
 #ifdef X86
+#include <stdio.h>
 void print(const char *str) {
   printf("%s", str);
 }
@@ -25,6 +22,9 @@ void print(const char *str) {
 void printnum(int n) {
   printf("%d", n);
 }
+#else
+#define NULL 0
+#include "stdthing.h"
 #endif
 
 // a simple Double Linked List
