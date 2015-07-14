@@ -13,6 +13,13 @@ REQOBJ_avr = $(addprefix $(OBJDIR)/, ArduinoLoader.o avr_static/core.a vm.o sysc
 
 CC_avr = /Applications/NewArduino.app/Contents/Java/hardware/tools/avr/bin/avr-g++
 
+benchmarks: goldenmodels mips_benchmarks
+	
+goldenmodels:
+	
+	
+	
+mips_benchmarks:
 
 i386:
 	$(CC_i386) $(INCLUDE_i386) -DARCH=1 src/*.c src/ARCH/i386_OS/*.c -o $(OBJDIR)/$(NAME)

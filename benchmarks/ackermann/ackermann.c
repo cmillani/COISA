@@ -3,10 +3,6 @@
  * http://www.bagley.org/~doug/shootout/
  */
 
-
-// #include <stdio.h>
-// #include <stdlib.h>
-
 #include "stdthing.h"
 
 int Ack(int M, int N);
@@ -14,6 +10,10 @@ int Ack(int M, int N);
 // #define X86
 
 #ifdef X86
+
+#include <stdio.h>
+#include <stdlib.h>
+
 void print(const char *str) {
   printf("%s", str);
 }

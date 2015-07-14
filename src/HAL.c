@@ -102,7 +102,6 @@ uint8_t hal_call(uint32_t sensid)//Call to hardware I/O
 		case 14: {
 #if PRINTING
 			printf("(HAL)Print string called\n");
-			printf(">>%d\n",RF[4]);
 #endif // PRINTING	
 			print((char *)&VM_memory[RF[4]]);
 			break;

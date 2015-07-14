@@ -96,7 +96,7 @@ void vm_cpu()
 		uint8_t op = (instr >> 26) & 0x3F;
 #if DEBUGING
 		char a;
-		while ((a = getchar()) != 'c')
+		while (PC > 0x700 && (a = getchar()) != 'c')
 		{
 			switch (a)
 			{
@@ -112,7 +112,7 @@ void vm_cpu()
 		}
 		printf("\n<Instr:%x op:%x\n\n", instr, op);
 #endif
-#if DEBUGING
+#if PRINTING
 		printf("|-----------------------------------------------|\n");
 		printf("|PC:%x\tInstr:%x\tOp:%x\n", PC, instr,op);
 		printf("|-----------------------------------------------|\n");
@@ -132,6 +132,14 @@ void vm_cpu()
 				uint8_t funct = (instr >> 0) & 0x3F;
 			  
 				switch (funct) {
+					case 0b001011: { // movn	001010 				if(rt!=0) rd = rs
+						if (RF[rt] != 0) RF[rd] = RF[rs];
+						break;
+					}
+					case 0b001010: { // movz	001010 				if(rt==0) rd = rs
+						if (RF[rt] == 0) RF[rd] = RF[rs];
+						break;
+					}
 					case 0b100000: { // add		100000	ArithLog	$d = $s + $t
 						RF[rd] = RF[rs] + RF[rt];
 						break;
@@ -214,11 +222,11 @@ void vm_cpu()
 						break;
 					}
 					case 0b101010: { // slt		101010	ArithLog	$d = ($s < $t)
-						RF[rd] = (RF[rs] < RF[rt]);
+						RF[rd] = (RF[rs] < RF[rt])?1:0;
 						break;
 					}
-					case 0b101001: { // sltu	101001	ArithLog	$d = ($s < $t)
-						RF[rd] = (RF[rs] < RF[rt]);
+					case 0b101011: { // sltu	101011	ArithLog	$d = ($s < $t)
+						RF[rd] = (RF[rs] < RF[rt])?1:0;
 						break;
 					}
 					case 0b001001: { // jalr	001001	JumpR		$31 = pc; pc = $s
@@ -258,6 +266,12 @@ void vm_cpu()
 						}
 						break; 
 					}	
+					default:
+					{
+		#if PRINTING
+						if (instr != 0)	printf("\n(ERROR)Invalid instruction %x at PC: %x\n",instr, PC);
+		#endif
+					}
 					break;
 				}      
 				break; // case 0x0
@@ -265,11 +279,11 @@ void vm_cpu()
 			
 			//Immediate encoding
 			case 0b001000: { //addi    001000  ArithLogI       $t = $s + SE(i)
-				RF[rt] = RF[rs] + (int32_t)immediate; //Implementar trap!
+				RF[rt] = RF[rs] + immediate; //Implementar trap!
 				break;
 			}
 			case 0b001001: { //addiu   001001  ArithLogI       $t = $s + SE(i)
-				RF[rt] = (RF[rs] + (int32_t)immediate);
+				RF[rt] = (RF[rs] + immediate);
 				break;
 			}
 			case 0b001100: { //andi    001100  ArithLogI       $t = $s & ZE(i)
@@ -285,7 +299,7 @@ void vm_cpu()
 				break;
 			}
 			case 0b001111: 	 //lui	   001111          Rdest, imm: Load Upper Immediate
-			case 0b011001: { //lhi     011001  LoadI   HH ($t) = i /////////////// Duvida + o que eh SE e ZE sinal e sem sinal?
+			case 0b011001: { //lhi     011001  LoadI   HH ($t) = i 
 			  	RF[rt] = ((uint32_t)immediate) << 16;
 				break;
 			}
@@ -294,11 +308,11 @@ void vm_cpu()
 				break;
 			}
 			case 0b001010: { //slti    001010  ArithLogI       $t = ($s < SE(i))
-			  	RF[rt] = RF[rs] < immediate;
+			  	RF[rt] = (RF[rs] < immediate)?1:0;
 				break;
 			}
-			case 0b001011: { //sltiu   001011  ArithLogI       $t = ($s < SE(i)) //CORRIGIDO
-				RF[rt] = RF[rs] < (uint16_t)immediate;
+			case 0b001011: { //sltiu   001011  ArithLogI       $t = ($s < SE(i)) 
+				RF[rt] = (RF[rs] < immediate)?1:0;
 				break;
 			}
 			case 0b000001: {
@@ -422,7 +436,7 @@ void vm_cpu()
 				break;
 			}
 			case 0b100011: { //lw      100011  LoadStore       $t = MEM [$s + i]:4
-			  	RF[rt] = ((uint32_t)(VM_memory[RF[rs] + immediate]) << 24) | ((uint32_t)(VM_memory[RF[rs] + immediate + 1]) << 16) | ((uint32_t)(VM_memory[RF[rs] + immediate + 2]) << 8)| ((uint32_t)VM_memory[RF[rs] + immediate + 3]);
+			  	RF[rt] = ((uint32_t)(VM_memory[RF[rs] + immediate]) << 24) | ((uint32_t)(VM_memory[RF[rs] + immediate + 1]) << 16) | ((uint32_t)(VM_memory[RF[rs] + immediate + 2]) << 8) | ((uint32_t)VM_memory[RF[rs] + immediate + 3]);
 				break;
 			}
 			case 0b101000: { //sb      101000  LoadStore       MEM [$s + i]:1 = LB ($t)

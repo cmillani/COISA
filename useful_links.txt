@@ -1,0 +1,13 @@
+http://csg.csail.mit.edu/6.884/handouts/labs/smips-spec.pdf
+http://math-atlas.sourceforge.net/devel/assembly/mips-iv.pdf
+http://www.mrc.uidaho.edu/mrc/people/jff/digital/MIPSir.html
+
+
+https://www.student.cs.uwaterloo.ca/~isg/res/mips/opcodes
+
+?:
+http://heather.cs.ucdavis.edu/~matloff/DLX/MIPS.html
+
+ABI:
+http://math-atlas.sourceforge.net/devel/assembly/mipsabi32.pdf
+http://www.linux-mips.org/wiki/MIPS_ABI_History
