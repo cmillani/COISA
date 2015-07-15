@@ -87,6 +87,8 @@ void vm_cpu()
 #if COUNTING
 	int instruct_cnt = 0;
 #endif
+	PC = 0;
+	nPC = 4;
 	RF[0] = 0; //Register $zero must always be zero
 	RF[31] = 1; //Return default (if the program does not set to zero, should put error)
 	uint32_t HI = 0, LO = 0;  

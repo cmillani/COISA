@@ -41,6 +41,6 @@ while True:
 #     sys.stdout.write(' ')
 #     sys.stdout.write(hex(ord(zero.read())))
 #     print
-    print zero.readline()
+    print zero.read()
     
 print "End"

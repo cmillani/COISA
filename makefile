@@ -99,7 +99,7 @@ link: $(REQOBJ_avr)
 	/Applications/NewArduino.app/Contents/Java/hardware/tools/avr/bin/avr-objcopy -O ihex -R .eeprom $(OBJDIR)/ArduinoLoader.elf $(OBJDIR)/$(NAME).hex
 
 atmega328_write:
-	/Applications/NewArduino.app/Contents/Java/hardware/tools/avr/bin/avrdude -C/Applications/NewArduino.app/Contents/Java/hardware/tools/avr/etc/avrdude.conf -v -patmega328p -carduino -P/dev/cu.usbmodem1411 -b115200 -D -Uflash:w:ArduinoLoader.hex:i 	
+	/Applications/NewArduino.app/Contents/Java/hardware/tools/avr/bin/avrdude -C/Applications/NewArduino.app/Contents/Java/hardware/tools/avr/etc/avrdude.conf -v -patmega328p -carduino -P/dev/cu.usbmodem1421 -b115200 -D -Uflash:w:ArduinoLoader.hex:i 	
 
 $(OBJDIR)/%.o: $(SRCDIR)/*/*/%.cpp
 	$(CC_avr) $(FLAGS_avr) $(INCLUDE_avr) $^ -o $@
