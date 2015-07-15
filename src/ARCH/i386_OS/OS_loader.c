@@ -34,6 +34,7 @@ int main(int argc, char * argv[])
 	// printf("\n");
 	fclose(binary);
 	// printf("Starting VM:\n");
+	
 	vm_cpu();
 	
 	return 0;

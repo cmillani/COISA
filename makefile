@@ -1,5 +1,6 @@
 INCLUDE_i386 = -I src/ -I src/peripherals/encoder/ -I src/peripherals/movement/ -I src/peripherals/PWM/ -I src/peripherals/serial/ -I src/peripherals/ultrasonic/ -I src/ARCH/i386_OS/
 CC_i386 = gcc
+CFLAGS_i386 = 
 
 OBJDIR = bin
 SRCDIR = src
@@ -23,6 +24,7 @@ LD_mips=/opt/cross/mips-binutils/bin/mips-unknown-elf-ld
 LD_SCRIPT_mips=$(MIPSDIR)/linker.ld
 AS_mips=/opt/cross/mips-binutils/bin/mips-unknown-elf-as
 INCLUDE_mips = -I $(MIPSDIR)/extras/lib/
+CFLAGS_mips = -O3 -nostdlib -fno-exceptions -fno-rtti -static
 LIBRARIES_mips = $(addprefix $(MIPSDIR)/,extras/crt0.s extras/lib/THING_ultrasonic.s extras/lib/THING_serial.s extras/lib/THING_encoder.s extras/lib/THING_movement.s)
 
 BENCHMARK_FILES = ackermann array fib lists matrix sieve
@@ -31,16 +33,16 @@ CC = gcc
 CFLAGS = 
 LFLAGS = 
 
-FOLDERS = $(GOLDENMODELS) $(MODELS) $(TESTSDIR)
+FOLDERS = $(GOLDENMODELS) $(MODELS)
 
 .PHONY: results clean data
 
-all: $(FOLDERS) i386 bench_files
+all: $(FOLDERS) $(TESTSDIR) i386 bench_files
 	
 data: mips_benchmarks $(OBJDIR)/$(NAME)
 	./tests.sh
 
-bench_files: goldenmodels mips_benchmarks results
+bench_files: goldenmodels mips_benchmarks
 	
 goldenmodels: $(addprefix $(BENCHDIR)/goldenmodels/,$(addsuffix .o, $(BENCHMARK_FILES))) $(addprefix $(BENCHDIR)/goldenmodels/,$(addsuffix .out, $(BENCHMARK_FILES)))
 	
@@ -58,11 +60,14 @@ results: $(addprefix $(BENCHDIR)/models/,$(addsuffix .out, $(BENCHMARK_FILES))) 
 	@echo
 	@echo ">>>>>>>>>>>All Tests Completed<<<<<<<<<<<" 
 	
-$(FOLDERS):
+$(TESTSDIR):
+	mkdir -p $(TESTSDIR)
+	
+$(FOLDERS) :
 	mkdir -p $(FOLDERS)
 
 $(BENCHDIR)/models/%.s: $(BENCHDIR)/src/%.c
-	$(HOME)/ellcc/bin/ecc -target mips-linux-eng -S $< $(INCLUDE_mips) -O3 -nostdlib -fno-exceptions -fno-rtti -static -o $@
+	$(HOME)/ellcc/bin/ecc -target mips-linux-eng -S $< $(INCLUDE_mips) $(CFLAGS_mips) -o $@
 
 $(MODELS)/%.o: $(MODELS)/%.s
 	$(AS_mips) $< $(LIBRARIES_mips) -o $@
@@ -84,7 +89,7 @@ $(GOLDENMODELS)/%.out: $(GOLDENMODELS)/%.o
 
 
 i386:
-	$(CC_i386) $(INCLUDE_i386) -DARCH=1 src/*.c src/ARCH/i386_OS/*.c -o $(OBJDIR)/$(NAME)
+	$(CC_i386) $(INCLUDE_i386) $(CFLAGS_i386) -DARCH=1 src/*.c src/ARCH/i386_OS/*.c -o $(OBJDIR)/$(NAME)
 
 atmega328: link atmega328_write
 	

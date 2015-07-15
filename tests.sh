@@ -8,50 +8,59 @@ CWPROOT=$HOME/src/cwp
 PATH=$CWPROOT/bin:$PATH
 
 DEFAULT_COMPILER="gcc"
-DEFAULT_CFLAGS="-O3 -std=gnu99 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE64_SOURCE -fopenmp"
-DEFAULT_LFLAGS="-fopenmp -lm"
+DEFAULT_CFLAGS_i386="-DCOUNTING=1"
+DEFAULT_CFLAGS_mips="-nostdlib -fno-exceptions -fno-rtti -static"
 
-# DEFAULT_COMPILER=icc
-# DEFAULT_CFLAGS="-O3 -std=c99 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE64_SOURCE -openmp -xhost -restrict -fno-exceptions -opt-streaming-stores=never -ipo2 -static"
-# DEFAULT_LFLAGS="-openmp -lm"
 
 TIME=${TIME:-`which gtime`}
-ARGS=${ARGS:-""}
 PROG=${PROG:-./bin/microvm}
-NUMBER_OF_TESTS=10
+NUMBER_OF_TESTS=1
 TESTS=${TESTS:-ackermann.x array.x fib.x lists.x matrix.x sieve.x}
 
-rm tests/*user tests/*sys tests/*real tests/*mem
+rm tests/*o1 tests/*o2 tests/*o3 tests/*os
 
-for f in ${TESTS}; do
-    # echo ">>>>>>>>>>>>>>> Compilando a versão: ${f} <<<<<<<<<<<<<<<";
-    # cd ${f}
-    # make clean
-    # make "CC=${DEFAULT_COMPILER}" "CFLAGS=${DEFAULT_CFLAGS}" "LFLAGS=${DEFAULT_LFLAGS}"
+for o in `seq 0 3` s; do
+    echo ">>>>>>>>>>> Compilando a versão: ${f} Counting <<<<<<<<<<";
 
-    # echo "\n"
-    echo ">>>>>>>>>>> Iniciando o teste da versão: ${f} <<<<<<<<<<<";
-    for i in `seq 1 $NUMBER_OF_TESTS`; do
-        echo "$i/$NUMBER_OF_TESTS"
-        # out=$($TIME $PROG $ARGS $DATA 2>&1 >/dev/null)
-        # echo $out | cut -d' ' -f2 | cut -c3-7 >> ../tests/${f}.real
-        # echo $out | cut -d' ' -f4 | cut -c3-7 >> ../tests/${f}.user
-        # echo $out | cut -d' ' -f6 | cut -c3-7 >> ../tests/${f}.sys
+    make clean
+    make "CFLAGS_i386=${DEFAULT_CFLAGS_i386}" "CFLAGS_mips=${DEFAULT_CFLAGS_mips} -O${o}"
+	
+	for f in ${TESTS}; do
+		
 
-		$TIME -f "%e:%U:%S:%M" $PROG benchmarks/models/${f}
-        out=$(($TIME -f "%e:%U:%S:%M" $PROG ${f}) 2>&1 >/dev/null)
-        echo $out | cut -d':' -f1 >> tests/${f}.real
-        echo $out | cut -d':' -f2 >> tests/${f}.user
-        echo $out | cut -d':' -f3 >> tests/${f}.sys
-        echo $out | cut -d':' -f4 >> tests/${f}.mem
+	    echo ">>>>>>>>>>> Iniciando o count da versão: ${f} <<<<<<<<<<<";
+		
+        out=$($PROG benchmarks/models/${f})
+        echo $out | cut -d'ç' -f2  > tests/${f}.count.o${o}
+		
+		out2=$(ls -l benchmarks/models/${f})
 
-        # Verificando se o resultado do programa é válido.
-        # sucmp --silent ../cmp.coher.su ./cmp.coher.su || echo "cmp.coher.su inválido"
-        # sucmp --silent ../cmp.stack.su ./cmp.stack.su || echo "cmp.stack.su inválido"
-        # sucmp --silent ../c.su ./c.su                 || echo "c.su inválido"
-    done
+		echo $out2 | cut -d ' ' -f5 > tests/${f}.size.o${o}
 
-    echo ">>>>>>>>>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<<<<<<<<<<";
-    echo "\n"
-    # cd ..
+	    echo ">>>>>>>>>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<<<<<<<<<<";
+	    echo "\n"
+	done
+	
+	echo ">>>>>>>>>>> Compilando a versão: ${f} Testing <<<<<<<<<<<";
+
+    make clean
+    make "CFLAGS_mips=${DEFAULT_CFLAGS_mips} -O${o}"
+	
+	for f in ${TESTS}; do
+		
+	    echo ">>>>>>>>>>> Iniciando o teste da versão: ${f} <<<<<<<<<<<";
+	    for i in `seq 1 $NUMBER_OF_TESTS`; do
+	        echo "$i/$NUMBER_OF_TESTS"
+
+	        out=$(($TIME -f "%e:%U:%S:%M" $PROG benchmarks/models/${f}) 2>&1 >/dev/null)
+	        echo $out | cut -d':' -f1 >> tests/${f}.real.o${o}
+	        echo $out | cut -d':' -f2 >> tests/${f}.user.o${o}
+	        echo $out | cut -d':' -f3 >> tests/${f}.sys.o${o}
+	        echo $out | cut -d':' -f4 >> tests/${f}.mem.o${o}
+
+	    done
+
+	    echo ">>>>>>>>>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<<<<<<<<<<";
+	    echo "\n"
+	done
 done

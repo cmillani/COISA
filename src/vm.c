@@ -84,6 +84,9 @@ void advance_pc(int32_t offset)
 
 void vm_cpu()
 {
+#if COUNTING
+	int instruct_cnt = 0;
+#endif
 	RF[0] = 0; //Register $zero must always be zero
 	RF[31] = 1; //Return default (if the program does not set to zero, should put error)
 	uint32_t HI = 0, LO = 0;  
@@ -92,6 +95,9 @@ void vm_cpu()
 
 	while (!halted) 
 	{
+#if COUNTING
+		instruct_cnt++;
+#endif
 		uint32_t instr = fetch(PC);
 		uint8_t op = (instr >> 26) & 0x3F;
 #if DEBUGING
@@ -510,6 +516,12 @@ void vm_cpu()
 		}
 		advance_pc(offset);//Advances the PC
 	}
+#if COUNTING
+	print("ç");
+	printnum(instruct_cnt);
+	print("ç");
+	print("\n");
+#endif
 }
 uint32_t fetch(uint32_t PC)
 {
