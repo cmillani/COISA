@@ -46,13 +46,13 @@ extern "C" {
 	
 #define HAS_INFRARED 0
 	
-#define HAS_ENCODER 1
+#define HAS_ENCODER 0
 #if HAS_ENCODER
 #define PIN_ENCODER1
 #define PIN_ENCODER2
 #endif
 	
-#define HAS_ULTRASONIC 1
+#define HAS_ULTRASONIC 0
 #if HAS_ULTRASONIC
 #define PIN_ECHO
 #define PIN_TRIG

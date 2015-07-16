@@ -3,15 +3,9 @@
  * http://www.bagley.org/~doug/shootout/
  */
 
-// #include <stdio.h>
-// #include <stdlib.h>
-// #include <math.h>
-// #include <string.h>
-// #include <unistd.h>
+#define SIZE 3
 
-#define SIZE 10
-
-// #define X86
+//#define X86
 
 #ifdef X86
 #include <stdio.h>
@@ -39,8 +33,8 @@ int test_lists();
 
 
 //// my malloc implementation
-#define POOLMAX 768
-char mypool[768];
+#define POOLMAX 256
+char mypool[256];
 int curptr = 0;
 
 void *my_malloc(int size) {
@@ -55,13 +49,8 @@ void *my_malloc(int size) {
 ///// end
 
 int main(int argc, char *argv[]) {
-  int n = 1;
-  int result = 0;
-  while(n--) result = test_lists();
-  printnum(result);
-  print("\n");
-  return 0;
-} 
+  return test_lists();
+}
 
 
 int list_length(DLL *head) { return(head->val); }
@@ -88,7 +77,7 @@ DLL *list_pop_tail(DLL *head) {
   head->val--;
   return(tail);
 }
-
+/*
 void list_push_head(DLL *head, DLL *item) {
   DLL *next = head->next;
   head->next = item;
@@ -97,6 +86,7 @@ void list_push_head(DLL *head, DLL *item) {
   item->prev = head;
   head->val++;
 }
+*/
 
 DLL *list_pop_head(DLL *head) {
   DLL *next;
@@ -183,7 +173,7 @@ int test_lists() {
   DLL *li3 = list_new();
   // compare li2 and li1 for equality
   if (!list_equal(li2, li1)) {
-    print("li2!=li1\n");
+    print("li2 and li1 are not equal\n");
     while(1);
   }
   while (!list_empty(li2)) {
@@ -191,7 +181,7 @@ int test_lists() {
   }
   // li2 must now be empty
   if (!list_empty(li2)) {
-    print("li2 NE\n");
+    print("li2 should be empty now\n");
     while(1);
   }
   // remove each individual item from right side of li3 and
@@ -201,40 +191,40 @@ int test_lists() {
   }
   // li3 must now be empty
   if (!list_empty(li3)) {
-    print( "li3 NE\n");
+    print( "li3 should be empty now\n");
     while(1);
   }
   // reverse li1 in place
   list_reverse(li1);
   // check that li1's first item is now SIZE
   if (list_first(li1)->val != SIZE) {
-    print( "li1 1st\n");
+    print( "li1 first value wrong\n");
     while(1);
   }
   // check that li1's last item is now 1
   if (list_last(li1)->val != 1) {
-    print( "lst \n");
+    print( "last value wrong\n");
     while(1);
   }
   // check that li2's first item is now SIZE
   if (list_first(li2)->val != SIZE) {
-    print( "li2 1st\n");
+    print( "li2 first value wrong\n");
     while(1);
   }
   // check that li2's last item is now 1
   if (list_last(li2)->val != 1) {
-    print( "lst\n");
+    print( "last value wrong\n");
     while(1);
   }
 
   // check that li1's length is still SIZE
   if (list_length(li1) != SIZE) {
-    print( "li1 sz\n");
+    print( "li1 size wrong\n");
     while(1);
   }
   // compare li1 and li2 for equality
   if (!list_equal(li1, li2)) {
-    print( "li1!=li2\n");
+    print( "li1 and li2 are not equal\n");
     while(1);
   }
   len = list_length(li1);
@@ -242,6 +232,9 @@ int test_lists() {
   //  free(li2);
   //  free(li3);
   // return the length of the list
-  return(len);
+  printnum(len);
+  print("\n");
+
+  return  0;
 }
 

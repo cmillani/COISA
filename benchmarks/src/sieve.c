@@ -2,9 +2,8 @@
  * $Id: sieve.gcc,v 1.7 2001/05/06 04:37:45 doug Exp $
  * http://www.bagley.org/~doug/shootout/
  */
-// #include <stdlib.h>
 
-// #define X86
+//#define X86
 
 #ifdef X86
 #include <stdio.h>
@@ -24,6 +23,7 @@ void *memset(void *s, int c, unsigned int n)
         *p++ = (unsigned char)c;
     return s;
 }
+
 #endif
 
 

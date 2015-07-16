@@ -4,15 +4,10 @@
  */
 
 
-// #include <stdlib.h>
-// #include <unistd.h>
+#define SIZE 3
 
 
-
-#define SIZE 7
-
-
-// #define X86
+//#define X86
 
 #ifdef X86
 #include <stdio.h>
@@ -34,8 +29,8 @@ void *memset(void *s, int c, unsigned int n)
 }
 #endif
 //// my malloc implementation
-#define POOLMAX 768
-char mypool[768];
+#define POOLMAX 256
+char mypool[256];
 int curptr = 0;
 
 void *my_malloc(int size) {
@@ -70,11 +65,11 @@ int main(int argc, char *argv[]) {
 
   printnum(mm[0][0]);
   print(" ");
-  printnum(mm[2][3]);
+  printnum(mm[1][2]);
   print(" ");
-  printnum(mm[3][2]);
+  printnum(mm[2][1]);
   print(" ");
-  printnum(mm[4][4]);
+  printnum(mm[0][2]);
   print("\n");
 
   //  freematrix(SIZE, m1);

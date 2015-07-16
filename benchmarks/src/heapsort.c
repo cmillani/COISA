@@ -3,51 +3,59 @@
  * http://www.bagley.org/~doug/shootout/
  */
 
-// #include <stdio.h>
-// #include <stdlib.h>
-// #include <math.h>
-
-// #include "stdthing.h"
 
 #define IM 139968
 #define IA   3877
 #define IC  29573
 
-double gen_random(double max);
-void heapsort(int n, double *ra);
+unsigned int gen_random();
+void heapsort(int n, unsigned int *ra);
+
+//#define X86
+
+#ifdef X86
+#include <stdio.h>
+void print(const char *str) {
+  printf("%s", str);
+}
+
+void printnum(int n) {
+  printf("%d", n);
+}
+#else
+#include "stdthing.h"
+#endif
 
 int
 main(int argc, char *argv[]) {
-  int N = 1000000; // ((argc == 2) ? atoi(argv[1]) : 1);
-  double *ary;
+  int N = 90;
+  unsigned int ary[91];
   int i;
     
-    
-  ary = (double *)malloc((N+1) * sizeof(double));
   for (i=1; i<=N; i++) {
-    ary[i] = gen_random(1);
+    ary[i] = gen_random();
   }
 
   heapsort(N, ary);
 
-  printf("%d %.10g\n", 0, ary[N]);
+  printnum(ary[N]);
+  print("\n");
 
-  free(ary);
   return(0);
 }
 
-double
-gen_random(double max) {
-  static long last = 42;
-  return( max * (last = (last * IA + IC) % IM) / IM );
+unsigned int
+gen_random() {
+  static unsigned int last = 42;
+  return( last = (last * IA + IC) % IM  );
 }
 
 void
-heapsort(int n, double *ra) {
+heapsort(int n, unsigned int *ra) {
   int i, j;
   int ir = n;
   int l = (n >> 1) + 1;
-  double rra;
+  unsigned int rra;
 
   for (;;) {
     if (l > 1) {

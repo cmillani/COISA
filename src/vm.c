@@ -104,7 +104,7 @@ void vm_cpu()
 		uint8_t op = (instr >> 26) & 0x3F;
 #if DEBUGING
 		char a;
-		while (PC > 0x700 && (a = getchar()) != 'c')
+		while (PC >= 0x160 && PC <= 0x2bc && (a = getchar()) != 'c')
 		{
 			switch (a)
 			{
@@ -120,7 +120,7 @@ void vm_cpu()
 		}
 		printf("\n<Instr:%x op:%x\n\n", instr, op);
 #endif
-#if PRINTING
+#if PRINTING_INST
 		printf("|-----------------------------------------------|\n");
 		printf("|PC:%x\tInstr:%x\tOp:%x\n", PC, instr,op);
 		printf("|-----------------------------------------------|\n");
@@ -171,15 +171,15 @@ void vm_cpu()
 						break;
 					}
 					case 0b011000: { // mult	011000  DivMult		hi:lo = $s * $t
-						uint64_t mult = (uint64_t)RF[rs] * (uint64_t) RF[rt];//Melho desempenho que efetuar o calculo duas vezes mas ocupa mais memoria, possivel gordura
-						HI = (mult >> 32) | 0xFFFFFFFF;
-						LO = mult | 0xFFFFFFFF;
+						uint64_t mult = (uint64_t)RF[rs] * (uint64_t) RF[rt];
+						HI = (mult >> 32) & 0xFFFFFFFF;
+						LO = mult & 0xFFFFFFFF;
 						break;
 					}
 					case 0b011001: { // multu	011001	DivMult		hi:lo = $s * $t
 						uint64_t mult = (uint64_t)RF[rs] * (uint64_t) RF[rt];
-						HI = (mult >> 32) | 0xFFFFFFFF;
-						LO = mult | 0xFFFFFFFF;  
+						HI = (mult >> 32) & 0xFFFFFFFF;
+						LO = mult & 0xFFFFFFFF;  
 						break;
 					}
 					case 0b100111: { // nor		100111	ArithLog	$d = ~($s | $t)
@@ -199,10 +199,10 @@ void vm_cpu()
 						break;
 					}
 					case 0b000011: { // sra		000011	Shift		$d = $t >> a 
-						if ((int32_t)RF[rs] < 0 && shamt > 0)
-					        RF[rd] = (int32_t)RF[rs] | ~(~0U >> shamt);
+						if ((int32_t)RF[rt] < 0 && shamt > 0)
+					        RF[rd] = (int32_t)RF[rt] | ~(~0U >> shamt);
 					    else
-					        RF[rd] = (int32_t)RF[rs] >> shamt;
+					        RF[rd] = (int32_t)RF[rt] >> shamt;
 						break;
 					}
 					case 0b000111: { // srav	000111	ShiftV		$d = $t >> $s

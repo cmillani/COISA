@@ -3,35 +3,52 @@
  * http://www.bagley.org/~doug/shootout/
  */
 
-// #include <stdio.h>
-// #include <stdlib.h>
-// #include <unistd.h>
-// #include <math.h>
-
-// #include "stdthing.h"
 
 #define IM 139968
 #define IA 3877
 #define IC 29573
 
-double gen_random(double max);
+//#define X86
 
-int
-main(int argc, char *argv[]) {
-  int N = 100000000;
-  double result = 0;
+#ifdef X86
+#include <stdio.h>
+void print(const char *str) {
+  printf("%s", str);
+}
+
+void printnum(int n) {
+  printf("%d", n);
+}
+#else
+#include "stdthing.h"
+#endif
+
+unsigned int gen_random();
+
+int main(int argc, char *argv[]) {
+  int N = 1;
+  long long result = 0;
     
   while (N--) {
-    result = gen_random(100.0);
+    result = gen_random();
   }
-  printf("%d %.9f\n", 0, result);
+  printnum(result);
+  print("\n");
   return(0);
 }
 
-double
-gen_random(double max) {
-  static long last = 42;
-    
-  last = (last * IA + IC) % IM;
-  return( max * last / IM );
+unsigned int gen_random() {
+  static unsigned int last = 42;
+  printnum(last);
+  print("\n");
+  last = last * IA;
+  printnum(last);
+  print("\n");
+  last = last + IC;
+  printnum(last);
+  print("\n");
+  last = last % IM;
+  printnum(last);
+  print("\n");
+  return last;
 }
