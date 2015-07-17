@@ -30,17 +30,18 @@ int main(int argc, char * argv[])
 	fclose(binary);
 #if MEASURING
 	struct timespec tic;
-	clock_gettime(0, &tic);
-	printf("%ld %ld\n", tic.tv_sec, tic.tv_nsec);
+	clock_gettime(CLOCK_REALTIME, &tic);
+	printf("%ld %ld %ld\n", tic.tv_sec, tic.tv_nsec, clock());
 #endif
 	vm_cpu();
 #if MEASURING	
 	struct timespec toc;
-	clock_gettime(0, &toc);
+	clock_gettime(CLOCK_REALTIME ,&toc);
+	printf("%ld %ld %ld\n", toc.tv_sec, toc.tv_nsec, clock());
 #endif
 	
 #if MEASURING
-	printf("ç%fç\n", (toc - tic)/CLOCKS_PER_SEC);
+//	printf("ç%fç\n", (toc - tic)/CLOCKS_PER_SEC);
 #endif
 	
 	return 0;
