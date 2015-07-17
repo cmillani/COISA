@@ -71,7 +71,7 @@ void print_registers(void);
 /* Register file. */
 uint32_t RF[32];
 /*VM memory vector*/
-uint8_t VM_memory[VM_MEMORY_SZ];
+uint8_t VM_memory[VM_MEMORY_SZ] = {0};
 
 uint32_t PC = 0;
 uint32_t nPC = 4;

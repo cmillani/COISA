@@ -100,6 +100,9 @@ link: $(REQOBJ_avr)
 	$(CC_avr) -w -Os -Wl,--gc-sections -mmcu=atmega328p -o bin/ArduinoLoader.elf $^ -L $(OBJDIR)/avr_static -lm
 	/Applications/NewArduino.app/Contents/Java/hardware/tools/avr/bin/avr-objcopy -O ihex -j .eeprom --set-section-flags=.eeprom=alloc,load --no-change-warnings --change-section-lma .eeprom=0 $(OBJDIR)/ArduinoLoader.elf $(OBJDIR)/ArduinoLoader.eep
 	/Applications/NewArduino.app/Contents/Java/hardware/tools/avr/bin/avr-objcopy -O ihex -R .eeprom $(OBJDIR)/ArduinoLoader.elf $(OBJDIR)/$(NAME).hex
+	@echo ">>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<"
+	avr-size bin/ArduinoLoader.elf
+	@echo ">>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<"
 
 atmega328_write:
 	/Applications/NewArduino.app/Contents/Java/hardware/tools/avr/bin/avrdude -C/Applications/NewArduino.app/Contents/Java/hardware/tools/avr/etc/avrdude.conf -v -patmega328p -carduino -P/dev/cu.usbmodem1421 -b115200 -D -Uflash:w:$(OBJDIR)/$(NAME).hex:i 	

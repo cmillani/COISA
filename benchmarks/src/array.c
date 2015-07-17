@@ -37,8 +37,8 @@ void *memset(void *s, int c, unsigned int n)
 
 int
 main(int argc, char *argv[]) {
-  int n = 250;
-  int i, k, x[250], y[250];
+  int n = 100;
+  int i, k, x[100], y[100];
 
   // emulando calloc
   for (i = 0; i < n; ++i) {

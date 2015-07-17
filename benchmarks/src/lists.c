@@ -39,7 +39,7 @@ int curptr = 0;
 
 void *my_malloc(int size) {
   if (curptr + size > POOLMAX) {
-    print("out of memory :-)\n");
+    print("oom\n");
     while(1);
   }
   void *res = &mypool[curptr];
@@ -173,7 +173,7 @@ int test_lists() {
   DLL *li3 = list_new();
   // compare li2 and li1 for equality
   if (!list_equal(li2, li1)) {
-    print("li2 and li1 are not equal\n");
+    print("li2!=li1\n");
     while(1);
   }
   while (!list_empty(li2)) {
@@ -181,7 +181,7 @@ int test_lists() {
   }
   // li2 must now be empty
   if (!list_empty(li2)) {
-    print("li2 should be empty now\n");
+    print("li2 ne\n");
     while(1);
   }
   // remove each individual item from right side of li3 and
@@ -191,40 +191,40 @@ int test_lists() {
   }
   // li3 must now be empty
   if (!list_empty(li3)) {
-    print( "li3 should be empty now\n");
+    print( "li3 ne\n");
     while(1);
   }
   // reverse li1 in place
   list_reverse(li1);
   // check that li1's first item is now SIZE
   if (list_first(li1)->val != SIZE) {
-    print( "li1 first value wrong\n");
+    print( "li1 stw\n");
     while(1);
   }
   // check that li1's last item is now 1
   if (list_last(li1)->val != 1) {
-    print( "last value wrong\n");
+    print( "lstw\n");
     while(1);
   }
   // check that li2's first item is now SIZE
   if (list_first(li2)->val != SIZE) {
-    print( "li2 first value wrong\n");
+    print( "li2 stw\n");
     while(1);
   }
   // check that li2's last item is now 1
   if (list_last(li2)->val != 1) {
-    print( "last value wrong\n");
+    print( "lstw\n");
     while(1);
   }
 
   // check that li1's length is still SIZE
   if (list_length(li1) != SIZE) {
-    print( "li1 size wrong\n");
+    print( "li1 szw\n");
     while(1);
   }
   // compare li1 and li2 for equality
   if (!list_equal(li1, li2)) {
-    print( "li1 and li2 are not equal\n");
+    print( "li1!=li2\n");
     while(1);
   }
   len = list_length(li1);

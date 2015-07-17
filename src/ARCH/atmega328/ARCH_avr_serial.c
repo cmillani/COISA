@@ -64,9 +64,9 @@ void printnum(uint32_t number)
 void print(const char *str)
 {
 	int i = 0;
-	while (str[i] != '/0')
+	while (str[i] != '\0')
 	{
-		send_byte(str[i]);
+		send_byte(str[i++]);
 	}
 }
 	

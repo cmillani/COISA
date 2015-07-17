@@ -7,8 +7,8 @@ print sys.argv[1]
 file = open(sys.argv[1], 'rb')
 executable = file.read()
 
-# zero = serial.Serial("/dev/tty.Zero-DevB")
-zero = serial.Serial("/dev/cu.usbmodem1421")
+zero = serial.Serial("/dev/tty.Zero-DevB")
+# zero = serial.Serial("/dev/cu.usbmodem1421")
 print zero.name
 time.sleep(5)
 zero.write(chr(len(executable)/4))
@@ -43,6 +43,7 @@ while True:
 #     sys.stdout.write(' ')
 #     sys.stdout.write(hex(ord(zero.read())))
 #     print
-    print zero.read()
+    received = zero.read()
+    sys.stdout.write(received)
     
 print "End"

@@ -28,8 +28,8 @@ void printnum(int n) {
 
 int
 main(int argc, char *argv[]) {
-  int N = 90;
-  unsigned int ary[91];
+  int N = 20;
+  unsigned int ary[21];
   int i;
     
   for (i=1; i<=N; i++) {

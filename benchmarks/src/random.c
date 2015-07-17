@@ -26,7 +26,7 @@ void printnum(int n) {
 unsigned int gen_random();
 
 int main(int argc, char *argv[]) {
-  int N = 1;
+  int N = 100;
   long long result = 0;
     
   while (N--) {
@@ -39,16 +39,6 @@ int main(int argc, char *argv[]) {
 
 unsigned int gen_random() {
   static unsigned int last = 42;
-  printnum(last);
-  print("\n");
-  last = last * IA;
-  printnum(last);
-  print("\n");
-  last = last + IC;
-  printnum(last);
-  print("\n");
-  last = last % IM;
-  printnum(last);
-  print("\n");
+  last = (last * IA + IC) % IM;
   return last;
 }

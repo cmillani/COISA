@@ -36,13 +36,13 @@ main(int argc, char *argv[]) {
 
   while (NUM--) {
     count = 0;
-    for (i=2; i <= 768; i++) {
+    for (i=2; i <= 500; i++) {
       flags[i] = 1;
     }
-    for (i=2; i <= 768; i++) {
+    for (i=2; i <= 500; i++) {
       if (flags[i]) {
         // remove all multiples of prime: i
-        for (k=i+i; k <= 768; k+=i) {
+        for (k=i+i; k <= 500; k+=i) {
           flags[k] = 0;
         }
         count++;
