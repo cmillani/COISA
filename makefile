@@ -1,6 +1,6 @@
 INCLUDE_i386 = -I src/ -I src/peripherals/encoder/ -I src/peripherals/movement/ -I src/peripherals/PWM/ -I src/peripherals/serial/ -I src/peripherals/ultrasonic/ -I src/ARCH/i386_OS/
 CC_i386 = gcc
-CFLAGS_i386 = 
+CFLAGS_i386 = -DARCH=1 # -DMEASURING=1
 
 OBJDIR = bin
 SRCDIR = src
@@ -92,7 +92,7 @@ $(GOLDENMODELS)/%.out: $(GOLDENMODELS)/%.o
 
 
 i386:
-	$(CC_i386) $(INCLUDE_i386) $(CFLAGS_i386) -DARCH=1 src/*.c src/ARCH/i386_OS/*.c -o $(OBJDIR)/$(NAME)
+	$(CC_i386) $(INCLUDE_i386) $(CFLAGS_i386) src/*.c src/ARCH/i386_OS/*.c -o $(OBJDIR)/$(NAME)
 
 atmega328: link atmega328_write
 	

@@ -29,7 +29,7 @@ extern "C" {
 #ifndef PROCESSOR
 #define PROCESSOR "i386"
 
-#define PROCESSOR_MEMORY_SZ 1800 /* (1/2)k */
+#define PROCESSOR_MEMORY_SZ 1024 * 5 /* (1/2)k */
 
 #endif /*PROCESSOR*/
 
