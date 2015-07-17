@@ -11,6 +11,7 @@ zero = serial.Serial("/dev/tty.Zero-DevB")
 # zero = serial.Serial("/dev/cu.usbmodem1421")
 print zero.name
 time.sleep(5)
+print len(executable)/4
 zero.write(chr(len(executable)/4))
 
 print "Will Read"
