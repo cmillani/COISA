@@ -7,15 +7,20 @@ print sys.argv[1]
 file = open(sys.argv[1], 'rb')
 executable = file.read()
 
-zero = serial.Serial("/dev/tty.Zero-DevB")
-# zero = serial.Serial("/dev/cu.usbmodem1421")
+# zero = serial.Serial("/dev/tty.Zero-DevB") # Upload using bluetooth
+zero = serial.Serial("/dev/cu.usbmodem1421") # Upload using USB
 print zero.name
 time.sleep(5)
+
 print len(executable)/4
-zero.write(chr(len(executable)/4))
+print (len(executable)/4 & 0xFF)
+print ((len(executable)/4 >> 8) & 0xFF)
+zero.write(chr(len(executable)/4 & 0xFF))
+zero.write(chr((len(executable)/4 >> 8) & 0xFF))
 
 print "Will Read"
 
+print zero.readline()
 print zero.readline()
 
 for c in executable:

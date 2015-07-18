@@ -1,6 +1,6 @@
 INCLUDE_i386 = -I src/ -I src/peripherals/encoder/ -I src/peripherals/movement/ -I src/peripherals/PWM/ -I src/peripherals/serial/ -I src/peripherals/ultrasonic/ -I src/ARCH/i386_OS/
 CC_i386 = gcc
-CFLAGS_i386 = -DARCH=1  -DMEASURING=0 -DRUN_VM=1 -DCOUNTING=0
+CFLAGS_i386 = -DARCH=1  -DMEASURING=0 -DRUN_VM=1 -DCOUNTING=0 -DCOUNTING_STACK=0
 
 OBJDIR = bin
 SRCDIR = src
@@ -25,7 +25,7 @@ LD_mips=/opt/cross/mips-binutils/bin/mips-unknown-elf-ld
 LD_SCRIPT_mips=$(MIPSDIR)/linker.ld
 AS_mips=/opt/cross/mips-binutils/bin/mips-unknown-elf-as
 INCLUDE_mips = -I $(MIPSDIR)/extras/lib/
-CFLAGS_mips = -O0 -nostdlib -fno-exceptions -fno-rtti -static -fno-builtin -nostdinc
+CFLAGS_mips = -Os -nostdlib -fno-exceptions -fno-rtti -static -fno-builtin -nostdinc
 LIBRARIES_mips = $(addprefix $(MIPSDIR)/,extras/crt0.s extras/lib/THING_serial.s)
 # LIBRARIES_mips = $(addprefix $(MIPSDIR)/,extras/crt0.s extras/lib/THING_ultrasonic.s extras/lib/THING_serial.s extras/lib/THING_encoder.s extras/lib/THING_movement.s)
 

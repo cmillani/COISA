@@ -87,6 +87,9 @@ void vm_cpu()
 #if COUNTING
 	int instruct_cnt = 0;
 #endif
+#if COUNTING_STACK
+	int max_stack = VM_MEMORY_SZ;
+#endif
 	PC = 0;
 	nPC = 4;
 	RF[0] = 0; //Register $zero must always be zero
@@ -99,6 +102,9 @@ void vm_cpu()
 	{
 #if COUNTING
 		instruct_cnt++;
+#endif
+#if COUNTING_STACK
+	if (max_stack > RF[29] && RF[29] != 0) max_stack = RF[29]; //Stack == 0 means it`s not yet initialized
 #endif
 		uint32_t instr = fetch(PC);
 		uint8_t op = (instr >> 26) & 0x3F;
@@ -522,6 +528,11 @@ void vm_cpu()
 	print("ç");
 	printnum(instruct_cnt);
 	print("ç");
+	print("\n");
+#endif
+#if COUNTING_STACK
+	print("MAXSTACK");
+	printnum(VM_MEMORY_SZ - max_stack);
 	print("\n");
 #endif
 }

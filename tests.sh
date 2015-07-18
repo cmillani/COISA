@@ -24,15 +24,16 @@ for o in `seq 0 3` s; do
     echo ">>>>>>>>>>> Compilando a versão: ${f} Counting <<<<<<<<<<";
 	# o COUNTING=1 habilita a contagem das instrucoes na VM
     make clean
-    make "CFLAGS_i386=${DEFAULT_CFLAGS_i386} -DCOUNTING=1" "CFLAGS_mips=${DEFAULT_CFLAGS_mips} -O${o}"
+    make "CFLAGS_i386=${DEFAULT_CFLAGS_i386} -DCOUNTING=1 -DCOUNTING_STACK=1" "CFLAGS_mips=${DEFAULT_CFLAGS_mips} -O${o}"
 	
 	for f in ${TESTS}; do
 		
 
 	    echo ">>>>>>>>>>> Iniciando o count da versão: ${f} <<<<<<<<<<<";
 		#Conta as instrucoes
-        out=$(($PROG benchmarks/models/${f}) | grep ç | cut -d'ç' -f2)
-        echo $out > tests/${f}.count.o${o}
+        out=$($PROG benchmarks/models/${f})
+        echo $out | grep ç | cut -d'ç' -f2 > tests/${f}.count.o${o}
+		echo $out | grep MAXSTACK | cut -d'K' -f2 > tests/${f}.stack.o${o}
 		#Verifica o tamanho o binario
 		out2=$(ls -l benchmarks/models/${f})
 		echo $out2 | cut -d' ' -f5 > tests/${f}.size.o${o}
