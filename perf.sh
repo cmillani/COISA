@@ -24,7 +24,7 @@ for o in `seq 0 3` s; do
 	if [ -n "$PERF" ]; then
 		echo ">>>>>>>>>>>> Compilando a versão: ${f} HOST 1<<<<<<<<<<<<";
 
-	    make clean
+	    make clean_vm
 	    make i386 "CFLAGS_i386=${DEFAULT_CFLAGS_i386} -DMEASURING=0 -DRUN_VM=0"
 		
 		echo ">>>>>>>>>>>> Rodando sem a CPU para contagem <<<<<<<<<<<<";
@@ -34,18 +34,19 @@ for o in `seq 0 3` s; do
 		    for i in `seq 1 $NUMBER_OF_TESTS`; do
 		        echo "$i/$NUMBER_OF_TESTS"
 
-		        out4=$(($PERF stat $PROG benchmarks/models/${f} > /dev/null) 2>&1 | grep instruction | cut -d ' ' -f10)
+		        out4=$(($PERF stat -x $PROG benchmarks/models/${f} > /dev/null) 2>&1 | grep instruction | cut -d '.' -f1)
+			echo $out4
 		        echo $out4 >> tests/${f}.host1.o${o}
 
 		    done
 
 		    echo ">>>>>>>>>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<<<<<<<<<<";
-		    echo "\n"
+		    echo 
 		done
 		
 		echo ">>>>>>>>>>>> Compilando a versão: ${f} HOST 2<<<<<<<<<<<<";
 
-	    make clean
+	    make clean_vm
 	    make i386 "CFLAGS_i386=${DEFAULT_CFLAGS_i386} -DMEASURING=0 -DRUN_VM=1"
 		
 		echo ">>>>>>>>>>>> Rodando sem a CPU para contagem <<<<<<<<<<<<";
@@ -55,13 +56,14 @@ for o in `seq 0 3` s; do
 		    for i in `seq 1 $NUMBER_OF_TESTS`; do
 		        echo "$i/$NUMBER_OF_TESTS"
 		
-		        out5=$(($PERF stat $PROG benchmarks/models/${f} > /dev/null) 2>&1 | grep instruction | cut -d ' ' -f10)
+		        out5=$(($PERF stat -x $PROG benchmarks/models/${f} > /dev/null) 2>&1 | grep instruction | cut -d '.' -f1)
+			echo $out5
 		        echo $out5 >> tests/${f}.host2.o${o}
 
 		    done
 
 		    echo ">>>>>>>>>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<<<<<<<<<<";
-		    echo "\n"
+		    echo 
 		done
 	fi
 done

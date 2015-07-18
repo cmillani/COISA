@@ -130,3 +130,5 @@ $(OBJDIR)/%.o: $(SRCDIR)/%.c
 
 clean:
 	rm -r $(OBJDIR)/*[!avr_static] $(FOLDERS)
+clean_vm: 
+	rm -r $(OBJDIR)/*[!avr_static]

@@ -33,3 +33,6 @@
 
 #Test Results
 tests/*.o*
+
+#Binaries
+bin/
