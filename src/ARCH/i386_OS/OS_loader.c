@@ -36,9 +36,6 @@ int main(int argc, char * argv[])
 #endif
 #if MEASURING	
 	time_t toc = clock();
-#endif
-	
-#if MEASURING
 	printf("ç%ldç\n", (toc - tic));
 #endif
 	

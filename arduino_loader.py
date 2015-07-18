@@ -20,8 +20,21 @@ zero.write(chr((len(executable)/4 >> 8) & 0xFF))
 
 print "Will Read"
 
-print zero.readline()
-print zero.readline()
+# a = ord(zero.read())
+# zero.read()
+# b = ord(zero.read())
+# zero.read()
+# zero.read()
+# print (a | (b << 8))
+#
+# a = ord(zero.read())
+# zero.read()
+# b = ord(zero.read())
+# zero.read()
+# zero.read()
+# print (a | (b << 8))
+# print zero.readline()
+# print zero.readline()
 
 for c in executable:
     zero.write(chr(ord(c)))
