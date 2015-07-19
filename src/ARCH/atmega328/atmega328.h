@@ -29,7 +29,7 @@ extern "C" {
 #ifndef PROCESSOR
 #define PROCESSOR "ATMEGA328"
 
-#define PROCESSOR_MEMORY_SZ 1670 /* (1/2)k */
+#define PROCESSOR_MEMORY_SZ 1700 /* (1/2)k */
 
 #endif /*PROCESSOR*/
 
