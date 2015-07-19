@@ -525,9 +525,9 @@ void vm_cpu()
 		advance_pc(offset);//Advances the PC
 	}
 #if COUNTING
-	print("ç");
+	print("INSTCOUNT.");
 	printnum(instruct_cnt);
-	print("ç");
+	print(".");
 	print("\n");
 #endif
 #if COUNTING_STACK
