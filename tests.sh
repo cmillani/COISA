@@ -15,7 +15,7 @@ if [ -z "$TIME" ]; then
 	TIME=${TIME:-`which time`}
 fi
 PROG=${PROG:-./bin/microvm}
-NUMBER_OF_TESTS=1
+NUMBER_OF_TESTS=40
 TESTS=${TESTS:-ackermann.x array.x fib.x lists.x matrix.x sieve.x heapsort.x random.x}
 
 rm tests/*o1 tests/*o2 tests/*o3 tests/*os

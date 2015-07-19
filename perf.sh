@@ -14,10 +14,8 @@ if [ -z "$TIME" ]; then
 fi
 
 PROG=${PROG:-./bin/microvm}
-NUMBER_OF_TESTS=1
+NUMBER_OF_TESTS=25
 TESTS=${TESTS:-ackermann.x array.x fib.x lists.x matrix.x sieve.x heapsort.x random.x}
-
-rm tests/*o1 tests/*o2 tests/*o3 tests/*os
 
 for o in `seq 0 3` s; do
     
@@ -34,7 +32,7 @@ for o in `seq 0 3` s; do
 		    for i in `seq 1 $NUMBER_OF_TESTS`; do
 		        echo "$i/$NUMBER_OF_TESTS"
 
-		        out4=$(($PERF stat -e instructions:u -x $PROG benchmarks/models/${f} >> /dev/null) 2>&1 | grep instruction | cut -d '.' -f1)
+		        out4=$(($PERF stat -e instructions:u -x . $PROG benchmarks/models/${f} >> /dev/null) 2>&1 | grep instruction | cut -d '.' -f1)
 			echo $out4
 		        echo $out4 >> tests/${f}.host1.o${o}
 
@@ -56,7 +54,7 @@ for o in `seq 0 3` s; do
 		    for i in `seq 1 $NUMBER_OF_TESTS`; do
 		        echo "$i/$NUMBER_OF_TESTS"
 		
-		        out5=$(($PERF stat -e instructions:u -x $PROG benchmarks/models/${f} >> /dev/null) 2>&1 | grep instruction | cut -d '.' -f1)
+		        out5=$(($PERF stat -e instructions:u -x . $PROG benchmarks/models/${f} >> /dev/null) 2>&1 | grep instruction | cut -d '.' -f1)
 			echo $out5
 		        echo $out5 >> tests/${f}.host2.o${o}
 
