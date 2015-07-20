@@ -4,7 +4,7 @@ optimizations = ["0","1","2","3","s"]
 # optimizations = ["0"]
 files = ["ackermann.x", "array.x", "fib.x", "lists.x", "matrix.x", "sieve.x", "heapsort.x", "random.x"]
 # files = ["a.x"]
-folder = "OSX64Tests/"
+folder = "ARMv7/"
 
 for o in optimizations:
     for f in files:
