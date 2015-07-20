@@ -1,6 +1,6 @@
 INCLUDE_i386 = -I src/ -I src/peripherals/encoder/ -I src/peripherals/movement/ -I src/peripherals/PWM/ -I src/peripherals/serial/ -I src/peripherals/ultrasonic/ -I src/ARCH/i386_OS/
 CC_i386 = gcc
-CFLAGS_i386 = -DARCH=1  -DMEASURING=0 -DRUN_VM=1 -DCOUNTING=0 -DCOUNTING_STACK=0
+CFLAGS_i386 = -DARCH=1  -DMEASURING=0 -DRUN_VM=1 -DCOUNTING=0 -DCOUNTING_STACK=0 -Os
 
 OBJDIR = bin
 SRCDIR = src

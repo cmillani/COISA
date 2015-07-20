@@ -15,7 +15,7 @@ if [ -z "$TIME" ]; then
 	TIME=${TIME:-`which time`}
 fi
 PROG=${PROG:-./bin/microvm}
-NUMBER_OF_TESTS=40
+NUMBER_OF_TESTS=100
 TESTS=${TESTS:-ackermann.x array.x fib.x lists.x matrix.x sieve.x heapsort.x random.x}
 
 rm tests/*o1 tests/*o2 tests/*o3 tests/*os
@@ -24,7 +24,7 @@ for o in `seq 0 3` s; do
     echo ">>>>>>>>>>> Compilando a versão: ${f} Counting <<<<<<<<<<";
 	# o COUNTING=1 habilita a contagem das instrucoes na VM
     make clean
-    make i386 "CFLAGS_i386=${DEFAULT_CFLAGS_i386} -DCOUNTING=1 -DCOUNTING_STACK=1"
+    make i386 "CFLAGS_i386=${DEFAULT_CFLAGS_i386} -DCOUNTING=1 -DCOUNTING_STACK=1 -Os"
 	
 	for f in ${TESTS}; do
 		
@@ -45,7 +45,7 @@ for o in `seq 0 3` s; do
 	echo ">>>>>>>>>>> Compilando a versão: ${f} Testing <<<<<<<<<<<";
 	#o MEASURING=1 habilita a contagem do tempo utilizando o clock()
     make clean
-    make i386 "CFLAGS_i386=${DEFAULT_CFLAGS_i386} -DMEASURING=1"
+    make i386 "CFLAGS_i386=${DEFAULT_CFLAGS_i386} -DMEASURING=1 -Os"
 
 	
 	for f in ${TESTS}; do
