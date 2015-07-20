@@ -35,4 +35,4 @@
 tests/*.o*
 
 #Binaries
-bin/
+./bin/
