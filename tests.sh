@@ -24,19 +24,18 @@ for o in `seq 0 3` s; do
     echo ">>>>>>>>>>> Compilando a versão: ${f} Counting <<<<<<<<<<";
 	# o COUNTING=1 habilita a contagem das instrucoes na VM
     make clean
-    make "CFLAGS_i386=${DEFAULT_CFLAGS_i386} -DCOUNTING=1 -DCOUNTING_STACK=1" "CFLAGS_mips=${DEFAULT_CFLAGS_mips} -O${o}"
-	make "CFLAGS_i386=${DEFAULT_CFLAGS_i386} -DCOUNTING=1 -DCOUNTING_STACK=1" "CFLAGS_mips=${DEFAULT_CFLAGS_mips} -O${o}"
+    make i386 "CFLAGS_i386=${DEFAULT_CFLAGS_i386} -DCOUNTING=1 -DCOUNTING_STACK=1"
 	
 	for f in ${TESTS}; do
 		
 
 	    echo ">>>>>>>>>>> Iniciando o count da versão: ${f} <<<<<<<<<<<";
 		#Conta as instrucoes
-        out=$($PROG benchmarks/models/${f})
+        out=$($PROG benchmarks/bin/o${o}/${f})
         echo $out | grep INSTCOUNT | cut -d '.' -f2 > tests/${f}.count.o${o}
 		echo $out | grep MAXSTACK | cut -d 'K' -f2 > tests/${f}.stack.o${o}
 		#Verifica o tamanho o binario
-		out2=$(ls -l benchmarks/models/${f})
+		out2=$(ls -l benchmarks/bin/o${o}/${f})
 		echo $out2 | cut -d' ' -f5 > tests/${f}.size.o${o}
 
 	    echo ">>>>>>>>>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<<<<<<<<<<";
@@ -46,15 +45,15 @@ for o in `seq 0 3` s; do
 	echo ">>>>>>>>>>> Compilando a versão: ${f} Testing <<<<<<<<<<<";
 	#o MEASURING=1 habilita a contagem do tempo utilizando o clock()
     make clean
-    make "CFLAGS_mips=${DEFAULT_CFLAGS_mips} -O${o}" "CFLAGS_i386=${DEFAULT_CFLAGS_i386} -DMEASURING=1"
-	make "CFLAGS_mips=${DEFAULT_CFLAGS_mips} -O${o}" "CFLAGS_i386=${DEFAULT_CFLAGS_i386} -DMEASURING=1"
+    make i386 "CFLAGS_i386=${DEFAULT_CFLAGS_i386} -DMEASURING=1"
+
 	
 	for f in ${TESTS}; do
 		
 	    echo ">>>>>>>>>>> Iniciando o teste da versão: ${f} <<<<<<<<<<<";
 	    for i in `seq 1 $NUMBER_OF_TESTS`; do
 	        echo "$i/$NUMBER_OF_TESTS"
-	        out3=$(($PROG benchmarks/models/${f}) | grep TIMESPENT | cut -d '.' -f2)
+	        out3=$(($PROG benchmarks/bin/o${o}/${f}) | grep TIMESPENT | cut -d '.' -f2)
 			echo $out3
 			echo $o
 	        echo $out3 >> tests/${f}.time.o${o}
