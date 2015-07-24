@@ -15,7 +15,7 @@ MODELS = $(BENCHDIR)/models
 
 ARCHFILES_avr = ARCH_avr_serial.o
 # ARCHFILES_avr = ARCH_avr_encoder.o ARCH_avr_movement.o ARCH_avr_PWM.o ARCH_avr_serial.o ARCH_avr_ultrasonic.o
-FLAGS_avr = -c -g -Os -w -fno-exceptions -ffunction-sections -fdata-sections -fno-threadsafe-statics -MMD -mmcu=atmega328p -DF_CPU=16000000L -DARDUINO=10603 -DARDUINO_AVR_UNO -DARDUINO_ARCH_A -DRUN_VM=1 -DMEASURING=0
+FLAGS_avr = -c -g -Os -w -fno-exceptions -ffunction-sections -fdata-sections -fno-threadsafe-statics -MMD -mmcu=atmega328p -DF_CPU=16000000L -DARDUINO=10603 -DARDUINO_AVR_UNO -DARDUINO_ARCH_A -DRUN_VM=1 -DMEASURING=1
 INCLUDE_avr = -I/Applications/NewArduino.app/Contents/Java/hardware/arduino/avr/cores/arduino -I/Applications/NewArduino.app/Contents/Java/hardware/arduino/avr/variants/standard -I src/ -I src/peripherals/encoder/ -I src/peripherals/movement/ -I src/peripherals/PWM/ -I src/peripherals/serial/ -I src/peripherals/ultrasonic/ 
 OBJFILES_avr = ArduinoLoader.o avr_static/core.a atmega328.o $(ARCHFILES_avr) vm.o syscall.o HAL.o
 REQOBJ_avr = $(addprefix $(OBJDIR)/, ArduinoLoader.o avr_static/core.a atmega328.o $(ARCHFILES_avr) vm.o syscall.o HAL.o) 

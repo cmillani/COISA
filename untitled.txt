@@ -1,6 +1,0 @@
-/Users/carlos/ellcc/bin/ecc -target mips-linux-eng benchmarks/src/random.c -I MipsCTestCases/extras/lib/ -Os -nostdlib -fno-exceptions -fno-rtti -static -fno-builtin -nostdinc -Wl,-T,MipsCTestCases/linker.ld -Wa,MipsCTestCases/extras/crt0.s,MipsCTestCases/extras/lib/THING_serial.s -o benchmarks/models/random.test
-
-/opt/cross/mips-binutils/bin/mips-unknown-elf-as benchmarks/models/ackermann.s MipsCTestCases/extras/crt0.s MipsCTestCases/extras/lib/THING_serial.s -o benchmarks/models/ackermann.o
-
-/opt/cross/mips-binutils/bin/mips-unknown-elf-ld -T MipsCTestCases/linker.ld benchmarks/models/ackermann.o -o benchmarks/models/ackermann.bin
-/opt/cross/mips-binutils/bin/mips-unknown-elf-objcopy -O binary benchmarks/models/ackermann.bin benchmarks/models/ackermann.x
