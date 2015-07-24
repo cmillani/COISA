@@ -1,10 +1,12 @@
 import os
 
-optimizations = ["0","1","2","3","s"]
+# optimizations = ["0","1","2","3","s"]
+optimizations = ["s"]
 # optimizations = ["0"]
-files = ["ackermann.x", "array.x", "fib.x", "lists.x", "matrix.x", "sieve.x", "heapsort.x", "random.x"]
+# files = ["ackermann.x", "array.x", "fib.x", "lists.x", "matrix.x", "sieve.x", "heapsort.x", "random.x"]
+files = ["ackermann.x", "array.x", "fib.x", "matrix.x", "sieve.x", "heapsort.x", "random.x"]
 # files = ["a.x"]
-folder = "OSX64Tests/"
+folder = "../AVRTests/"
 
 for o in optimizations:
     for f in files:

@@ -1,0 +1,17 @@
+Time results (micro-secs)
+
+	Ackermann	Array	Fib	Heapsort	Lists	Matrix	Random	Sieve
+Mean	220.39	30296.01	127.64	126.71	42.89	69.39	117.6	62089.32
+Std. Dev.	14.60	43.89	11.24	3.20	11.00	8.60	11.08	103.98
+
+
+Ratio Host Instructions per Guest Instructions
+
+	Ackermann	Array	Fib	Heapsort	Lists	Matrix	Random	Sieve
+Ratio	74.12	53.49	91.68	110.90	537.25	223.74	109.28	52.95
+
+
+MIPS (Millions Instructions per Second)
+
+	Ackermann	Array	Fib	Heapsort	Lists	Matrix	Random	Sieve
+MIPS	24.34	26.57	23.53	20.86	10.93	17.48	20.69	26.45

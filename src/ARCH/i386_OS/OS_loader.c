@@ -8,10 +8,10 @@
 
 int main(int argc, char * argv[])
 {
-	FILE * manifest;
 	FILE * binary;
 	int i = 0, j = 0;
 	uint8_t byte;
+	
 	if (argc < 2) 
 	{
 		printf("Expected file name, aborting\n");
