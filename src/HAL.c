@@ -113,18 +113,28 @@ uint8_t hal_call(uint32_t sensid)//Call to hardware I/O
 #if PRINTING
 			printf("(HAL)Ahead called\n");
 #endif		
+			ahead();
 			break;
 		}
 		case 16: { 
 #if PRINTING
 			printf("(HAL)Right called\n");
 #endif		
+			turn_right();
 			break;
 		}
 		case 17: {
 #if PRINTING
 			printf("(HAL)Left called\n");
 #endif		
+			turn_left();
+			break;
+		}
+		case 18: {
+#if PRINTING
+			printf("(HAL)Mov. Setup called\n");
+#endif		
+			setup_movement();
 			break;
 		}
 		case 20: {

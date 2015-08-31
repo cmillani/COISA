@@ -38,27 +38,31 @@ void set_PWM(int pin, int duty_cycle)
     {
         case 1: // OC1A //Arduino Pin 9
         {
+			DDRB |= (1 << DDB1);
             TCCR1A |= (1 << COM1A1) | (1 << WGM10);
-            TCCR1A |= (1 << WGM12) | (1 << CS11);
+            TCCR1B |= (1 << WGM12) | (1 << CS11);
             OCR1A = duty_cycle;
             break;
         }
         case 2: // OC1B //Arduino Pin 10
         {
+			DDRB |= (1 << DDB2);
             TCCR1A |= (1 << COM1B1) | (1 << WGM10);
-            TCCR1A |= (1 << WGM12) | (1 << CS11);
+            TCCR1B |= (1 << WGM12) | (1 << CS11);
             OCR1B = duty_cycle;
             break;
         }
         case 3: // OC2A //Arduino Pin 11
         {
+			DDRB |= (1 << DDB3);
             TCCR2A |= (1 << COM2A1) | (1 << WGM20) | (1 << WGM21);
             TCCR2B |= (1 << CS21);
             OCR2A = duty_cycle;
             break;
         }
-        case 19:// OC2B //Arduino Pin 3
+        case 19:// OC2B  //Arduino Pin 3
         {
+			DDRD |= (1 << DDD3);
             TCCR2A |= (1 << COM2B1) | (1 << WGM20) | (1 << WGM21);
             TCCR2B |= (1 << CS21);
             OCR2B = duty_cycle;
@@ -66,6 +70,7 @@ void set_PWM(int pin, int duty_cycle)
         }
         case 21:// OC0B //Arduino Pin 5
         {
+			DDRD |= (1 << DDD5);
             TCCR0A |= (1 << COM0B1) | (1 << WGM01) | (1 << WGM00);
             TCCR0B |= (1 << CS01);
             OCR0B = duty_cycle;
@@ -73,6 +78,7 @@ void set_PWM(int pin, int duty_cycle)
         }
         case 22:// OC0A //Arduino Pin 6
         {
+			DDRD |= (1 << DDD6);
             TCCR0A |= (1 << COM0A1) | (1 << WGM01) | (1 << WGM00);
             TCCR0B |= (1 << CS01);
             OCR0A = duty_cycle;

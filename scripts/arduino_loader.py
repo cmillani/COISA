@@ -9,7 +9,7 @@ executable = file.read()
 # print len(executable)
 
 # zero = serial.Serial("/dev/tty.Zero-DevB") # Upload using bluetooth
-zero = serial.Serial("/dev/cu.usbmodem1421") # Upload using USB
+zero = serial.Serial("/dev/cu.usbmodem1411") # Upload using USB
 time.sleep(2) # make sure the connection is ok
 
 zero.write(chr(len(executable)/4 & 0xFF))

@@ -13,9 +13,9 @@ NAME = microvm
 GOLDENMODELS = $(BENCHDIR)/goldenmodels
 MODELS = $(BENCHDIR)/models
 
-ARCHFILES_avr = ARCH_avr_serial.o
-# ARCHFILES_avr = ARCH_avr_encoder.o ARCH_avr_movement.o ARCH_avr_PWM.o ARCH_avr_serial.o ARCH_avr_ultrasonic.o
-FLAGS_avr = -c -g -Os -w -fno-exceptions -ffunction-sections -fdata-sections -fno-threadsafe-statics -MMD -mmcu=atmega328p -DF_CPU=16000000L -DARDUINO=10603 -DARDUINO_AVR_UNO -DARDUINO_ARCH_A -DRUN_VM=1 -DMEASURING=1
+# ARCHFILES_avr = ARCH_avr_serial.o
+ARCHFILES_avr = ARCH_avr_encoder.o ARCH_avr_movement.o ARCH_avr_PWM.o ARCH_avr_serial.o ARCH_avr_ultrasonic.o
+FLAGS_avr = -c -g -Os -w -fno-exceptions -ffunction-sections -fdata-sections -fno-threadsafe-statics -MMD -mmcu=atmega328p -DF_CPU=16000000L -DARDUINO=10603 -DARDUINO_AVR_UNO -DARDUINO_ARCH_A -DRUN_VM=1 -DMEASURING=0
 INCLUDE_avr = -I/Applications/NewArduino.app/Contents/Java/hardware/arduino/avr/cores/arduino -I/Applications/NewArduino.app/Contents/Java/hardware/arduino/avr/variants/standard -I src/ -I src/peripherals/encoder/ -I src/peripherals/movement/ -I src/peripherals/PWM/ -I src/peripherals/serial/ -I src/peripherals/ultrasonic/ 
 OBJFILES_avr = ArduinoLoader.o avr_static/core.a atmega328.o $(ARCHFILES_avr) vm.o syscall.o HAL.o
 REQOBJ_avr = $(addprefix $(OBJDIR)/, ArduinoLoader.o avr_static/core.a atmega328.o $(ARCHFILES_avr) vm.o syscall.o HAL.o) 
@@ -26,7 +26,7 @@ LD_SCRIPT_mips=$(MIPSDIR)/linker.ld
 AS_mips=/opt/cross/mips-binutils/bin/mips-unknown-elf-as
 INCLUDE_mips = -I $(MIPSDIR)/extras/lib/
 CFLAGS_mips = -Os -nostdlib -fno-exceptions -fno-rtti -static -fno-builtin -nostdinc
-LIBRARIES_mips = $(addprefix $(MIPSDIR)/,extras/crt0.s extras/lib/THING_serial.s)
+LIBRARIES_mips = $(addprefix $(MIPSDIR)/,extras/crt0.s extras/lib/THING_serial.s extras/lib/THING_movement.s)
 # LIBRARIES_mips = $(addprefix $(MIPSDIR)/,extras/crt0.s extras/lib/THING_ultrasonic.s extras/lib/THING_serial.s extras/lib/THING_encoder.s extras/lib/THING_movement.s)
 
 BENCHMARK_FILES = ackermann array fib lists matrix sieve heapsort random
@@ -111,7 +111,7 @@ link: $(REQOBJ_avr)
 	@echo ">>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<"
 
 atmega328_write:
-	/Applications/NewArduino.app/Contents/Java/hardware/tools/avr/bin/avrdude -C/Applications/NewArduino.app/Contents/Java/hardware/tools/avr/etc/avrdude.conf -v -patmega328p -carduino -P/dev/cu.usbmodem1421 -b115200 -D -Uflash:w:$(OBJDIR)/$(NAME).hex:i 	
+	/Applications/NewArduino.app/Contents/Java/hardware/tools/avr/bin/avrdude -C/Applications/NewArduino.app/Contents/Java/hardware/tools/avr/etc/avrdude.conf -v -patmega328p -carduino -P/dev/cu.usbmodem1411 -b115200 -D -Uflash:w:$(OBJDIR)/$(NAME).hex:i 	
 
 $(OBJDIR)/%.o: $(SRCDIR)/*/*/%.cpp
 	$(CC_avr) $(FLAGS_avr) $(INCLUDE_avr) $^ -o $@

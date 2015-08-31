@@ -76,6 +76,10 @@ uint8_t remove_handler();
 #include "serial.h"
 #endif
 
+#if HAS_MOTORS
+#include "movement.h"
+#endif
+
 #endif /*HAL*/
 
 #ifdef __cplusplus

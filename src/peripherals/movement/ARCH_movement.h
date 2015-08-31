@@ -28,6 +28,16 @@ extern "C" {
 void ahead(void);
 void turn_left(void);
 void turn_right(void);
+void setup_movement(void);
+
+
+void ahead_L(void);
+void ahead_R(void);
+void back_R(void);
+void back_L(void);
+void stop_motor_L(void);//Turn off left motor
+void stop_motor_R(void);//Turn off right motor 
+void control(void);
 
 #endif
 

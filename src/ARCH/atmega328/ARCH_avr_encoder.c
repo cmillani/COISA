@@ -27,6 +27,9 @@ extern "C" {
 #include "ARCH_encoder.h"
 #include <stdint.h>
 #include <stdbool.h>
+	
+	
+#include <serial.h>
 
 volatile uint32_t last_left;
 volatile uint32_t last_right;
@@ -36,6 +39,20 @@ volatile uint32_t pulse_right = 0;
 
 volatile uint32_t left_count = 0;
 volatile uint32_t right_count = 0;
+
+void reset_counter(int side)
+{
+	switch (side)
+	{
+		case RIGHT:
+		right_count = 0;
+		case LEFT:
+		left_count = 0;
+		default:
+		return;
+		break;
+	}
+}
 
 uint32_t read_encoder_counter(int side) //Defined on ARCH
 {
@@ -65,6 +82,8 @@ uint32_t read_encoder_time(int side)
 }
 void start_encoder(void)
 {
+	DDRD &= ~((1 << PD2) | (1 << PD3));
+	PORTD |= ((1 << PD2) | (1 << PD3));
 	EICRA |= (1 << ISC01) | (1 << ISC11); //Configures interrupt on the falling edge
 	EIMSK |= (1 << INT0) | (1 << INT1); //Enables interrupt
 	sei();
@@ -72,19 +91,17 @@ void start_encoder(void)
 
 ISR(INT0_vect)
 {
-  //encoder_right();
-	register uint32_t time_now = TCNT0; 
-	pulse_right = time_now - last_right;
-	last_right = time_now;
-	right_count++;
-}
-ISR(INT1_vect)
-{
-  //encoder_left();
 	register uint32_t time_now = TCNT0; 
 	pulse_left = time_now - last_left;
 	last_left = time_now;
 	left_count++;
+}
+ISR(INT1_vect)
+{
+	register uint32_t time_now = TCNT0; 
+	pulse_right = time_now - last_right;
+	last_right = time_now;
+	right_count++;
 }
 
 #ifdef __cplusplus

@@ -24,5 +24,6 @@ Halcalls:
 	15:Go ahead
 	16:Turn Right
 	17:Turn Left
+	18:Setup
 	
 	20:PWM generator

@@ -5,19 +5,25 @@
 .globl turn_right
 
 ahead:
-	li		$v0, 12		# $v0 = 11
-	li		$v1, 15		# $a0 = 1
+	li		$v0, 12		# $v0 = 12
+	li		$v1, 15		# $a0 = 15
 	syscall 
 	jr		$31					# jump to $31
 	
 turn_right:
-	li		$v0, 12		# $v0 = 11
-	li		$v1, 16		# $a0 = 1
+	li		$v0, 12		# $v0 = 12
+	li		$v1, 16		# $a0 = 16
 	syscall 
 	jr		$31					# jump to $31
 
 turn_left:
-	li		$v0, 12		# $v0 = 11
-	li		$v1, 17		# $a0 = 1
+	li		$v0, 12		# $v0 = 12
+	li		$v1, 17		# $a0 = 17
 	syscall 
 	jr		$31					# jump to $31
+setup_movement:
+	li		$v0, 12		# $v0 = 12
+	li		$v1, 18		# $a0 = 18
+	syscall 
+	jr		$31					# jump to $31
+	
