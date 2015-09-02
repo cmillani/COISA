@@ -31,14 +31,17 @@ extern "C" {
 	
 #include <serial.h>
 
-volatile uint32_t last_left;
-volatile uint32_t last_right;
+volatile uint32_t last_left = 0;
+volatile uint32_t last_right = 0;
 
 volatile uint32_t pulse_left = 0;
 volatile uint32_t pulse_right = 0;
 
 volatile uint32_t left_count = 0;
 volatile uint32_t right_count = 0;
+
+volatile uint32_t timer0_ovf_count = 0;
+volatile uint32_t timer0_last_ovf_count = 0;
 
 void reset_counter(int side)
 {
@@ -85,21 +88,33 @@ void start_encoder(void)
 	DDRD &= ~((1 << PD2) | (1 << PD3));
 	PORTD |= ((1 << PD2) | (1 << PD3));
 	EICRA |= (1 << ISC01) | (1 << ISC11); //Configures interrupt on the falling edge
-	EIMSK |= (1 << INT0) | (1 << INT1); //Enables interrupt
+	EIMSK |= (1 << INT0) | (1 << INT1); //Enables encoder interrupt
+	TIMSK0 |= (1 << TOIE0);//Enables timer overflow interrupt
 	sei();
+}
+
+// uint32_t millees()
+// {
+// 	return timer0_ovf_count;
+// }
+
+ISR(TIMER0_OVF_vect) //Timer0 overflow interrupt
+{
+	timer0_ovf_count++;
 }
 
 ISR(INT0_vect)
 {
-	register uint32_t time_now = TCNT0; 
-	pulse_left = time_now - last_left;
+	register uint32_t time_now = timer0_ovf_count; 
+	
+	pulse_left = (time_now - last_left)>10?(time_now - last_left):pulse_left;
 	last_left = time_now;
 	left_count++;
 }
 ISR(INT1_vect)
 {
-	register uint32_t time_now = TCNT0; 
-	pulse_right = time_now - last_right;
+	register uint32_t time_now = timer0_ovf_count; 
+	pulse_right = (time_now - last_right)>10?(time_now - last_right):pulse_right;
 	last_right = time_now;
 	right_count++;
 }

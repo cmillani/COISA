@@ -32,9 +32,9 @@ extern "C" {
 #include <stdbool.h>
 #include <math.h>
 	
-#define MOVE_DURATION 25
-#define KP 3
-#define KI 0.3
+#define MOVE_DURATION 50
+#define KP 0.3
+#define KI 0.05
 #define BASE_POW 200
 #define MIN_POW 155
 
@@ -187,15 +187,26 @@ void stop_motor_R(void)//Turn off right motor
 }
 void control(void)
 {
-	static unsigned long int I = 0;
+	if (read_encoder_time(LEFT) == 0 || read_encoder_time(RIGHT) == 0) return;
+	static long int I = 0;
 	long int P = 0;
-	long int diff = (read_encoder_time(LEFT) - read_encoder_time(RIGHT) >> 11);
+	printnum(read_encoder_time(LEFT));
+	print(">>");
+	printnum(read_encoder_time(RIGHT));
+	print(">>");
+	long int diff = (read_encoder_time(LEFT) - read_encoder_time(RIGHT))>> 4;
+	printnum(diff);
+	print("--");
 	I += diff * KI;
 	P = diff * KP;
 	
 	pow_right = ((uint16_t)pow_right + I + P) > 255? 255:(pow_right + I + P) < MIN_POW? MIN_POW: (pow_right + I + P);
 	pow_left = ((uint16_t)pow_right - (I + P)) > 255? 255:(pow_right - (I + P)) < MIN_POW? MIN_POW: (pow_right - (I + P));
 	
+	printnum(I);
+	print("--");
+	printnum(P);
+	print("--");
 	printnum(read_encoder_time(RIGHT));
 	print("-");
 	printnum(read_encoder_time(LEFT));

@@ -28,6 +28,9 @@ extern "C" {
 #define RIGHT 1
 #define LEFT 0
 	
+extern volatile uint32_t timer0_ovf_count;
+// uint32_t millees();
+	
 void reset_counter(int side);
 uint32_t read_encoder_counter(int side); //Defined on ARCH
 uint32_t read_encoder_time(int side);
