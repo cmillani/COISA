@@ -29,14 +29,14 @@ void loop();
 #line 18
 void setup() {
 	serial_configure(9600);
-	setup_movement();
-	ahead();
-	printnum(read_encoder_counter(LEFT));
-	print("-");
-	printnum(read_encoder_counter(RIGHT));
-	print("\n");
-	stop_motor_R();
-	stop_motor_L();
+	// setup_movement();
+	// ahead();
+	// printnum(read_encoder_counter(LEFT));
+	// print("-");
+	// printnum(read_encoder_counter(RIGHT));
+	// print("\n");
+	// stop_motor_R();
+	// stop_motor_L();
 	uint8_t size1 = read_byte();
 	uint8_t size2 = read_byte();
 	// send_byte(size1);
