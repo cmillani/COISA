@@ -25,7 +25,7 @@ extern "C" {
 	
 #include <EH.h>
 
-uint16_t ehvec[EHVECSZ] = {0}; //16bits can represent 64k of memory
+void (*ehvec[EHVECSZ])(void) = {0};
 uint8_t vec_size = 0;
 uint8_t ehqueue[EHQUEUESZ] = {0};
 uint8_t queue_init = 0;
@@ -49,8 +49,9 @@ void eh_init(void)
 }
 
 
-int8_t register_handler(uint8_t event_id, void *handler, ...)
+int8_t register_handler(uint8_t event_id, void (*handler)(void), ...)
 {
+	if (!(vec_size < EHVECSZ)) return -2; //No space for one more handler
 	register int8_t selected;
 	for (selected = 0; selected < EVENTQTTY; selected++)
 	{
@@ -63,31 +64,39 @@ int8_t register_handler(uint8_t event_id, void *handler, ...)
 			if (ehvecpointers[selected].id == -1) break; //Selected is now the position of the first empty slot on the array
 		}
 		if (ehvecpointers[selected].id != -1) return -1;//No empty space
-		
 		ehvecpointers[selected].id = event_id; //marks the empty space as the new event
-		//needs to set the starting address
+		ehvecpointers[selected].pos = vec_size; //Position for the first handler = end of the vector
+	}
+	if (ehvec[ehvecpointers[selected].pos] == 0) //No handler in the position after the last handler of this event
+	{
+		ehvec[ehvecpointers[selected].pos] = handler;
+	}
+	else //Shift all right to get space
+	{
 		
 	}
-	
-	ehvecpointers[selected].sz++;
-	
-	
-	
 	//Creates handler
 	
+	
+	//Remember to tell HAL to generate events!
+	
+	ehvecpointers[selected].sz++;
+	vec_size++;
 	return 1;
 }
-int8_t remove_handler(uint8_t event_id, uint8_t handler_id)
+int8_t remove_handler(uint8_t event_id, void (*handler)(void))
 {
 	register int8_t selected;
 	for (selected = 0; selected < EVENTQTTY; selected++)
 	{
 		if (ehvecpointers[selected].id == event_id) break; //Selected is now the position of the event on the vector
 	}
-	if (ehvecpointers[selected].id != event_id) return -1; //Case where there was no break, thus no match was found
+	if (ehvecpointers[selected].id != event_id) return -1; //No such handler
 	
 	//Removes handler and check if event is still generating events -- VERIFY HAL after removing, should stop generating events?
 	
+	
+	vec_size--;
 	return 1;
 }
 void __inline__ event_timer(void)
@@ -130,7 +139,7 @@ int8_t consume_event()
 		}
 		return 1; // Success
 	}
-	else return -1;
+	else return -1; //Nothing to Consume
 }
 
 	

@@ -45,16 +45,18 @@ typedef struct event_point
 
 #define EHVECSZ 10 //Size of the vector of handlers
 #define EHQUEUESZ 10 //Size of the event queue
-extern uint16_t ehvec[EHVECSZ]; //Vector of handlers
+extern void (*ehvec[EHVECSZ])(void); //Vector of handlers
 extern uint8_t ehqueue[EHQUEUESZ]; //Event handlers queue	
+extern uint8_t queue_init;
+extern uint8_t queue_size;
 
 #define EVENTQTTY 4 //Number of different events that can be ganerated
 extern ev_point ehvecpointers[EVENTQTTY]; //Pointer to the part of the vector that corresponds to that event
 
 void eh_init(void); //Initializes the environment
 
-int8_t register_handler(uint8_t event_id, void *handler, ...); //Registers the given function to handle the especified event, returns the handler_id (eventid*eventnumber)
-int8_t remove_handler(uint8_t event_id, uint8_t handler_id); //Removes a handler from a determined event
+int8_t register_handler(uint8_t event_id, void (*handler)(void), ...); //Registers the given function to handle the especified event, returns the handler_id (eventid*eventnumber)
+int8_t remove_handler(uint8_t event_id, void (*handler)(void)); //Removes a handler from a determined event
 void __inline__ event_timer(void); //To be called by the timer and then process data from sensors and (maybe) generate events
 
 int8_t insert_event(uint8_t event_id); //Generates an event

@@ -6,8 +6,46 @@
 
 /*File for debug purpose only. To be used in order to load a binary into the vm*/
 
+#include <EH.h>
+void print_EH(void)
+{
+	printf("*---------------------------------------------------------*\n");
+	printf("EH:\n");
+	printf("Events:\t");
+	for (int i = 0; i < EVENTQTTY; i++)
+	{
+		printf("%d,%d,%d\t", ehvecpointers[i].id, ehvecpointers[i].pos, ehvecpointers[i].sz);
+	}
+	printf("\n");
+	printf("Handlers:\t");
+	for (int i = 0; i < EHVECSZ; i++)
+	{
+		printf("%p\t", ehvec[i]);
+	}
+	printf("\n");
+	printf("Queue:\t");
+	for (int i = 0; i < EHQUEUESZ; i++)
+	{
+		printf("%d\t", ehqueue[i]);
+	}
+	printf("Init:%d,Sz:%d\n", queue_init, queue_size);
+	printf("*---------------------------------------------------------*\n");
+}
+void blah(void)
+{
+	
+}
+
+
 int main(int argc, char * argv[])
 {
+	/*Debugging EH*/
+	print_EH();
+	eh_init();
+	print_EH();	
+	register_handler(1, blah);
+	print_EH();
+	/*End Debugging EH*/
 	FILE * binary;
 	int i = 0, j = 0;
 	uint8_t byte;
