@@ -29,9 +29,11 @@ extern "C" {
 #endif
 
 /*Defined peripherals ids:
-	Ultrasonic		0
-	Serial			1
-	Encoder			2
+	Ultrasonic  0
+	Encoder     5
+	Serial      10
+	Moviment    15
+	
 */
 
 uint8_t hal_call(uint32_t sensid)//Call to hardware I/O

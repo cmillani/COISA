@@ -26,19 +26,24 @@ extern "C" {
 #ifndef CONFIG
 #define CONFIG
 
+/*Debuging and testing info*/
 #define DEBUGING 0
 	
 #define PRINTING 0
 	
 #define PRINTING_INST 0
+/*-------------------------*/
 
+/*Selects which arch will be used*/
 #if ARCH
 #include "ARCH/i386_OS/i386_OS.h"
 #else
 #include "ARCH/atmega328/atmega328.h"
 #endif
+/*-------------------------------*/
 
-#define HAS_MOTORS 1
+/*Define which sensors and peripherals are available*/
+#define HAS_MOTORS 0
 
 #define HAS_ACCELEROMETER 0 //  TODO Define pins
 	
@@ -61,7 +66,8 @@ extern "C" {
 #define HAS_SERIAL 1
 #if HAS_SERIAL
 #endif 
-
+/*--------------------------------------------------*/
+	
 #endif /*CONFIG*/
     
 #ifdef __cplusplus

@@ -18,66 +18,49 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-/*Description: HAL being developed in order to abstract the sensor hardware connected to a microprocessor.
- *It's intended to be used with a VM to make possible an easier programming of a robot or device.
- * 
- * Possible sensors:
- * 
- * Encoder to count the rotations of the motor
- * Ultrasonic distance sensor
- * Infrared reflectance sensor
- * Gyroscope
- * Accelerometer
- * */
+
 #ifdef __cplusplus
 extern "C" {
 #endif
-    
 
-#ifndef HAL
-#define HAL
+#ifndef EH_H
+#define EH_H
 
-#include "config.h" 
-
+#include "config.h"
 #include <inttypes.h>
 
-/**************************************************************************/
-/*******************************HAL functions******************************/
-/**************************************************************************/
+extern uint8_t timer_flag; //Flag to indicate that data must be processed
 
-// uint32_t hal_;
+/*
+	The id if first -1, showing that there is still space for one more event to be handled.
+Once an event handler for a new event must be registered, we search for an empty event (id = -1)
+and use it, changing it`s ID to the one of the new event.
+*/
+typedef struct event_point
+{
+	int8_t id;
+	uint8_t pos;
+	uint8_t sz;
+} ev_point;
 
-uint8_t hal_call(uint32_t sensid);//Call to hardware I/O
+#define EHVECSZ 10 //Size of the vector of handlers
+#define EHQUEUESZ 10 //Size of the event queue
+extern uint16_t ehvec[EHVECSZ]; //Vector of handlers
+extern uint8_t ehqueue[EHQUEUESZ]; //Event handlers queue	
 
-#if HAS_ULTRASONIC
-#include "ultrasonic.h"
-#endif
+#define EVENTQTTY 4 //Number of different events that can be ganerated
+extern ev_point ehvecpointers[EVENTQTTY]; //Pointer to the part of the vector that corresponds to that event
 
-#if HAS_ENCODER
-#include "encoder.h"
-#endif
+void eh_init(void); //Initializes the environment
 
-#if HAS_INFRARED
+int8_t register_handler(uint8_t event_id, void *handler, ...); //Registers the given function to handle the especified event, returns the handler_id (eventid*eventnumber)
+int8_t remove_handler(uint8_t event_id, uint8_t handler_id); //Removes a handler from a determined event
+void __inline__ event_timer(void); //To be called by the timer and then process data from sensors and (maybe) generate events
 
-#endif
+int8_t insert_event(uint8_t event_id); //Generates an event
+int8_t consume_event(); //Gets the id of the next event to be handled
 
-#if HAS_GYROSCOPE
-
-#endif
-
-#if HAS_ACCELEROMETER
-
-#endif
-
-#if HAS_SERIAL
-#include "serial.h"
-#endif
-
-#if HAS_MOTORS
-#include "movement.h"
-#endif
-
-#endif /*HAL*/
+#endif // EH_H
 
 #ifdef __cplusplus
 }

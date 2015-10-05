@@ -1,8 +1,3 @@
-li	$v0, 11
-syscall
-jal	main
-li	$v0, 10
-syscall
 main:
 addiu	$sp,$sp,-4
 sw	$ra,0($sp)
