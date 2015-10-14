@@ -32,7 +32,7 @@ extern "C" {
 extern uint8_t timer_flag; //Flag to indicate that data must be processed
 
 /*
-	The id if first -1, showing that there is still space for one more event to be handled.
+	The id is first -1, showing that there is still space for one more event to be handled.
 Once an event handler for a new event must be registered, we search for an empty event (id = -1)
 and use it, changing it`s ID to the one of the new event.
 */
@@ -53,14 +53,70 @@ extern uint8_t queue_size;
 #define EVENTQTTY 4 //Number of different events that can be ganerated
 extern ev_point ehvecpointers[EVENTQTTY]; //Pointer to the part of the vector that corresponds to that event
 
-void eh_init(void); //Initializes the environment
+/********************************************************************
+** eh_init(void)                                                   **
+**                                                                 **
+** Configures HAL and initilizes variables in order to start EH    **
+********************************************************************/
+void eh_init(void);
 
-int8_t register_handler(uint8_t event_id, void (*handler)(void), ...); //Registers the given function to handle the especified event, returns the handler_id (eventid*eventnumber)
-int8_t remove_handler(uint8_t event_id, void (*handler)(void)); //Removes a handler from a determined event
+/********************************************************************
+** register_handler(uint8_t event_id, void (*handler)(void), ...)  **
+**                                                                 **
+** PARAMS:                                                         **
+** event_id: the id of the event receiving the handler             **
+** handler: pointer to the handler function                        **
+** (...) extra paramaters that vary accordingly to the event       **
+**    (see HAL)                                                    **
+**                                                                 **
+** RETURNS:                                                        **
+** -1 no space for one mor handler error                           **
+** 1 success                                                       **
+**                                                                 **
+** DESCRIPTION:                                                    **
+** Register 'handler' as a callback to be executed when the event  **
+** of id 'event_id' happens                                        **
+********************************************************************/
+int8_t register_handler(uint8_t event_id, void (*handler)(void), ...);
+
+/********************************************************************
+** remove_handler(uint8_t event_id, void (*handler)(void))         **
+**                                                                 **
+** PARAMS:                                                         **
+** event_id: the id of the event receiving the handler             **
+** handler: pointer to the handler function                        **
+**                                                                 **
+** RETURNS:                                                        **
+** -1 handler or event not registered                              **
+** 1 success                                                       **
+**                                                                 **
+** DESCRIPTION:                                                    **
+** removes 'handler' from the handler vector                       **
+********************************************************************/
+int8_t remove_handler(uint8_t event_id, void (*handler)(void));
+
+/********************************************************************
+** event_timer(void)                                               **
+**                                                                 **
+** Function to be executed from time to time, using a hardware     **
+**   clock. Responsible for polling and processing data from some  **
+**   sensors.                                                      **
+********************************************************************/
 void __inline__ event_timer(void); //To be called by the timer and then process data from sensors and (maybe) generate events
 
+/********************************************************************
+** insert_event(uint8_t event_id)                                  **
+**                                                                 **
+** Used to register on the queue an event of the id 'event_id'     **
+********************************************************************/
 int8_t insert_event(uint8_t event_id); //Generates an event
-int8_t consume_event(); //Gets the id of the next event to be handled
+
+/********************************************************************
+** consume_event(void)                                             **
+**                                                                 **
+** Gets the next event to be handled on the queue                  **
+********************************************************************/
+int8_t consume_event(void); //Gets the id of the next event to be handled
 
 #endif // EH_H
 

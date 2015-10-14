@@ -22,7 +22,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-	
+#include <stdio.h>
 #include <EH.h>
 
 void (*ehvec[EHVECSZ])(void) = {0};
@@ -51,8 +51,8 @@ void eh_init(void)
 
 int8_t register_handler(uint8_t event_id, void (*handler)(void), ...)
 {
-	if (!(vec_size < EHVECSZ)) return -2; //No space for one more handler
-	register int8_t selected;
+	if (!(vec_size < EHVECSZ)) return -1; //No space for one more handler
+	register uint8_t selected;
 	for (selected = 0; selected < EVENTQTTY; selected++)
 	{
 		if (ehvecpointers[selected].id == event_id) break; //Selected is now the position of the event on the vector
@@ -65,20 +65,69 @@ int8_t register_handler(uint8_t event_id, void (*handler)(void), ...)
 		}
 		if (ehvecpointers[selected].id != -1) return -1;//No empty space
 		ehvecpointers[selected].id = event_id; //marks the empty space as the new event
-		ehvecpointers[selected].pos = vec_size; //Position for the first handler = end of the vector
-	}
-	if (ehvec[ehvecpointers[selected].pos] == 0) //No handler in the position after the last handler of this event
-	{
-		ehvec[ehvecpointers[selected].pos] = handler;
-	}
-	else //Shift all right to get space
-	{
+		for (ehvecpointers[selected].pos = 0; ehvecpointers[selected].pos < EHVECSZ; ehvecpointers[selected].pos++)
+		{
+			if (ehvec[ehvecpointers[selected].pos] == 0) break;
+		}//Gets the first free position for the new event
 		
 	}
-	//Creates handler
+	if (ehvec[ehvecpointers[selected].pos + ehvecpointers[selected].sz] == 0) //No handler in the position after the last handler of this event
+	{
+		ehvec[ehvecpointers[selected].pos + ehvecpointers[selected].sz] = handler;
+	}
+	else //Shift to get space
+	{
+		printf("Uhul\n");
+		register uint8_t first_zero;
+		register uint8_t idnearfz;
+		for (first_zero = 0; first_zero < EHVECSZ; first_zero++)
+		{
+			if (ehvec[first_zero] == 0) break;
+		}//find first empty, check which event it is from, then shift... firstzero>pos and <= pos+sz
+		if (first_zero < ehvecpointers[selected].pos) // the empty space is before the event, should shift left
+		{
+			for (idnearfz = 0; idnearfz < selected; idnearfz++) //To set idnearfz
+			{
+				if(first_zero < ehvecpointers[idnearfz].pos + ehvecpointers[idnearfz].sz -1) break; //Ensures that the first zero is on that id
+			}
+			for (;idnearfz <= selected; idnearfz++) //Starts shifting id by id
+			{
+				printf("idnearfz** %d\n",ehvecpointers[idnearfz].id);
+				ehvec[first_zero] = ehvec[ehvecpointers[idnearfz].pos + ehvecpointers[idnearfz].sz -1];
+				ehvec[ehvecpointers[idnearfz].pos + ehvecpointers[idnearfz].sz -1] = 0;
+				first_zero = ehvecpointers[idnearfz].pos + ehvecpointers[idnearfz].sz -1;
+				ehvecpointers[idnearfz].pos--;
+			}
+			ehvec[ehvecpointers[selected].pos + ehvecpointers[selected].sz] = handler;
+		}
+		else if (first_zero > ehvecpointers[selected].pos + ehvecpointers[selected].sz)
+		{
+			printf("FZ %d\n",first_zero);
+			for (idnearfz = EVENTQTTY-1; idnearfz > selected; idnearfz--) //To set idnearfz
+			{
+				printf("%d %d, %d\n", ehvecpointers[idnearfz].pos, ehvecpointers[idnearfz].sz, idnearfz);
+				if (ehvecpointers[idnearfz].id == -1) continue; //Position not used
+				if(first_zero > ehvecpointers[idnearfz].pos + ehvecpointers[idnearfz].sz -1) break; //Ensures that the first zero is on that id
+			}
+			printf(">>>idnearfz %d\n",ehvecpointers[idnearfz].id);
+			for (;idnearfz > selected; idnearfz--) //Starts shifting id by id
+			{
+				printf("idnearfz %d\n",ehvecpointers[idnearfz].id);
+				ehvec[first_zero] = ehvec[ehvecpointers[idnearfz].pos];
+				ehvec[ehvecpointers[idnearfz].pos] = 0;
+				first_zero = ehvecpointers[idnearfz].pos;
+				ehvecpointers[idnearfz].pos++;
+			}
+			ehvec[ehvecpointers[selected].pos + ehvecpointers[selected].sz] = handler;
+		}
+		else //Should never get here
+		{
+			return -3;
+		}
+		
+	}
 	
-	
-	//Remember to tell HAL to generate events!
+	//TODO:Remember to tell HAL to generate events!
 	
 	ehvecpointers[selected].sz++;
 	vec_size++;
@@ -91,9 +140,26 @@ int8_t remove_handler(uint8_t event_id, void (*handler)(void))
 	{
 		if (ehvecpointers[selected].id == event_id) break; //Selected is now the position of the event on the vector
 	}
-	if (ehvecpointers[selected].id != event_id) return -1; //No such handler
+	if (ehvecpointers[selected].id != event_id) return -1; //No such event
+
+	register int8_t event;
+	for (event = ehvecpointers[selected].pos; event < ehvecpointers[selected].sz; event++)
+	{
+		if (ehvec[event] == handler) break;
+	}
+	if (ehvec[event] != handler) return -1; //No such handler
 	
-	//Removes handler and check if event is still generating events -- VERIFY HAL after removing, should stop generating events?
+	
+	ehvec[event] = ehvec[ehvecpointers[selected].pos + ehvecpointers[selected].sz -1]; //Make sure there won`t be a gap in the vector
+	ehvec[ehvecpointers[selected].pos + ehvecpointers[selected].sz - 1] = 0;
+	
+	if (--ehvecpointers[selected].sz == 0) //Became empty
+	{
+		ehvecpointers[selected].id = -1;
+		ehvecpointers[selected].pos = 0;
+	}
+	
+	//TODO:VERIFY HAL after removing, should stop generating events?
 	
 	
 	vec_size--;
@@ -115,7 +181,7 @@ int8_t insert_event(uint8_t event_id)
 	}
 	else return -1; // No space, returns error
 }
-int8_t consume_event()
+int8_t consume_event(void)
 {
 	if (queue_size > 0) //Has something
 	{
@@ -135,7 +201,7 @@ int8_t consume_event()
 		register  uint8_t loop;
 		for (loop = ehvecpointers[selected].pos; loop < ehvecpointers[selected].sz; loop++)
 		{
-			//cpu(ehvec[loop]); // Should call CPU this way, sending the address to the function
+			//cpu(ehvec[loop]); // TODO:Should call CPU this way, sending the address to the function
 		}
 		return 1; // Success
 	}

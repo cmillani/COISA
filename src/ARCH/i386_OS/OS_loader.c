@@ -44,7 +44,14 @@ int main(int argc, char * argv[])
 	eh_init();
 	print_EH();	
 	register_handler(1, blah);
+	register_handler(2, blah + 1);
+	register_handler(3, blah + 2);
 	print_EH();
+	// remove_handler(1, blah);
+	print_EH();
+	register_handler(2, blah + 3);
+	print_EH();
+	insert_event(1);
 	/*End Debugging EH*/
 	FILE * binary;
 	int i = 0, j = 0;
