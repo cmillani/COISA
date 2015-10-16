@@ -22,8 +22,34 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-#include <stdio.h>
+	
 #include <EH.h>
+	
+#include <stdio.h>
+void print_EH(void)
+{
+	printf("*---------------------------------------------------------*\n");
+	printf("EH:\n");
+	printf("Events:\t");
+	for (int i = 0; i < EVENTQTTY; i++)
+	{
+		printf("%d,%d,%d\t", ehvecpointers[i].id, ehvecpointers[i].pos, ehvecpointers[i].sz);
+	}
+	printf("\n");
+	printf("Handlers:\t");
+	for (int i = 0; i < EHVECSZ; i++)
+	{
+		printf("%p\t", ehvec[i]);
+	}
+	printf("\n");
+	printf("Queue:\t");
+	for (int i = 0; i < EHQUEUESZ; i++)
+	{
+		printf("%d\t", ehqueue[i]);
+	}
+	printf("Init:%d,Sz:%d\n", queue_init, queue_size);
+	printf("*---------------------------------------------------------*\n");
+}
 
 void (*ehvec[EHVECSZ])(void) = {0};
 uint8_t vec_size = 0;
@@ -77,7 +103,6 @@ int8_t register_handler(uint8_t event_id, void (*handler)(void), ...)
 	}
 	else //Shift to get space
 	{
-		printf("Uhul\n");
 		register uint8_t first_zero;
 		register uint8_t idnearfz;
 		for (first_zero = 0; first_zero < EHVECSZ; first_zero++)
@@ -92,7 +117,6 @@ int8_t register_handler(uint8_t event_id, void (*handler)(void), ...)
 			}
 			for (;idnearfz <= selected; idnearfz++) //Starts shifting id by id
 			{
-				printf("idnearfz** %d\n",ehvecpointers[idnearfz].id);
 				ehvec[first_zero] = ehvec[ehvecpointers[idnearfz].pos + ehvecpointers[idnearfz].sz -1];
 				ehvec[ehvecpointers[idnearfz].pos + ehvecpointers[idnearfz].sz -1] = 0;
 				first_zero = ehvecpointers[idnearfz].pos + ehvecpointers[idnearfz].sz -1;
@@ -102,17 +126,13 @@ int8_t register_handler(uint8_t event_id, void (*handler)(void), ...)
 		}
 		else if (first_zero > ehvecpointers[selected].pos + ehvecpointers[selected].sz)
 		{
-			printf("FZ %d\n",first_zero);
 			for (idnearfz = EVENTQTTY-1; idnearfz > selected; idnearfz--) //To set idnearfz
 			{
-				printf("%d %d, %d\n", ehvecpointers[idnearfz].pos, ehvecpointers[idnearfz].sz, idnearfz);
 				if (ehvecpointers[idnearfz].id == -1) continue; //Position not used
 				if(first_zero > ehvecpointers[idnearfz].pos + ehvecpointers[idnearfz].sz -1) break; //Ensures that the first zero is on that id
 			}
-			printf(">>>idnearfz %d\n",ehvecpointers[idnearfz].id);
 			for (;idnearfz > selected; idnearfz--) //Starts shifting id by id
 			{
-				printf("idnearfz %d\n",ehvecpointers[idnearfz].id);
 				ehvec[first_zero] = ehvec[ehvecpointers[idnearfz].pos];
 				ehvec[ehvecpointers[idnearfz].pos] = 0;
 				first_zero = ehvecpointers[idnearfz].pos;
@@ -185,6 +205,7 @@ int8_t consume_event(void)
 {
 	if (queue_size > 0) //Has something
 	{
+		printf("CONSUMING\n");
 		register int8_t selected;
 		{ //Block used to scope the event variable
 			register uint8_t event = ehqueue[queue_init];
@@ -199,8 +220,10 @@ int8_t consume_event(void)
 			if (ehvecpointers[selected].id != event) return -1; //No event with that id found -- ERROR
 		}
 		register  uint8_t loop;
-		for (loop = ehvecpointers[selected].pos; loop < ehvecpointers[selected].sz; loop++)
+		printf("SELEC %d\n",ehvecpointers[selected].id);
+		for (loop = ehvecpointers[selected].pos; loop < ehvecpointers[selected].pos + ehvecpointers[selected].sz; loop++)
 		{
+			printf("%p\n",ehvec[loop]);
 			//cpu(ehvec[loop]); // TODO:Should call CPU this way, sending the address to the function
 		}
 		return 1; // Success

@@ -53,6 +53,8 @@ extern uint8_t queue_size;
 #define EVENTQTTY 4 //Number of different events that can be ganerated
 extern ev_point ehvecpointers[EVENTQTTY]; //Pointer to the part of the vector that corresponds to that event
 
+void print_EH(void);
+
 /********************************************************************
 ** eh_init(void)                                                   **
 **                                                                 **
@@ -114,7 +116,11 @@ int8_t insert_event(uint8_t event_id); //Generates an event
 /********************************************************************
 ** consume_event(void)                                             **
 **                                                                 **
-** Gets the next event to be handled on the queue                  **
+** RETURNS:                                                        **
+** 1  success                                                      **
+** -1 error                                                        **
+**                                                                 **
+** Tells the EH to consume the next event on the queue             **
 ********************************************************************/
 int8_t consume_event(void); //Gets the id of the next event to be handled
 
