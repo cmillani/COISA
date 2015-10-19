@@ -25,6 +25,7 @@ extern "C" {
 	
 #include <EH.h>
 #include <vm.h>
+#include <string.h>
 	
 #include <stdio.h>
 void print_EH(void)
@@ -34,7 +35,7 @@ void print_EH(void)
 	printf("Events:\t");
 	for (int i = 0; i < EVENTQTTY; i++)
 	{
-		printf("%d,%d,%d\t", ehvecpointers[i].id, ehvecpointers[i].pos, ehvecpointers[i].sz);
+		printf("%d,%d,%d, %s\t", ehvecpointers[i].id, ehvecpointers[i].pos, ehvecpointers[i].sz, ehvecpointers[i].name);
 	}
 	printf("\n");
 	printf("Handlers:\t");
@@ -46,7 +47,7 @@ void print_EH(void)
 	printf("Queue:\t");
 	for (int i = 0; i < EHQUEUESZ; i++)
 	{
-		printf("%d\t", ehqueue[i]);
+		printf("%d, %s\t", ehqueue[i].id, ehqueue[i].name);
 	}
 	printf("Init:%d,Sz:%d\n", queue_init, queue_size);
 	printf("*---------------------------------------------------------*\n");
@@ -54,7 +55,7 @@ void print_EH(void)
 
 void (*ehvec[EHVECSZ])(void) = {0};
 uint8_t vec_size = 0;
-uint8_t ehqueue[EHQUEUESZ] = {0};
+new_event ehqueue[EHQUEUESZ] = {0};
 uint8_t queue_init = 0;
 uint8_t queue_size = 0;
 uint8_t timer_flag = 0;
@@ -76,15 +77,15 @@ void eh_init(void)
 }
 
 
-int8_t register_handler(uint8_t event_id, void (*handler)(void), ...)
+int8_t register_handler(uint8_t event_id, void (*handler)(void), char * evname, ...)
 {
 	if (!(vec_size < EHVECSZ)) return -1; //No space for one more handler
 	register uint8_t selected;
 	for (selected = 0; selected < EVENTQTTY; selected++)
 	{
-		if (ehvecpointers[selected].id == event_id) break; //Selected is now the position of the event on the vector
+		if (ehvecpointers[selected].id == event_id && ehvecpointers[selected].name == evname) break; //Selected is now the position of the event on the vector
 	}
-	if (ehvecpointers[selected].id != event_id) //Case where there was no break, thus no match was found
+	if (ehvecpointers[selected].id != event_id || ehvecpointers[selected].name != evname) //Case where there was no break, thus no match was found
 	{
 		for (selected = 0; selected < EVENTQTTY; selected++)//Searches for the first empty space
 		{
@@ -92,6 +93,7 @@ int8_t register_handler(uint8_t event_id, void (*handler)(void), ...)
 		}
 		if (ehvecpointers[selected].id != -1) return -1;//No empty space
 		ehvecpointers[selected].id = event_id; //marks the empty space as the new event
+		ehvecpointers[selected].name = evname;
 		for (ehvecpointers[selected].pos = 0; ehvecpointers[selected].pos < EHVECSZ; ehvecpointers[selected].pos++)
 		{
 			if (ehvec[ehvecpointers[selected].pos] == 0) break;
@@ -154,14 +156,14 @@ int8_t register_handler(uint8_t event_id, void (*handler)(void), ...)
 	vec_size++;
 	return 1;
 }
-int8_t remove_handler(uint8_t event_id, void (*handler)(void))
+int8_t remove_handler(uint8_t event_id, void (*handler)(void), char * evname)
 {
 	register int8_t selected;
 	for (selected = 0; selected < EVENTQTTY; selected++)
 	{
-		if (ehvecpointers[selected].id == event_id) break; //Selected is now the position of the event on the vector
+		if (ehvecpointers[selected].id == event_id && ehvecpointers[selected].name == evname) break; //Selected is now the position of the event on the vector
 	}
-	if (ehvecpointers[selected].id != event_id) return -1; //No such event
+	if (ehvecpointers[selected].id != event_id || ehvecpointers[selected].name != evname) return -1; //No such event
 
 	register int8_t event;
 	for (event = ehvecpointers[selected].pos; event < ehvecpointers[selected].sz; event++)
@@ -192,11 +194,12 @@ void __inline__ event_timer(void)
 }
 
 
-int8_t insert_event(uint8_t event_id)
+int8_t insert_event(uint8_t event_id, char * evname)
 {
 	if (queue_size < EHQUEUESZ) //Still has space
 	{
-		ehqueue[(queue_init + queue_size) % EHQUEUESZ] = event_id; //Its a vector list
+		ehqueue[(queue_init + queue_size) % EHQUEUESZ].id = event_id; //Its a vector list
+		ehqueue[(queue_init + queue_size) % EHQUEUESZ].name = evname; //Its a vector list
 		queue_size++; 
 		return 1; //Success
 	}
@@ -209,16 +212,16 @@ int8_t consume_event(void)
 		printf(">>Consuming event<<\n");
 		register int8_t selected;
 		{ //Block used to scope the event variable
-			register uint8_t event = ehqueue[queue_init];
+			register new_event event = ehqueue[queue_init];
 			queue_size--;
 			queue_init = (queue_init+1)%(EHQUEUESZ); //Pops the first value and updates 
 		
 			//Gets the event pointer to
 			for (selected = 0; selected < EVENTQTTY; selected++)
 			{
-				if (ehvecpointers[selected].id == event) break; //Selected is now the position of the event on the vector
+				if (ehvecpointers[selected].id == event.id && ehvecpointers[selected].name == event.name) break; //Selected is now the position of the event on the vector
 			}
-			if (ehvecpointers[selected].id != event) return -1; //No event with that id found -- ERROR
+			if (ehvecpointers[selected].id != event.id || ehvecpointers[selected].name != event.name) return -1; //No event with that id found -- ERROR
 		}
 		register  uint8_t loop;
 		for (loop = ehvecpointers[selected].pos; loop < ehvecpointers[selected].pos + ehvecpointers[selected].sz; loop++)

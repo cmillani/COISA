@@ -39,18 +39,25 @@ and use it, changing it`s ID to the one of the new event.
 typedef struct event_point
 {
 	int8_t id;
+	char * name;
 	uint8_t pos;
 	uint8_t sz;
 } ev_point;
 
+typedef struct event
+{
+	uint8_t id;
+	char * name;
+} new_event;
+
 #define EHVECSZ 10 //Size of the vector of handlers
 #define EHQUEUESZ 10 //Size of the event queue
 extern void (*ehvec[EHVECSZ])(void); //Vector of handlers
-extern uint8_t ehqueue[EHQUEUESZ]; //Event handlers queue	
+extern new_event ehqueue[EHQUEUESZ]; //Events queue	
 extern uint8_t queue_init;
 extern uint8_t queue_size;
 
-#define EVENTQTTY 4 //Number of different events that can be ganerated
+#define EVENTQTTY 4 //Number of different events that can be generated
 extern ev_point ehvecpointers[EVENTQTTY]; //Pointer to the part of the vector that corresponds to that event
 
 void print_EH(void);
@@ -79,7 +86,7 @@ void eh_init(void);
 ** Register 'handler' as a callback to be executed when the event  **
 ** of id 'event_id' happens                                        **
 ********************************************************************/
-int8_t register_handler(uint8_t event_id, void (*handler)(void), ...);
+int8_t register_handler(uint8_t event_id, void (*handler)(void), char * evname, ...);
 
 /********************************************************************
 ** remove_handler(uint8_t event_id, void (*handler)(void))         **
@@ -95,7 +102,7 @@ int8_t register_handler(uint8_t event_id, void (*handler)(void), ...);
 ** DESCRIPTION:                                                    **
 ** removes 'handler' from the handler vector                       **
 ********************************************************************/
-int8_t remove_handler(uint8_t event_id, void (*handler)(void));
+int8_t remove_handler(uint8_t event_id, void (*handler)(void), char * evname);
 
 /********************************************************************
 ** event_timer(void)                                               **
@@ -111,7 +118,7 @@ void __inline__ event_timer(void); //To be called by the timer and then process 
 **                                                                 **
 ** Used to register on the queue an event of the id 'event_id'     **
 ********************************************************************/
-int8_t insert_event(uint8_t event_id); //Generates an event
+int8_t insert_event(uint8_t event_id, char * evname); //Generates an event
 
 /********************************************************************
 ** consume_event(void)                                             **
