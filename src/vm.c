@@ -82,7 +82,7 @@ void advance_pc(int32_t offset)
 	nPC  += offset;
 }
 
-void vm_cpu()
+void vm_cpu(uint32_t newPC)
 {
 #if COUNTING
 	int instruct_cnt = 0;
@@ -90,7 +90,7 @@ void vm_cpu()
 #if COUNTING_STACK
 	int max_stack = VM_MEMORY_SZ;
 #endif
-	PC = 0;
+	PC = newPC;
 	nPC = 4;
 	RF[0] = 0; //Register $zero must always be zero
 	RF[31] = 1; //Return default (if the program does not set to zero, should put error)

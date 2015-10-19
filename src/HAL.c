@@ -24,9 +24,12 @@ extern "C" {
 
 #include "HAL.h"
 #include "vm.h"
+#include <string.h>
+	
 #if PRINTING
 #include <stdio.h>
 #endif
+#include <stdio.h>
 
 /*Defined peripherals ids:
 	Ultrasonic  0
@@ -36,9 +39,29 @@ extern "C" {
 	
 */
 
-uint8_t hal_call(uint32_t sensid)//Call to hardware I/O
+uint8_t hal_call(uint32_t sensid, char identifier[])//Call to hardware I/O
 {
 	uint8_t retval = -1;
+	printf(">>>>%s<<<<\n",identifier);
+	//Building new hal_call
+	if (!strcmp(identifier,"US_S"))
+	{
+		
+	}
+	else if (!strcmp(identifier,"ENCD"))
+	{
+		
+	}
+	else if (!strcmp(identifier,"RXTX"))
+	{
+		
+	}
+	else if (!strcmp(identifier,"MOVM"))
+	{
+		
+	}
+	//End of build
+	
 	switch (sensid)
 	{
 #if HAS_ULTRASONIC // Verify if there is an ultrasonic sensor built

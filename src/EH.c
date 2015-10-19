@@ -24,6 +24,7 @@ extern "C" {
 #endif
 	
 #include <EH.h>
+#include <vm.h>
 	
 #include <stdio.h>
 void print_EH(void)
@@ -223,7 +224,7 @@ int8_t consume_event(void)
 		for (loop = ehvecpointers[selected].pos; loop < ehvecpointers[selected].pos + ehvecpointers[selected].sz; loop++)
 		{
 			printf("EV: %d || Jump to:%p\n", ehvecpointers[selected].id ,ehvec[loop]);
-			//cpu(ehvec[loop]); // TODO:Should call CPU this way, sending the address to the function
+			// vm_cpu(ehvec[loop]); // TODO:Should call CPU this way, sending the address to the function
 		}
 		return 1; // Success
 	}

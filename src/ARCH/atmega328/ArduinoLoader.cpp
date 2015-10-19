@@ -54,7 +54,7 @@ void setup() {
 	unsigned long tic = micros();
 #endif
 #if RUN_VM
-	vm_cpu();
+	vm_cpu(0);
 #endif
 #if MEASURING
 	unsigned long toc = micros();

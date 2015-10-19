@@ -42,8 +42,8 @@ LD_SCRIPT_mips=$(MIPSDIR)/linker.ld
 AS_mips=/opt/cross/mips-binutils/bin/mips-unknown-elf-as
 INCLUDE_mips = -I $(MIPSDIR)/extras/lib/
 CFLAGS_mips = -Os -nostdlib -fno-exceptions -fno-rtti -static -fno-builtin -nostdinc
-LIBRARIES_mips = $(addprefix $(MIPSDIR)/,extras/crt0.s extras/lib/THING_serial.s extras/lib/THING_movement.s)
-# LIBRARIES_mips = $(addprefix $(MIPSDIR)/,extras/crt0.s extras/lib/THING_ultrasonic.s extras/lib/THING_serial.s extras/lib/THING_encoder.s extras/lib/THING_movement.s)
+# LIBRARIES_mips = $(addprefix $(MIPSDIR)/,extras/crt0.s extras/lib/THING_serial.s extras/lib/THING_movement.s)
+LIBRARIES_mips = $(addprefix $(MIPSDIR)/,extras/crt0.s extras/lib/THING_ultrasonic.s extras/lib/THING_serial.s extras/lib/THING_encoder.s extras/lib/THING_movement.s)
 #############################################################
 
 

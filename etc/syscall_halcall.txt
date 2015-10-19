@@ -8,22 +8,29 @@ Syscalls:
 	12: Hal Call
 
 Halcalls:
+	US_S
 	0: Ultrasonic Read
 	1: Ultrasonic Configure
 	
+	ENCD
 	5: Read encoder count
 	6: Read encoder time between "holes"
 	7: Start encoder
 	
+	RXTX
 	10:Serial send byte
 	11:Serial read byte
 	12:Serial configure 
 	13:Print Number
 	14:Print String
 	
+	MOVM
 	15:Go ahead
 	16:Turn Right
 	17:Turn Left
 	18:Setup
 	
+	PWMG
 	20:PWM generator
+	
+	TIMR - TODO

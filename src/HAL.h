@@ -47,7 +47,7 @@ extern "C" {
 
 // uint32_t hal_;
 
-uint8_t hal_call(uint32_t sensid);//Call to hardware I/O
+uint8_t hal_call(uint32_t sensid, char identifier[]);//Call to hardware I/O
 
 #if HAS_ULTRASONIC
 #include "ultrasonic.h"

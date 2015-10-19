@@ -16,45 +16,44 @@ void blah(void)
 int main(int argc, char * argv[])
 {
 	/*Debugging EH*/
-	print_EH();
-	eh_init();
-	print_EH();	
-	register_handler(1, blah);
-	register_handler(2, blah + 1);
-	register_handler(2, blah + 2);
-	register_handler(3, blah + 3);
-	print_EH();
-	insert_event(1);
-	insert_event(2);
-	insert_event(3);
-	insert_event(1);
-	print_EH();
-	consume_event();
-	consume_event();
-	consume_event();
-	consume_event();
-	print_EH();
-	insert_event(1);
-	insert_event(2);
-	insert_event(3);
-	insert_event(1);
-	print_EH();
-	consume_event();
-	consume_event();
-	consume_event();
-	consume_event();
-	print_EH();
-	insert_event(1);
-	insert_event(2);
-	insert_event(3);
-	insert_event(1);
-	print_EH();
-	consume_event();
-	consume_event();
-	consume_event();
-	consume_event();
-	print_EH();
-		
+	// print_EH();
+// 	eh_init();
+// 	print_EH();
+// 	register_handler(1, blah);
+// 	register_handler(2, blah + 1);
+// 	register_handler(2, blah + 2);
+// 	register_handler(3, blah + 3);
+// 	print_EH();
+// 	insert_event(1);
+// 	insert_event(2);
+// 	insert_event(3);
+// 	insert_event(1);
+// 	print_EH();
+// 	consume_event();
+// 	consume_event();
+// 	consume_event();
+// 	consume_event();
+// 	print_EH();
+// 	insert_event(1);
+// 	insert_event(2);
+// 	insert_event(3);
+// 	insert_event(1);
+// 	print_EH();
+// 	consume_event();
+// 	consume_event();
+// 	consume_event();
+// 	consume_event();
+// 	print_EH();
+// 	insert_event(1);
+// 	insert_event(2);
+// 	insert_event(3);
+// 	insert_event(1);
+// 	print_EH();
+// 	consume_event();
+// 	consume_event();
+// 	consume_event();
+// 	consume_event();
+// 	print_EH();
 	/*End Debugging EH*/
 	FILE * binary;
 	int i = 0, j = 0;
@@ -79,7 +78,7 @@ int main(int argc, char * argv[])
 	time_t tic = clock();
 #endif
 #if RUN_VM
-	vm_cpu();
+	vm_cpu(0);
 #endif
 #if MEASURING	
 	time_t toc = clock();

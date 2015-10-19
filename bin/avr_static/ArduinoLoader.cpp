@@ -38,7 +38,7 @@ void setup() {
 	{
 		send_byte(VM_memory[i]);
 	}
-	vm_cpu();
+	vm_cpu(0);
 	send_byte(0x18);
 }
 
