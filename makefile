@@ -22,8 +22,8 @@ MODELS = $(BENCHDIR)/models
 ##################### Arduino Variables ####################
 ARDUINO_BIN = /Applications/NewArduino.app/Contents/Java/hardware/tools/avr/bin
 ARDUINO_AVR = /Applications/NewArduino.app/Contents/Java/hardware/arduino/avr
-
 AVRDUDE_CONF = /Applications/NewArduino.app/Contents/Java/hardware/tools/avr/etc/avrdude.conf
+
 AVRDUDE = $(ARDUINO_BIN)/avrdude
 AVR_OBJCPY = $(ARDUINO_BIN)/avr-objcopy
 AVR_SIZE = $(ARDUINO_BIN)/avr-size

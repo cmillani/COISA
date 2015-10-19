@@ -205,12 +205,12 @@ int8_t consume_event(void)
 {
 	if (queue_size > 0) //Has something
 	{
-		printf("CONSUMING\n");
+		printf(">>Consuming event<<\n");
 		register int8_t selected;
 		{ //Block used to scope the event variable
 			register uint8_t event = ehqueue[queue_init];
 			queue_size--;
-			queue_init++; //Pops the first value and updates 
+			queue_init = (queue_init+1)%(EHQUEUESZ); //Pops the first value and updates 
 		
 			//Gets the event pointer to
 			for (selected = 0; selected < EVENTQTTY; selected++)
@@ -220,10 +220,9 @@ int8_t consume_event(void)
 			if (ehvecpointers[selected].id != event) return -1; //No event with that id found -- ERROR
 		}
 		register  uint8_t loop;
-		printf("SELEC %d\n",ehvecpointers[selected].id);
 		for (loop = ehvecpointers[selected].pos; loop < ehvecpointers[selected].pos + ehvecpointers[selected].sz; loop++)
 		{
-			printf("%p\n",ehvec[loop]);
+			printf("EV: %d || Jump to:%p\n", ehvecpointers[selected].id ,ehvec[loop]);
 			//cpu(ehvec[loop]); // TODO:Should call CPU this way, sending the address to the function
 		}
 		return 1; // Success

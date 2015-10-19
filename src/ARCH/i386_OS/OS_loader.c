@@ -34,6 +34,26 @@ int main(int argc, char * argv[])
 	consume_event();
 	consume_event();
 	print_EH();
+	insert_event(1);
+	insert_event(2);
+	insert_event(3);
+	insert_event(1);
+	print_EH();
+	consume_event();
+	consume_event();
+	consume_event();
+	consume_event();
+	print_EH();
+	insert_event(1);
+	insert_event(2);
+	insert_event(3);
+	insert_event(1);
+	print_EH();
+	consume_event();
+	consume_event();
+	consume_event();
+	consume_event();
+	print_EH();
 		
 	/*End Debugging EH*/
 	FILE * binary;
