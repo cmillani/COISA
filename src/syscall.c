@@ -29,7 +29,8 @@ extern "C" {
 
 #include "syscall.h"
 #include "HAL.h"
-	
+#include <EH.h>
+#include <stdio.h>	
 #if PRINTING
 #include <stdio.h>
 #endif
@@ -52,9 +53,20 @@ uint8_t syscall(uint8_t trap_code)
 		}
 		case 12: { //Hall Call
 			RF[2] = hal_call(RF[3], (char *)&VM_memory[RF[12]]);
+			break;
 		}
-		
-		// TODO Insert hall 
+		case 13: { //Setup Event Handler
+			eh_init();
+			break;
+		}
+		case 14: { //Register Event Handler
+			register_handler((uint8_t)VM_memory[RF[4]], (void (*)()) &VM_memory[RF[5]], (char *)&VM_memory[RF[6]], VM_memory[RF[7]], VM_memory[RF[8]]);
+			break;
+		}
+		case 15: { //Remove Event Handler
+			remove_handler((uint8_t)VM_memory[RF[4]], (void (*)()) &VM_memory[RF[5]], (char *)&VM_memory[RF[6]]);
+			break;
+		}
 		
 		default: {
 			break;

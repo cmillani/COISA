@@ -18,27 +18,33 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
+
 #ifdef __cplusplus
 extern "C" {
-#endif
-    
-#ifndef VM_H
-#define VM_H
+#endif    
 
-#include "config.h"
-#include <inttypes.h>
+#include <timer.h>
+#include <avr/interrupt.h>
+#include <avr/io.h>
+	
+ISR(TIMER2_OVF_vect)
+{
+	
+}
+ISR(TIMER2_COMPA_vect)
+{
+	
+}
 
-#define VM_MEMORY_SZ PROCESSOR_MEMORY_SZ /* Available memory from the microprocessor  */
-/* Register file. */
-extern uint32_t RF[32];
-/*VM memory vector*/
-extern uint8_t VM_memory[VM_MEMORY_SZ];
-
-uint32_t fetch(uint32_t PC);
-void vm_cpu(uint32_t newPC);
-void advance_pc(int32_t offset);
-
-#endif // VM_H
+void init_timer()
+{
+	uint16_t prescaler = best_PS();//CHAMAR FUNCAO
+	
+	TCCR2A |= 0;
+	TCCR2B |= 0;
+	TCNT2 |= 0;
+	TIMSK2 |= 0;
+}
 
 #ifdef __cplusplus
 }

@@ -6,6 +6,9 @@ Syscalls:
 	10: Exit
 	11: System Startup
 	12: Hal Call
+	13: Init EH
+	14: Register EV
+	15: Remove EV
 
 Halcalls:
 	US_S

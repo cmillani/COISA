@@ -16,24 +16,30 @@ void blah(void)
 int main(int argc, char * argv[])
 {
 	/*Debugging EH*/
-	// print_EH();
-// 	eh_init();
-// 	print_EH();
-// 	register_handler(1, blah);
-// 	register_handler(2, blah + 1);
-// 	register_handler(2, blah + 2);
-// 	register_handler(3, blah + 3);
-// 	print_EH();
-// 	insert_event(1);
+	char a[] = "A";
+	char b[] = "B";
+	char c[] = "C";
+	char d[] = "D";
+	print_EH();
+	eh_init();
+	print_EH();
+	register_handler(1, blah, a);
+	register_handler(2, blah + 1, b);
+	register_handler(2, blah + 2, c);
+	register_handler(2, blah + 3, d);
+	register_handler(2, blah + 4, "E");
+	print_EH();
+	register_handler(1, blah+5, a);
+	insert_event(1, a);
 // 	insert_event(2);
 // 	insert_event(3);
 // 	insert_event(1);
-// 	print_EH();
+	print_EH();
+	consume_event();
 // 	consume_event();
 // 	consume_event();
 // 	consume_event();
-// 	consume_event();
-// 	print_EH();
+	print_EH();
 // 	insert_event(1);
 // 	insert_event(2);
 // 	insert_event(3);

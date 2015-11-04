@@ -8,5 +8,6 @@ set_PWM:
 	la 		$t4, pwmID
 	syscall 
 	jr		$31					# jump to $31
-	
+
+.data	
 pwmID: .asciiz "PWMG"

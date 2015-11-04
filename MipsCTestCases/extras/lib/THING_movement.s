@@ -30,6 +30,7 @@ setup_movement:
 	la 		$t4, movmID
 	syscall 
 	jr		$31					# jump to $31
-	
+
+.data	
 movmID: .asciiz "MOVM"
 	

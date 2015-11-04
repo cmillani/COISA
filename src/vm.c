@@ -31,6 +31,7 @@ extern "C" {
 #include "vm.h"
 #include "syscall.h"
 #include <inttypes.h>
+#include <EH.h>
 
 #if DEBUGING
 #include <stdio.h>
@@ -100,11 +101,15 @@ void vm_cpu(uint32_t newPC)
 
 	while (!halted) 
 	{
+		if (timer_flag)
+		{
+			print("OLAR\r\n"); //TODO : do stuff
+		}
 #if COUNTING
 		instruct_cnt++;
 #endif
 #if COUNTING_STACK
-	if (max_stack > RF[29] && RF[29] != 0) max_stack = RF[29]; //Stack == 0 means it`s not yet initialized
+		if (max_stack > RF[29] && RF[29] != 0) max_stack = RF[29]; //Stack == 0 means it`s not yet initialized
 #endif
 		uint32_t instr = fetch(PC);
 		uint8_t op = (instr >> 26) & 0x3F;
@@ -536,6 +541,7 @@ void vm_cpu(uint32_t newPC)
 	print("\n");
 #endif
 }
+
 uint32_t fetch(uint32_t PC)
 {
 #if DEBUGING

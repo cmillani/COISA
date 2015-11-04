@@ -39,4 +39,5 @@ print:
 	syscall 
 	jr		$31					# jump to $31
 	
+.data
 rxtxID: .asciiz "RXTX"

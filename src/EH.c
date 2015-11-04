@@ -188,7 +188,7 @@ int8_t remove_handler(uint8_t event_id, void (*handler)(void), char * evname)
 	vec_size--;
 	return 1;
 }
-void __inline__ event_timer(void)
+void event_timer(void)
 {
 	timer_flag = 1; //Set flag to true
 }

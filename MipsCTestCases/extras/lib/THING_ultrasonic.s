@@ -17,4 +17,5 @@ configure_ultrasonic:
 	syscall 
 	jr		$31					# jump to $31
 
+.data
 usID: .asciiz "US_S"

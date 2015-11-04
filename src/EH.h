@@ -111,7 +111,7 @@ int8_t remove_handler(uint8_t event_id, void (*handler)(void), char * evname);
 **   clock. Responsible for polling and processing data from some  **
 **   sensors.                                                      **
 ********************************************************************/
-void __inline__ event_timer(void); //To be called by the timer and then process data from sensors and (maybe) generate events
+void event_timer(void); //To be called by the timer and then process data from sensors and (maybe) generate events
 
 /********************************************************************
 ** insert_event(uint8_t event_id)                                  **

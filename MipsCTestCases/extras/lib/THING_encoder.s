@@ -25,4 +25,5 @@ start_encoder:
 	syscall 
 	jr		$31					# jump to $31
 
+.data
 encdID: .asciiz "ENCD"

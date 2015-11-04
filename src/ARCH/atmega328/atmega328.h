@@ -29,6 +29,7 @@ extern "C" {
 #ifndef PROCESSOR
 #define PROCESSOR "ATMEGA328"
 
+#define MAX_PS 1024
 #define PROCESSOR_MEMORY_SZ 1700 /* (1/2)k */
 
 #endif /*PROCESSOR*/
