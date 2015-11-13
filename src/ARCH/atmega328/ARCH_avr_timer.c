@@ -26,24 +26,50 @@ extern "C" {
 #include <timer.h>
 #include <avr/interrupt.h>
 #include <avr/io.h>
-	
-ISR(TIMER2_OVF_vect)
-{
-	
-}
-ISR(TIMER2_COMPA_vect)
-{
-	
-}
+#include <HAL.h>
 
-void init_timer()
+void init_timer(void)
 {
 	uint16_t prescaler = best_PS();//CHAMAR FUNCAO
+	uint32_t comparer = 0;
+	while (prescaler != 1 && prescaler != 8 && prescaler != 32 && prescaler != 64 && prescaler != 128 && prescaler != 256 && prescaler != 1024)
+	{
+		prescaler = prescaler << 1;
+	}
+	comparer = ((F_CPU/prescaler)/F_INT);
+	while (comparer > 255)
+	{
+		comparer = comparer >> 1;
+		threshold = threshold << 1;
+	}
 	
-	TCCR2A |= 0;
-	TCCR2B |= 0;
-	TCNT2 |= 0;
-	TIMSK2 |= 0;
+	TCCR2B |= ((prescaler >= 64) << CS22) | ((prescaler==8 || prescaler==32 || prescaler==256 || prescaler==1024) << CS21) | ((prescaler==1 || prescaler==32 || prescaler==128 || prescaler==1024) << CS20);
+	OCR2A = comparer;
+	OCR2B = comparer;
+	TCNT2 = 0;
+	TIMSK2 |= (1 << OCIE2A);
+	
+	sei();
+	
+	printnum(TIMSK2);
+	print("\n");
+	printnum(OCR2A);
+	print("\n");
+	printnum(TCCR2B);
+	print("\n");
+	// PORTB |= (1 << PB5);
+}
+	
+ISR(TIMER2_COMPA_vect)
+{
+	// PORTB |= (1 << PB5);
+	counter++;
+	if (counter == threshold)
+	{
+		// CALL FUNCTION ->Set variable
+		PORTB ^= (1 << PB5);
+		counter = 0;
+	}
 }
 
 #ifdef __cplusplus

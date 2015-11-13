@@ -17,18 +17,30 @@
 
                                                                        
 #include "Arduino.h"
-#include "vm.h"
-#include "HAL.h"
+#include <vm.h>
+#include <HAL.h>
 #include <inttypes.h>
 
 #include <movement.h>
 #include <encoder.h>
-
+#include <timer.h>
 void setup();
 void loop();
 #line 18
+
 void setup() {
 	serial_configure(9600);
+	DDRB |= (1 << PB5);
+	// PORTB |= (1 << PB5);
+	init_timer();
+	// start_encoder();
+    // TCCR0B |= (1 << CS01);
+	// setup_movement();
+	while(1)
+	{
+		// printnum(TCNT2);
+		// print("\n");
+	}
 	// setup_movement();
 	// ahead();
 	// printnum(read_encoder_counter(LEFT));

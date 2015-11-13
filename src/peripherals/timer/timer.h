@@ -19,10 +19,18 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef TIMER_H
-#define TIMER_H
+#ifdef __cplusplus
+extern "C" {
+#endif 
 
 #include <CONFIG_timer.h>
 #include <ARCH_timer.h>
 
+#ifndef TIMER_H
+#define TIMER_H
+
+#endif
+	
+#ifdef __cplusplus
+}
 #endif

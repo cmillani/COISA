@@ -19,6 +19,10 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+#ifdef __cplusplus
+extern "C" {
+#endif 
+
 #ifndef CONFIGTIM_H
 #define CONFIGTIM_H
 
@@ -27,6 +31,12 @@
 #define F_CPU 8000000 //CPU CLOCK
 #define F_INT 20 //TIMER INTERRUPT FREQ
 
+extern int threshold;
+extern volatile int counter;
 uint16_t best_PS(void);
 
+#endif
+
+#ifdef __cplusplus
+}
 #endif

@@ -19,9 +19,17 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+#ifdef __cplusplus
+extern "C" {
+#endif 
+
 #ifndef ARCHTIM_H
 #define ARCHTIM_H
 
 void init_timer(void);
 
+#endif
+
+#ifdef __cplusplus
+}
 #endif

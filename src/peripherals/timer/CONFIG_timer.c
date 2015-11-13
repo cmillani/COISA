@@ -26,16 +26,22 @@ extern "C" {
 #include <CONFIG_timer.h>
 #include <config.h>	
 
+int threshold = 1;
+volatile int counter = 0;
 	
 uint16_t best_PS(void)
 {
-	uint16_t ideal = (F_CPU/F_INT);
-	uint16_t real = 1;
+	uint32_t ideal = (F_CPU/F_INT);
+	uint32_t real = 1;
 	while (ideal > 1)
 	{
 		real = real << 1;
 		ideal = ideal >> 1; 
-		if (F_CPU%(real*F_INT) != 0 || real >= MAX_PS) break;
+		if (F_CPU%(real*F_INT) != 0 || real >= MAX_PS) 
+		{
+			real = real >> 1;
+			break;
+		}
 	}
 	return real;
 }

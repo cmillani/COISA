@@ -99,7 +99,7 @@ void start_encoder(void)
 // }
 
 ISR(TIMER0_OVF_vect) //Timer0 overflow interrupt
-{
+{ 
 	timer0_ovf_count++;
 }
 
