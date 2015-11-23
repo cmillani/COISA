@@ -106,7 +106,7 @@ ISR(TIMER0_OVF_vect) //Timer0 overflow interrupt
 ISR(INT0_vect)
 {
 	register uint32_t time_now = timer0_ovf_count;
-	if (time_now - last_left>10)
+	if (time_now - last_left>100)
 	{
 		pulse_left = (time_now - last_left);
 		last_left = time_now;
@@ -116,7 +116,7 @@ ISR(INT0_vect)
 ISR(INT1_vect)
 {
 	register uint32_t time_now = timer0_ovf_count;
-	if (time_now - last_right>10)
+	if (time_now - last_right>100)
 	{
 		pulse_right = (time_now - last_right);
 		last_right = time_now;

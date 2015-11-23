@@ -5,7 +5,11 @@ import time
 # print sys.argv[1]
 print "Starting"
 
-zero = serial.Serial("/dev/cu.usbmodem1411") # Upload using USB
+if len(sys.argv) >= 2 and sys.argv[1] == "-bt":
+    zero = serial.Serial("/dev/tty.Zero-DevB") # Upload using bluetooth
+else:
+    zero = serial.Serial("/dev/cu.usbmodem1411") # Upload using USB
+
 
 while True:
     

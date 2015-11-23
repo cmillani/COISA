@@ -47,7 +47,7 @@ extern "C" {
 #define BETWEEN_HOLES (ONE_WHEEL_TURN/HOLE_COUNT)
 #define ONE_TURN ((BETWEEN_WHEELS_DIST+WHEEL_WIDTH)*M_PI)
 // #define QUARTER_TURN (((ONE_TURN/4)/(BETWEEN_HOLES)) + 1)
-#define QUARTER_TURN 22
+#define QUARTER_TURN 15
 
 #define RIG0 22 //6 on arduino
 #define RIG1 1 //09 on arduino

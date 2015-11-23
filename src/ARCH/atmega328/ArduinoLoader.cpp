@@ -30,6 +30,18 @@ void loop();
 
 void setup() {
 	serial_configure(9600);
+	// setup_movement();
+	// ahead_L();
+	// ahead_R();
+	// while(1)
+	// {
+		// printnum(read_encoder_counter(LEFT));
+		// print("-");
+		// printnum(read_encoder_time(LEFT));
+		// print("\n");
+	// }
+	// stop_motor_L();
+	// stop_motor_R();
 	while(1)
 	{
 		// setup_movement();
