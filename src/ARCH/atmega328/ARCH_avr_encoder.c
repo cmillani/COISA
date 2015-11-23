@@ -87,7 +87,7 @@ void start_encoder(void)
 {
 	DDRD &= ~((1 << PD2) | (1 << PD3));
 	PORTD |= ((1 << PD2) | (1 << PD3));
-	EICRA |= (1 << ISC01) | (1 << ISC11); //Configures interrupt on the falling edge
+	EICRA |= (1 << ISC01) | (1 << ISC00) | (1 << ISC11) | (1 << ISC10); //Configures interrupt on the falling edge
 	EIMSK |= (1 << INT0) | (1 << INT1); //Enables encoder interrupt
 	TIMSK0 |= (1 << TOIE0);//Enables timer overflow interrupt
 	sei();
@@ -105,18 +105,23 @@ ISR(TIMER0_OVF_vect) //Timer0 overflow interrupt
 
 ISR(INT0_vect)
 {
-	register uint32_t time_now = timer0_ovf_count; 
-	
-	pulse_left = (time_now - last_left)>10?(time_now - last_left):pulse_left;
-	last_left = time_now;
-	left_count++;
+	register uint32_t time_now = timer0_ovf_count;
+	if (time_now - last_left>10)
+	{
+		pulse_left = (time_now - last_left);
+		last_left = time_now;
+		left_count++;
+	}
 }
 ISR(INT1_vect)
 {
-	register uint32_t time_now = timer0_ovf_count; 
-	pulse_right = (time_now - last_right)>10?(time_now - last_right):pulse_right;
-	last_right = time_now;
-	right_count++;
+	register uint32_t time_now = timer0_ovf_count;
+	if (time_now - last_right>10)
+	{
+		pulse_right = (time_now - last_right);
+		last_right = time_now;
+		right_count++;
+	}
 }
 
 #ifdef __cplusplus

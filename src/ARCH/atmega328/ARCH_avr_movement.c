@@ -32,11 +32,11 @@ extern "C" {
 #include <stdbool.h>
 #include <math.h>
 	
-#define MOVE_DURATION 50
+#define MOVE_DURATION 30
 #define KP 0.3
 #define KI 0.05
-#define BASE_POW 200
-#define MIN_POW 155
+#define BASE_POW 235
+#define MIN_POW 195
 
 #define HOLE_COUNT 20.0
 #define DIAMETER 69.6
@@ -46,7 +46,8 @@ extern "C" {
 #define ONE_WHEEL_TURN (DIAMETER*M_PI)
 #define BETWEEN_HOLES (ONE_WHEEL_TURN/HOLE_COUNT)
 #define ONE_TURN ((BETWEEN_WHEELS_DIST+WHEEL_WIDTH)*M_PI)
-#define QUARTER_TURN (((ONE_TURN/4)/(BETWEEN_HOLES)) + 1)
+// #define QUARTER_TURN (((ONE_TURN/4)/(BETWEEN_HOLES)) + 1)
+#define QUARTER_TURN 22
 
 #define RIG0 22 //6 on arduino
 #define RIG1 1 //09 on arduino
@@ -67,32 +68,38 @@ void setup_movement(void)
 }
 void ahead(void)
 {
+	// printnum(read_encoder_counter(RIGHT));
+	// print("\n");
 	reset_counter(LEFT);
 	reset_counter(RIGHT);
 	while(read_encoder_counter(RIGHT) < MOVE_DURATION && read_encoder_counter(LEFT) < MOVE_DURATION)
 	{
 		ahead_R();
 		ahead_L();
-		control();
+		// printnum(read_encoder_counter(RIGHT));
+		// print("\n");
+		// control();
 	}
-	if (read_encoder_counter(RIGHT) < MOVE_DURATION )
-	{
-		stop_motor_L();
-		while (read_encoder_counter(RIGHT) < MOVE_DURATION )
-		{
-			ahead_R();
-		}
-		stop_motor_R();
-	}
-	else if (read_encoder_counter(LEFT) < MOVE_DURATION )
-	{
-		stop_motor_R();
-		while (read_encoder_counter(LEFT) < MOVE_DURATION )
-		{
-			ahead_L();
-		}
-		stop_motor_L();
-	}
+	// if (read_encoder_counter(RIGHT) < MOVE_DURATION )
+// 	{
+// 		stop_motor_L();
+// 		while (read_encoder_counter(RIGHT) < MOVE_DURATION )
+// 		{
+// 			ahead_R();
+// 		}
+// 		stop_motor_R();
+// 	}
+// 	else if (read_encoder_counter(LEFT) < MOVE_DURATION )
+// 	{
+// 		stop_motor_R();
+// 		while (read_encoder_counter(LEFT) < MOVE_DURATION )
+// 		{
+// 			ahead_L();
+// 		}
+// 		stop_motor_L();
+// 	}
+	stop_motor_L();
+	stop_motor_R();
 }
 void turn_left(void)
 {
@@ -102,26 +109,28 @@ void turn_left(void)
 	{
 		ahead_R();
 		back_L();
-		control();
+		// control();
 	}
-	if (read_encoder_counter(RIGHT) < (int)(QUARTER_TURN+0.5) )
-	{
-		stop_motor_L();
-		while (read_encoder_counter(RIGHT) < (int)(QUARTER_TURN+0.5) )
-		{
-			ahead_R();
-		}
-		stop_motor_R();
-	}
-	else if (read_encoder_counter(LEFT) < (int)(QUARTER_TURN-0.5) )
-	{
-		stop_motor_R();
-		while (read_encoder_counter(LEFT) < (int)(QUARTER_TURN-0.5) )
-		{
-			back_L();
-		}
-		stop_motor_L();
-	}
+	// if (read_encoder_counter(RIGHT) < (int)(QUARTER_TURN+0.5) )
+// 	{
+// 		stop_motor_L();
+// 		while (read_encoder_counter(RIGHT) < (int)(QUARTER_TURN+0.5) )
+// 		{
+// 			ahead_R();
+// 		}
+// 		stop_motor_R();
+// 	}
+// 	else if (read_encoder_counter(LEFT) < (int)(QUARTER_TURN-0.5) )
+// 	{
+// 		stop_motor_R();
+// 		while (read_encoder_counter(LEFT) < (int)(QUARTER_TURN-0.5) )
+// 		{
+// 			back_L();
+// 		}
+// 		stop_motor_L();
+// 	}
+	stop_motor_L();
+	stop_motor_R();
 }
 void turn_right(void)
 {
@@ -131,26 +140,28 @@ void turn_right(void)
 	{
 		back_R();
 		ahead_L();
-		control();
+		// control();
 	}
-	if (read_encoder_counter(RIGHT) < (int)(QUARTER_TURN-0.5) )
-	{
-		stop_motor_L();
-		while (read_encoder_counter(RIGHT) < (int)(QUARTER_TURN-0.5) )
-		{
-			back_R();
-		}
-		stop_motor_R();
-	}
-	else if (read_encoder_counter(LEFT) < (int)(QUARTER_TURN+0.5) )
-	{
-		stop_motor_R();
-		while (read_encoder_counter(LEFT) < (int)(QUARTER_TURN+0.5) )
-		{
-			ahead_L();
-		}
-		stop_motor_L();
-	}
+	// if (read_encoder_counter(RIGHT) < (int)(QUARTER_TURN-0.5) )
+// 	{
+// 		stop_motor_L();
+// 		while (read_encoder_counter(RIGHT) < (int)(QUARTER_TURN-0.5) )
+// 		{
+// 			back_R();
+// 		}
+// 		stop_motor_R();
+// 	}
+// 	else if (read_encoder_counter(LEFT) < (int)(QUARTER_TURN+0.5) )
+// 	{
+// 		stop_motor_R();
+// 		while (read_encoder_counter(LEFT) < (int)(QUARTER_TURN+0.5) )
+// 		{
+// 			ahead_L();
+// 		}
+// 		stop_motor_L();
+// 	}
+	stop_motor_L();
+	stop_motor_R();
 }
 /**************************************************************/
 

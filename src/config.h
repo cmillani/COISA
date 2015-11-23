@@ -43,7 +43,7 @@ extern "C" {
 /*-------------------------------*/
 
 /*Define which sensors and peripherals are available*/
-#define HAS_MOTORS 0
+#define HAS_MOTORS 1
 
 #define HAS_ACCELEROMETER 0 //  TODO Define pins
 	
