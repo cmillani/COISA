@@ -43,14 +43,20 @@ volatile uint32_t right_count = 0;
 volatile uint32_t timer0_ovf_count = 0;
 volatile uint32_t timer0_last_ovf_count = 0;
 
+volatile uint8_t changed;
+
 void reset_counter(int side)
 {
 	switch (side)
 	{
 		case RIGHT:
-		right_count = 0;
+			right_count = 0;
+			pulse_right = 0;
+			break;
 		case LEFT:
-		left_count = 0;
+			left_count = 0;
+			pulse_left = 0;
+			break;
 		default:
 		return;
 		break;
@@ -111,6 +117,7 @@ ISR(INT0_vect)
 		pulse_left = (time_now - last_left);
 		last_left = time_now;
 		left_count++;
+		changed = 1;
 	}
 }
 ISR(INT1_vect)
@@ -121,6 +128,7 @@ ISR(INT1_vect)
 		pulse_right = (time_now - last_right);
 		last_right = time_now;
 		right_count++;
+		changed = 1;
 	}
 }
 
