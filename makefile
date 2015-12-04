@@ -1,5 +1,5 @@
 ###################### i386 Variables ######################
-INCLUDE_i386 = -I src/ -I src/peripherals/encoder/ -I src/peripherals/movement/ -I src/peripherals/PWM/ -I src/peripherals/serial/ -I src/peripherals/ultrasonic/ -I src/ARCH/i386_OS/ -I src/peripherals/timer/
+INCLUDE_i386 = -I src/ -I src/peripherals/encoder/ -I src/peripherals/movement/ -I src/peripherals/PWM/ -I src/peripherals/serial/ -I src/peripherals/ultrasonic/ -I src/ARCH/i386_OS/ -I src/peripherals/timer/ -I src/peripherals/button/
 CC_i386 = gcc
 CFLAGS_i386 = -DARCH=1  -DMEASURING=0 -DRUN_VM=1 -DCOUNTING=0 -DCOUNTING_STACK=0 -Os
 ############################################################
@@ -28,9 +28,9 @@ AVRDUDE = $(ARDUINO_BIN)/avrdude
 AVR_OBJCPY = $(ARDUINO_BIN)/avr-objcopy
 AVR_SIZE = $(ARDUINO_BIN)/avr-size
 
-ARCHFILES_avr = ARCH_avr_timer.o ARCH_avr_encoder.o ARCH_avr_movement.o ARCH_avr_PWM.o ARCH_avr_serial.o ARCH_avr_ultrasonic.o
+ARCHFILES_avr = ARCH_avr_timer.o ARCH_avr_encoder.o ARCH_avr_movement.o ARCH_avr_PWM.o ARCH_avr_serial.o ARCH_avr_ultrasonic.o ARCH_avr_button.o
 FLAGS_avr = -c -g -Os -w -fno-exceptions -ffunction-sections -fdata-sections -fno-threadsafe-statics -MMD -mmcu=atmega328p -DF_CPU=16000000L -DARDUINO=10603 -DARDUINO_AVR_UNO -DARDUINO_ARCH_A -DRUN_VM=1 -DMEASURING=0
-INCLUDE_avr = -I$(ARDUINO_AVR)/cores/arduino -I$(ARDUINO_AVR)/variants/standard -I src/ -I src/peripherals/encoder/ -I src/peripherals/movement/ -I src/peripherals/PWM/ -I src/peripherals/serial/ -I src/peripherals/ultrasonic/ -I src/peripherals/timer/ 
+INCLUDE_avr = -I$(ARDUINO_AVR)/cores/arduino -I$(ARDUINO_AVR)/variants/standard -I src/ -I src/peripherals/encoder/ -I src/peripherals/movement/ -I src/peripherals/PWM/ -I src/peripherals/serial/ -I src/peripherals/ultrasonic/ -I src/peripherals/timer/ -I src/peripherals/button/
 REQOBJ_avr = $(addprefix $(OBJDIR)/, avr_static/core.a atmega328.o $(ARCHFILES_avr) vm.o syscall.o HAL.o EH.o CONFIG_timer.o ArduinoLoader.o)
 CC_avr = $(ARDUINO_BIN)/avr-g++
 #############################################################
@@ -42,7 +42,7 @@ AS_mips=/opt/cross/mips-binutils/bin/mips-unknown-elf-as
 INCLUDE_mips = -I $(MIPSDIR)/extras/lib/
 CFLAGS_mips = -Os -nostdlib -fno-exceptions -fno-rtti -static -fno-builtin -nostdinc
 # LIBRARIES_mips = $(addprefix $(MIPSDIR)/,extras/crt0.s extras/lib/THING_serial.s extras/lib/THING_movement.s)
-LIBRARIES_mips = $(addprefix $(MIPSDIR)/,extras/crt0.s extras/lib/THING_ultrasonic.s extras/lib/THING_serial.s extras/lib/THING_encoder.s extras/lib/THING_movement.s extras/lib/THING_EH.s)
+LIBRARIES_mips = $(addprefix $(MIPSDIR)/,extras/crt0.s extras/lib/THING_ultrasonic.s extras/lib/THING_serial.s extras/lib/THING_encoder.s extras/lib/THING_movement.s extras/lib/THING_EH.s extras/lib/THING_button.s)
 #############################################################
 
 

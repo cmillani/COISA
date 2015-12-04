@@ -25,7 +25,7 @@ extern "C" {
 #include <stdint.h>
 
 extern uint8_t initialized;
-void init_button(uint8_t port, uint8_t pin, uint8_t intmode);
+void init_button(uint8_t port, uint8_t pin);
 	
 #ifdef __cplusplus
 }

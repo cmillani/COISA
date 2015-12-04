@@ -77,6 +77,10 @@ uint8_t hal_call(uint32_t sensid, char identifier[]);//Call to hardware I/O
 #include "movement.h"
 #endif
 
+#if HAS_BUTTON
+#include <button.h>
+#endif
+
 #endif /*HAL*/
 
 #ifdef __cplusplus

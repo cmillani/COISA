@@ -19,17 +19,45 @@
 #include "Arduino.h"
 #include <vm.h>
 #include <HAL.h>
+#include <EH.h>
 #include <inttypes.h>
 
 #include <movement.h>
 #include <encoder.h>
 #include <timer.h>
+
+#include <avr/io.h>
+
+#include <button.h>
 void setup();
 void loop();
 #line 18
 
+void test()
+{
+	
+}
+
 void setup() {
+	// eh_init();
 	serial_configure(9600);
+	// init_button(BPORT, 5);
+	// register_handler(1, test, "BTOG");
+	
+	// while(1)
+	// {
+	// 	for (int i = 0; i < EHQUEUESZ; i++)
+	// 	 		{
+	// 	 			printnum(ehqueue[i].id);
+	// 	 			print(" ");
+	// 	 			print(ehqueue[i].name);
+	// 	 			print("\t");
+	// 	 		}
+	// 	 		// printnum(timerOvfcnt);
+	//  		print("\n");
+	// 	// consume_event();
+	//
+	// }
 	// setup_movement();
 	// ahead_L();
 	// ahead_R();
@@ -73,17 +101,39 @@ void setup() {
 		uint16_t tot_size = (uint16_t)size1 | ((uint16_t)size2 << 8);
 		int i;
 
-		for (i = 0; i < 4*tot_size; i++)
+		for (i = 0; i < tot_size; i++)
 		{
 			VM_memory[i] = read_byte();
 			//send_byte(VM_memory[i]);
 		}
+		
+		// for (i = 0; i < 1700; i++)
+		// {
+		// 	printnum(VM_memory[i]);
+		// 	print("-");
+		// }
+		// print("\n");
 
 	#if MEASURING
 		unsigned long tic = micros();
 	#endif
 	#if RUN_VM
+		print("Um\n");
 		vm_cpu(0);
+		print("Dois\n");
+		while(1)
+		{
+			// for (int i = 0; i < EHQUEUESZ; i++)
+			// 	 		{
+			// 	 			printnum(ehqueue[i].id);
+			// 	 			print(" ");
+			// 	 			print(ehqueue[i].name);
+			// 	 			print("\t");
+			// 	 		}
+			// print("\n");
+
+			if (consume_event() == 1) print("F\n");
+		}
 	#endif
 	#if MEASURING
 		unsigned long toc = micros();

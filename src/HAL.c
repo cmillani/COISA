@@ -168,6 +168,13 @@ uint8_t hal_call(uint32_t sensid, char identifier[])//Call to hardware I/O
 		}
 #endif
 	}
+#if HAS_BUTTON
+	else if(!strcmp(identifier,"BTOG"))
+	{
+		// print("BUT\n");
+		init_button(RF[4], RF[5]);
+	}
+#endif
 	else
 	{
 #if PRINTING

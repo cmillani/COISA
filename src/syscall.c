@@ -37,6 +37,7 @@ extern "C" {
  
 uint8_t syscall(uint8_t trap_code)
 {
+	// print("SYSCLL\n");
 	switch (trap_code)
 	{
 		case 10: { //Exit
@@ -56,15 +57,17 @@ uint8_t syscall(uint8_t trap_code)
 			break;
 		}
 		case 13: { //Setup Event Handler
+			// print("INI\n");
 			eh_init();
 			break;
 		}
 		case 14: { //Register Event Handler
-			register_handler((uint8_t)VM_memory[RF[4]], (void (*)()) &VM_memory[RF[5]], (char *)&VM_memory[RF[6]], VM_memory[RF[7]], VM_memory[RF[8]]);
+			// print("Reg\n");
+			register_handler((uint8_t)VM_memory[RF[4]], VM_memory[RF[5]], (char *)&VM_memory[RF[6]], VM_memory[RF[7]], VM_memory[RF[8]]);
 			break;
 		}
 		case 15: { //Remove Event Handler
-			remove_handler((uint8_t)VM_memory[RF[4]], (void (*)()) &VM_memory[RF[5]], (char *)&VM_memory[RF[6]]);
+			remove_handler((uint8_t)VM_memory[RF[4]], VM_memory[RF[5]], (char *)&VM_memory[RF[6]]);
 			break;
 		}
 		

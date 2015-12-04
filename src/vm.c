@@ -43,7 +43,7 @@ void print_registers(void);
 #include <stdio.h>
 #endif
 
-#include "HAL.h"
+#include <HAL.h>
 
 /*typedef struct decoded_instruction
 {
@@ -85,6 +85,9 @@ void advance_pc(int32_t offset)
 
 void vm_cpu(uint32_t newPC)
 {
+	print("Oi!!!\n");
+	printnum(PC);
+	print("\n");
 #if COUNTING
 	int instruct_cnt = 0;
 #endif
@@ -92,7 +95,7 @@ void vm_cpu(uint32_t newPC)
 	int max_stack = VM_MEMORY_SZ;
 #endif
 	PC = newPC;
-	nPC = 4;
+	nPC = PC + 4;
 	RF[0] = 0; //Register $zero must always be zero
 	RF[31] = 1; //Return default (if the program does not set to zero, should put error)
 	uint32_t HI = 0, LO = 0;  
@@ -101,6 +104,8 @@ void vm_cpu(uint32_t newPC)
 
 	while (!halted) 
 	{
+		if (PC == 1) break; //PC should never be a non-multiple of 4, so 1 indicates something
+		// print("Oi?\n");
 		if (timer_flag)
 		{
 			print("OLAR\r\n"); //TODO : do stuff
@@ -111,6 +116,8 @@ void vm_cpu(uint32_t newPC)
 #if COUNTING_STACK
 		if (max_stack > RF[29] && RF[29] != 0) max_stack = RF[29]; //Stack == 0 means it`s not yet initialized
 #endif
+		// printnum(PC);
+		// print("\n");
 		uint32_t instr = fetch(PC);
 		uint8_t op = (instr >> 26) & 0x3F;
 #if DEBUGING

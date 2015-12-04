@@ -26,38 +26,39 @@ extern "C" {
 #include <EH.h>
 #include <vm.h>
 #include <string.h>
+#include <HAL.h>
 	
-#include <stdio.h>
-void print_EH(void)
-{
-	printf("*---------------------------------------------------------*\n");
-	printf("EH:\n");
-	printf("Events:\t");
-	for (int i = 0; i < EVENTQTTY; i++)
-	{
-		printf("%d,%d,%d, %s\t", ehvecpointers[i].id, ehvecpointers[i].pos, ehvecpointers[i].sz, ehvecpointers[i].name);
-	}
-	printf("\n");
-	printf("Handlers:\t");
-	for (int i = 0; i < EHVECSZ; i++)
-	{
-		printf("%p\t", ehvec[i]);
-	}
-	printf("\n");
-	printf("Queue:\t");
-	for (int i = 0; i < EHQUEUESZ; i++)
-	{
-		printf("%d, %s\t", ehqueue[i].id, ehqueue[i].name);
-	}
-	printf("Init:%d,Sz:%d\n", queue_init, queue_size);
-	printf("*---------------------------------------------------------*\n");
-}
+// #include <stdio.h>
+// void print_EH(void)
+// {
+// 	printf("*---------------------------------------------------------*\n");
+// 	printf("EH:\n");
+// 	printf("Events:\t");
+// 	for (int i = 0; i < EVENTQTTY; i++)
+// 	{
+// 		printf("%d,%d,%d, %s\t", ehvecpointers[i].id, ehvecpointers[i].pos, ehvecpointers[i].sz, ehvecpointers[i].name);
+// 	}
+// 	printf("\n");
+// 	printf("Handlers:\t");
+// 	for (int i = 0; i < EHVECSZ; i++)
+// 	{
+// 		printf("%p\t", ehvec[i]);
+// 	}
+// 	printf("\n");
+// 	printf("Queue:\t");
+// 	for (int i = 0; i < EHQUEUESZ; i++)
+// 	{
+// 		printf("%d, %s\t", ehqueue[i].id, ehqueue[i].name);
+// 	}
+// 	printf("Init:%d,Sz:%d\n", queue_init, queue_size);
+// 	printf("*---------------------------------------------------------*\n");
+// }
 
-void (*ehvec[EHVECSZ])(void) = {0};
+uint32_t ehvec[EHVECSZ] = {0};
 uint8_t vec_size = 0;
 new_event ehqueue[EHQUEUESZ] = {0};
-uint8_t queue_init = 0;
-uint8_t queue_size = 0;
+volatile uint8_t queue_init = 0;
+volatile uint8_t queue_size = 0;
 uint8_t timer_flag = 0;
 ev_point ehvecpointers[EVENTQTTY];
 
@@ -77,13 +78,15 @@ void eh_init(void)
 }
 
 
-int8_t register_handler(uint8_t event_id, void (*handler)(void), char * evname, ...)
+int8_t register_handler(uint8_t event_id, uint32_t handler, char * evname, ...)
 {
+	// printnum((uint32_t)handler);
+	// print("\n");
 	if (!(vec_size < EHVECSZ)) return -1; //No space for one more handler
 	register uint8_t selected;
 	for (selected = 0; selected < EVENTQTTY; selected++)
 	{
-		if (ehvecpointers[selected].id == event_id && ehvecpointers[selected].name == evname) break; //Selected is now the position of the event on the vector
+		if (ehvecpointers[selected].id == event_id && strcmp(ehvecpointers[selected].name,evname)) break; //Selected is now the position of the event on the vector
 	}
 	if (ehvecpointers[selected].id != event_id || ehvecpointers[selected].name != evname) //Case where there was no break, thus no match was found
 	{
@@ -156,14 +159,14 @@ int8_t register_handler(uint8_t event_id, void (*handler)(void), char * evname, 
 	vec_size++;
 	return 1;
 }
-int8_t remove_handler(uint8_t event_id, void (*handler)(void), char * evname)
+int8_t remove_handler(uint8_t event_id, uint32_t handler, char * evname)
 {
 	register int8_t selected;
 	for (selected = 0; selected < EVENTQTTY; selected++)
 	{
-		if (ehvecpointers[selected].id == event_id && ehvecpointers[selected].name == evname) break; //Selected is now the position of the event on the vector
+		if (ehvecpointers[selected].id == event_id && !strcmp(ehvecpointers[selected].name,evname)) break; //Selected is now the position of the event on the vector
 	}
-	if (ehvecpointers[selected].id != event_id || ehvecpointers[selected].name != evname) return -1; //No such event
+	if (ehvecpointers[selected].id != event_id || strcmp(ehvecpointers[selected].name,evname)) return -1; //No such event
 
 	register int8_t event;
 	for (event = ehvecpointers[selected].pos; event < ehvecpointers[selected].sz; event++)
@@ -205,29 +208,42 @@ int8_t insert_event(uint8_t event_id, char * evname)
 	}
 	else return -1; // No space, returns error
 }
-int8_t consume_event(void)
+int8_t consume_event(void) //TODO:For some reason i cannot print from inside this func
 {
+	// return 0;
+	// print("OUT\n");
+	// if(0);
 	if (queue_size > 0) //Has something
 	{
-		printf(">>Consuming event<<\n");
+		// print("IN\n");
+// 		// printf(">>Consuming event<<\n");
 		register int8_t selected;
 		{ //Block used to scope the event variable
-			register new_event event = ehqueue[queue_init];
+			new_event event = ehqueue[queue_init];
 			queue_size--;
-			queue_init = (queue_init+1)%(EHQUEUESZ); //Pops the first value and updates 
-		
+			queue_init = (queue_init+1)%(EHQUEUESZ); //Pops the first value and updates
+
 			//Gets the event pointer to
 			for (selected = 0; selected < EVENTQTTY; selected++)
 			{
-				if (ehvecpointers[selected].id == event.id && ehvecpointers[selected].name == event.name) break; //Selected is now the position of the event on the vector
+				
+				if (!strcmp(ehvecpointers[selected].name,event.name)) break; //Selected is now the position of the event on the vector
 			}
-			if (ehvecpointers[selected].id != event.id || ehvecpointers[selected].name != event.name) return -1; //No event with that id found -- ERROR
+			if (strcmp(ehvecpointers[selected].name,event.name) ) return -1; //No event with that id found -- ERROR
 		}
+		// print("Loop\n");
 		register  uint8_t loop;
 		for (loop = ehvecpointers[selected].pos; loop < ehvecpointers[selected].pos + ehvecpointers[selected].sz; loop++)
 		{
-			printf("EV: %d || Jump to:%p\n", ehvecpointers[selected].id ,ehvec[loop]);
-			// vm_cpu(ehvec[loop]); // TODO:Should call CPU this way, sending the address to the function
+			printnum(ehvec[loop]);
+			print("\n");
+// 			// printf("EV: %d || Jump to:%p\n", ehvecpointers[selected].id ,ehvec[loop]);
+// 			print("EV:");
+// 			printnum(ehvecpointers[selected].id);
+// 			print("\nTO:");
+// 			printnum((uint32_t)ehvec[loop]);
+// 			print("\n");
+			vm_cpu((uint32_t)ehvec[loop]); // TODO:Should call CPU this way, sending the address to the function
 		}
 		return 1; // Success
 	}

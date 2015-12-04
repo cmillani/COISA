@@ -36,4 +36,7 @@ Halcalls:
 	PWMG
 	20:PWM generator
 	
+	BTOG
+	21:Init Button
+	
 	TIMR - TODO

@@ -61,7 +61,7 @@ void printnum(uint32_t number)
 		send_byte((number%(max))/(max/10) + '0');
 	}
 }
-void print(const char *str)
+void print(char *str)
 {
 	int i = 0;
 	while (str[i] != '\0')

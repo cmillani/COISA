@@ -33,6 +33,7 @@ extern "C" {
 
 extern int threshold;
 extern volatile int counter;
+extern volatile int timerOvfcnt;
 uint16_t best_PS(void);
 
 #endif

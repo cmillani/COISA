@@ -28,6 +28,7 @@ extern "C" {
 
 int threshold = 1;
 volatile int counter = 0;
+volatile int timerOvfcnt;
 	
 uint16_t best_PS(void)
 {

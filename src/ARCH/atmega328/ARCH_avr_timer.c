@@ -47,7 +47,7 @@ void init_timer(void)
 	OCR2A = comparer;
 	OCR2B = comparer;
 	TCNT2 = 0;
-	TIMSK2 |= (1 << OCIE2A);
+	TIMSK2 |= (1 << OCIE2A) | (1 << TOIE2);
 	
 	sei();
 	
@@ -58,6 +58,11 @@ void init_timer(void)
 	printnum(TCCR2B);
 	print("\n");
 	// PORTB |= (1 << PB5);
+}
+
+ISR(TIMER2_OVF_vect)
+{
+	timerOvfcnt++;
 }
 	
 ISR(TIMER2_COMPA_vect)

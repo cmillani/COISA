@@ -7,5 +7,6 @@
 #include "THING_movement.h"
 #include "THING_PWM.h"
 #include "THING_EH.h"
+#include "THING_button.h"
 
 #endif

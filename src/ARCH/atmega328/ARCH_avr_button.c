@@ -24,13 +24,15 @@ extern "C" {
 	
 #include <ARCH_button.h>
 #include <avr/io.h>
+#include <avr/interrupt.h>
 #include <EH.h>
+#include <HAL.h>
+#include <timer.h>
 uint8_t initialized;
 uint8_t mode;
 
-void init_button(uint8_t port, uint8_t pin, uint8_t intmode)
+void init_button(uint8_t port, uint8_t pin)
 {
-	mode = intmode;
 	if (port == BPORT)
 	{
 		PORTB |= (1 << pin);
@@ -46,7 +48,7 @@ void init_button(uint8_t port, uint8_t pin, uint8_t intmode)
 		DDRC &= ~(1 << pin);
 		PCICR |= (1 << PCIE1);
 		PCMSK1 |= (1 << pin);
-		sei();	
+		sei();
 		initialized = 1;
 	}
 	else if (port == DPORT)
@@ -62,7 +64,11 @@ void init_button(uint8_t port, uint8_t pin, uint8_t intmode)
 
 ISR(PCINT0_vect)
 {
-	insert_event(1,"BTOG");
+	if (~(PCIFR & (1 << PCIF2) | PCIFR & (1 << PCIF1) | PCIFR & (1 << PCIF0)))
+	{
+		insert_event(1,"BTOG");
+		PCIFR |= (1 << PCIF2) | (1 << PCIF1) | (1 << PCIF0);
+	}
 }
 ISR(PCINT1_vect, ISR_ALIASOF(PCINT0_vect));
 ISR(PCINT2_vect, ISR_ALIASOF(PCINT0_vect));

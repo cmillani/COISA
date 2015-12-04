@@ -52,13 +52,13 @@ typedef struct event
 
 #define EHVECSZ 10 //Size of the vector of handlers
 #define EHQUEUESZ 10 //Size of the event queue
-extern void (*ehvec[EHVECSZ])(void); //Vector of handlers
+extern uint32_t ehvec[EHVECSZ]; //Vector of handlers
 extern new_event ehqueue[EHQUEUESZ]; //Events queue	
-extern uint8_t queue_init;
-extern uint8_t queue_size;
+volatile extern uint8_t queue_init;
+volatile extern uint8_t queue_size;
 
 #define EVENTQTTY 4 //Number of different events that can be generated
-extern ev_point ehvecpointers[EVENTQTTY]; //Pointer to the part of the vector that corresponds to that event
+extern ev_point ehvecpointers[EVENTQTTY]; //Pointer to the part of the handler vector that corresponds to that event
 
 void print_EH(void);
 
@@ -86,7 +86,7 @@ void eh_init(void);
 ** Register 'handler' as a callback to be executed when the event  **
 ** of id 'event_id' happens                                        **
 ********************************************************************/
-int8_t register_handler(uint8_t event_id, void (*handler)(void), char * evname, ...);
+int8_t register_handler(uint8_t event_id, uint32_t handler, char * evname, ...);
 
 /********************************************************************
 ** remove_handler(uint8_t event_id, void (*handler)(void))         **
@@ -102,7 +102,7 @@ int8_t register_handler(uint8_t event_id, void (*handler)(void), char * evname, 
 ** DESCRIPTION:                                                    **
 ** removes 'handler' from the handler vector                       **
 ********************************************************************/
-int8_t remove_handler(uint8_t event_id, void (*handler)(void), char * evname);
+int8_t remove_handler(uint8_t event_id, uint32_t handler, char * evname);
 
 /********************************************************************
 ** event_timer(void)                                               **
