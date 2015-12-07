@@ -86,9 +86,9 @@ int8_t register_handler(uint8_t event_id, uint32_t handler, char * evname, ...)
 	register uint8_t selected;
 	for (selected = 0; selected < EVENTQTTY; selected++)
 	{
-		if (ehvecpointers[selected].id == event_id && strcmp(ehvecpointers[selected].name,evname)) break; //Selected is now the position of the event on the vector
+		if (ehvecpointers[selected].id == event_id && !strcmp(ehvecpointers[selected].name,evname)) break; //Selected is now the position of the event on the vector
 	}
-	if (ehvecpointers[selected].id != event_id || ehvecpointers[selected].name != evname) //Case where there was no break, thus no match was found
+	if (ehvecpointers[selected].id != event_id || strcmp(ehvecpointers[selected].name,evname)) //Case where there was no break, thus no match was found
 	{
 		for (selected = 0; selected < EVENTQTTY; selected++)//Searches for the first empty space
 		{
@@ -96,7 +96,8 @@ int8_t register_handler(uint8_t event_id, uint32_t handler, char * evname, ...)
 		}
 		if (ehvecpointers[selected].id != -1) return -1;//No empty space
 		ehvecpointers[selected].id = event_id; //marks the empty space as the new event
-		ehvecpointers[selected].name = evname;
+		strcpy(ehvecpointers[selected].name, evname);
+		// ehvecpointers[selected].name = evname;
 		for (ehvecpointers[selected].pos = 0; ehvecpointers[selected].pos < EHVECSZ; ehvecpointers[selected].pos++)
 		{
 			if (ehvec[ehvecpointers[selected].pos] == 0) break;
@@ -238,7 +239,7 @@ int8_t consume_event(void) //TODO:For some reason i cannot print from inside thi
 		// print("\nLOOOP\n");
 		for (loop = ehvecpointers[selected].pos; loop < ehvecpointers[selected].pos + ehvecpointers[selected].sz; loop++)
 		{
-			printnum(ehvec[loop]);
+			// printnum(ehvec[loop]);
 			// print("\nOdoJump\n");
 			// printnum()
 // 			// printf("EV: %d || Jump to:%p\n", ehvecpointers[selected].id ,ehvec[loop]);
@@ -247,6 +248,8 @@ int8_t consume_event(void) //TODO:For some reason i cannot print from inside thi
 // 			print("\nTO:");
 // 			printnum((uint32_t)ehvec[loop]);
 // 			print("\n");
+			RF[4] = ehvec[loop];
+			vm_cpu(hand_addr);
 			// vm_cpu(ehvec[loop]);
 		}
 		return 1; // Success

@@ -122,12 +122,14 @@ void setup() {
 		vm_cpu(0);
 		// print("Dois\n");hand_addr
 		// RF[4] = ehvec[0];
-		RF[4] = 60;
-		vm_cpu(hand_addr);
+		// printnum(ehvec[0]);
+		// print("\n");
+		// RF[4] = ehvec[0];
+		// vm_cpu(hand_addr);
 		// vm_cpu(60);
 		// vm_cpu(ehvec[0]);
-		// while(1)
-// 		{
+		while(1)
+		{
 // 			// for (int i = 0; i < EHQUEUESZ; i++)
 // 			// 	 		{
 // 			// 	 			printnum(ehqueue[i].id);
@@ -137,8 +139,8 @@ void setup() {
 // 			// 	 		}
 // 			// print("\n");
 //
-			// if (consume_event() == 1) print("F>>>>>>\n");
-// 		}
+			if (consume_event() == 1) print("F>>>>>>\n");
+		}
 	#endif
 	#if MEASURING
 		unsigned long toc = micros();

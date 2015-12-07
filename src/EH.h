@@ -39,7 +39,7 @@ and use it, changing it`s ID to the one of the new event.
 typedef struct event_point
 {
 	int8_t id;
-	char * name;
+	char name[5];
 	uint8_t pos;
 	uint8_t sz;
 } ev_point;
