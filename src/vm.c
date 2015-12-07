@@ -71,6 +71,7 @@ void print_registers(void);
 
 /* Register file. */
 uint32_t RF[32];
+uint32_t hand_addr;
 /*VM memory vector*/
 uint8_t VM_memory[VM_MEMORY_SZ] = {0};
 
@@ -104,7 +105,7 @@ void vm_cpu(uint32_t newPC)
 
 	while (!halted) 
 	{
-		if (PC == 1) break; //PC should never be a non-multiple of 4, so 1 indicates something
+		// if (PC == 1) break; //PC should never be a non-multiple of 4, so 1 indicates something
 		// print("Oi?\n");
 		if (timer_flag)
 		{

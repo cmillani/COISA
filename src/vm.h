@@ -31,6 +31,7 @@ extern "C" {
 #define VM_MEMORY_SZ PROCESSOR_MEMORY_SZ /* Available memory from the microprocessor  */
 /* Register file. */
 extern uint32_t RF[32];
+extern uint32_t hand_addr;
 /*VM memory vector*/
 extern uint8_t VM_memory[VM_MEMORY_SZ];
 

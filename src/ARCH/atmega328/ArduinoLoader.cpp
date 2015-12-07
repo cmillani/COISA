@@ -120,8 +120,12 @@ void setup() {
 	#if RUN_VM
 		// print("Um\n");
 		vm_cpu(0);
-		// print("Dois\n");
-		vm_cpu(ehvec[0]);
+		// print("Dois\n");hand_addr
+		// RF[4] = ehvec[0];
+		RF[4] = 60;
+		vm_cpu(hand_addr);
+		// vm_cpu(60);
+		// vm_cpu(ehvec[0]);
 		// while(1)
 // 		{
 // 			// for (int i = 0; i < EHQUEUESZ; i++)
@@ -133,7 +137,7 @@ void setup() {
 // 			// 	 		}
 // 			// print("\n");
 //
-// 			if (consume_event() == 1) print("F>>>>>>\n");
+			// if (consume_event() == 1) print("F>>>>>>\n");
 // 		}
 	#endif
 	#if MEASURING

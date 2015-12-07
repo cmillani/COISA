@@ -40,6 +40,10 @@ uint8_t syscall(uint8_t trap_code)
 	// print("SYSCLL\n");
 	switch (trap_code)
 	{
+		case 9: {
+			hand_addr = RF[3];
+			break;
+		}
 		case 10: { //Exit
 			return 1; //The vm cpu should stop
 			break;
@@ -63,6 +67,8 @@ uint8_t syscall(uint8_t trap_code)
 		}
 		case 14: { //Register Event Handler
 			// print("Reg\n");
+			// printnum(RF[5]);
+			// print("\n");
 			register_handler((uint8_t)RF[4], (uintptr_t)RF[5], (char *)&VM_memory[RF[6]], RF[7], RF[8]);
 			break;
 		}
