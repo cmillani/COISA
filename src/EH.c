@@ -235,7 +235,7 @@ int8_t consume_event(void) //TODO:For some reason i cannot print from inside thi
 		}
 		// print("Loop\n");
 		register  uint8_t loop;
-		printnum(ehvecpointers[selected].sz);
+		// printnum(ehvecpointers[selected].sz);
 		// print("\nLOOOP\n");
 		for (loop = ehvecpointers[selected].pos; loop < ehvecpointers[selected].pos + ehvecpointers[selected].sz; loop++)
 		{

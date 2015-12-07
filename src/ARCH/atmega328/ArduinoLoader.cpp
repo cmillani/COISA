@@ -139,7 +139,7 @@ void setup() {
 // 			// 	 		}
 // 			// print("\n");
 //
-			if (consume_event() == 1) print("F>>>>>>\n");
+			consume_event();
 		}
 	#endif
 	#if MEASURING
