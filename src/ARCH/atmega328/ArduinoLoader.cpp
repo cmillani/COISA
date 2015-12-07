@@ -118,22 +118,23 @@ void setup() {
 		unsigned long tic = micros();
 	#endif
 	#if RUN_VM
-		print("Um\n");
+		// print("Um\n");
 		vm_cpu(0);
-		print("Dois\n");
-		while(1)
-		{
-			// for (int i = 0; i < EHQUEUESZ; i++)
-			// 	 		{
-			// 	 			printnum(ehqueue[i].id);
-			// 	 			print(" ");
-			// 	 			print(ehqueue[i].name);
-			// 	 			print("\t");
-			// 	 		}
-			// print("\n");
-
-			if (consume_event() == 1) print("F\n");
-		}
+		// print("Dois\n");
+		vm_cpu(ehvec[0]);
+		// while(1)
+// 		{
+// 			// for (int i = 0; i < EHQUEUESZ; i++)
+// 			// 	 		{
+// 			// 	 			printnum(ehqueue[i].id);
+// 			// 	 			print(" ");
+// 			// 	 			print(ehqueue[i].name);
+// 			// 	 			print("\t");
+// 			// 	 		}
+// 			// print("\n");
+//
+// 			if (consume_event() == 1) print("F>>>>>>\n");
+// 		}
 	#endif
 	#if MEASURING
 		unsigned long toc = micros();
@@ -141,8 +142,8 @@ void setup() {
 		printnum(toc - tic);
 		print("\n");
 	#endif
-		print("End\n");
-		send_byte('\0');
+		// print("End\n");
+		// send_byte('\0');
 	}
 }
 

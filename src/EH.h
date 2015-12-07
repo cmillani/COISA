@@ -46,8 +46,8 @@ typedef struct event_point
 
 typedef struct event
 {
-	uint8_t id;
-	char * name;
+	volatile uint8_t id;
+	char name[5];
 } new_event;
 
 #define EHVECSZ 10 //Size of the vector of handlers

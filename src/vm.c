@@ -85,9 +85,9 @@ void advance_pc(int32_t offset)
 
 void vm_cpu(uint32_t newPC)
 {
-	print("Oi!!!\n");
-	printnum(PC);
-	print("\n");
+	// print("Oi!!!\n");
+	// printnum(newPC);
+	// print("\n");
 #if COUNTING
 	int instruct_cnt = 0;
 #endif

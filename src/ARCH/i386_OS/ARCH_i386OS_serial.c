@@ -43,7 +43,7 @@ void printnum(uint32_t number)
 {
 	printf("%d",number);
 }
-void print(const char *str)
+void print(char *str)
 {
 	printf("%s", str);
 }

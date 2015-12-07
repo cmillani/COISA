@@ -85,6 +85,9 @@ int main(int argc, char * argv[])
 #endif
 #if RUN_VM
 	vm_cpu(0);
+	// print_EH();
+	// print_EH();
+	vm_cpu(ehvec[0]);
 #endif
 #if MEASURING	
 	time_t toc = clock();

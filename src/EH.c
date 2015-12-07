@@ -42,7 +42,7 @@ extern "C" {
 // 	printf("Handlers:\t");
 // 	for (int i = 0; i < EHVECSZ; i++)
 // 	{
-// 		printf("%p\t", ehvec[i]);
+// 		printf("%d\t", ehvec[i]);
 // 	}
 // 	printf("\n");
 // 	printf("Queue:\t");
@@ -202,8 +202,9 @@ int8_t insert_event(uint8_t event_id, char * evname)
 	if (queue_size < EHQUEUESZ) //Still has space
 	{
 		ehqueue[(queue_init + queue_size) % EHQUEUESZ].id = event_id; //Its a vector list
-		ehqueue[(queue_init + queue_size) % EHQUEUESZ].name = evname; //Its a vector list
-		queue_size++; 
+		// ehqueue[(queue_init + queue_size) % EHQUEUESZ].name = evname; //Its a vector list
+		strcpy(ehqueue[(queue_init + queue_size) % EHQUEUESZ].name, evname);
+		queue_size++;
 		return 1; //Success
 	}
 	else return -1; // No space, returns error
@@ -233,17 +234,20 @@ int8_t consume_event(void) //TODO:For some reason i cannot print from inside thi
 		}
 		// print("Loop\n");
 		register  uint8_t loop;
+		printnum(ehvecpointers[selected].sz);
+		// print("\nLOOOP\n");
 		for (loop = ehvecpointers[selected].pos; loop < ehvecpointers[selected].pos + ehvecpointers[selected].sz; loop++)
 		{
 			printnum(ehvec[loop]);
-			print("\n");
+			// print("\nOdoJump\n");
+			// printnum()
 // 			// printf("EV: %d || Jump to:%p\n", ehvecpointers[selected].id ,ehvec[loop]);
 // 			print("EV:");
 // 			printnum(ehvecpointers[selected].id);
 // 			print("\nTO:");
 // 			printnum((uint32_t)ehvec[loop]);
 // 			print("\n");
-			vm_cpu((uint32_t)ehvec[loop]); // TODO:Should call CPU this way, sending the address to the function
+			// vm_cpu(ehvec[loop]);
 		}
 		return 1; // Success
 	}
