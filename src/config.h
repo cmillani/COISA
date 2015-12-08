@@ -59,7 +59,7 @@ extern "C" {
 #define PIN_ENCODER2
 #endif
 	
-#define HAS_ULTRASONIC 0
+#define HAS_ULTRASONIC 1
 #if HAS_ULTRASONIC
 #define PIN_ECHO
 #define PIN_TRIG

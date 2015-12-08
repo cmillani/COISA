@@ -29,7 +29,7 @@ extern "C" {
 #include "config.h"
 #include <inttypes.h>
 
-extern uint8_t timer_flag; //Flag to indicate that data must be processed
+extern volatile uint8_t timer_flag; //Flag to indicate that data must be processed
 
 /*
 	The id is first -1, showing that there is still space for one more event to be handled.
@@ -60,7 +60,23 @@ volatile extern uint8_t queue_size;
 #define EVENTQTTY 4 //Number of different events that can be generated
 extern ev_point ehvecpointers[EVENTQTTY]; //Pointer to the part of the handler vector that corresponds to that event
 
+/*******************************************************************/
+/*******************************************************************/
+#if HAS_ULTRASONIC
+#include <ultrasonic.h>
+#endif 
+/*******************************************************************/
+/*******************************************************************/
+
+
 void print_EH(void);
+
+/********************************************************************
+** timed_polling(void)                                             **
+**                                                                 **
+** Poll some sensor values                                         **
+********************************************************************/
+void timed_polling(void);
 
 /********************************************************************
 ** eh_init(void)                                                   **

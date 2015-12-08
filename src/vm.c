@@ -109,7 +109,8 @@ void vm_cpu(uint32_t newPC)
 		// print("Oi?\n");
 		if (timer_flag)
 		{
-			print("OLAR\r\n"); //TODO : do stuff
+			timed_polling();
+			timer_flag = 0;
 		}
 #if COUNTING
 		instruct_cnt++;
@@ -117,8 +118,6 @@ void vm_cpu(uint32_t newPC)
 #if COUNTING_STACK
 		if (max_stack > RF[29] && RF[29] != 0) max_stack = RF[29]; //Stack == 0 means it`s not yet initialized
 #endif
-		// printnum(PC);
-		// print("\n");
 		uint32_t instr = fetch(PC);
 		uint8_t op = (instr >> 26) & 0x3F;
 #if DEBUGING

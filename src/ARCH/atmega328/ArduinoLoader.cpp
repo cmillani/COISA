@@ -72,6 +72,17 @@ void setup() {
 	// stop_motor_R();
 	while(1)
 	{
+		init_timer();
+		while(1)
+		{
+			if(timer_flag) 
+			{
+				print("FOE\n");
+				timer_flag = 0;
+			}
+			// printnum(timerOvfcnt);
+			// print("\n");
+		}
 		// setup_movement();
 		// ahead();
 		// while(1);
@@ -138,7 +149,12 @@ void setup() {
 // 			// 	 			print("\t");
 // 			// 	 		}
 // 			// print("\n");
-//
+//			
+			if(timer_flag) 
+			{
+				timed_polling();
+				timer_flag = 0;
+			}
 			consume_event();
 		}
 	#endif

@@ -27,25 +27,7 @@ extern "C" {
 #include <config.h>	
 
 int threshold = 1;
-volatile int counter = 0;
-volatile int timerOvfcnt;
-	
-uint16_t best_PS(void)
-{
-	uint32_t ideal = (F_CPU/F_INT);
-	uint32_t real = 1;
-	while (ideal > 1)
-	{
-		real = real << 1;
-		ideal = ideal >> 1; 
-		if (F_CPU%(real*F_INT) != 0 || real >= MAX_PS) 
-		{
-			real = real >> 1;
-			break;
-		}
-	}
-	return real;
-}
+volatile uint32_t timerOvfcnt = 0;
 	
 #ifdef __cplusplus
 }

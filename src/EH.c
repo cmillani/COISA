@@ -59,7 +59,7 @@ uint8_t vec_size = 0;
 new_event ehqueue[EHQUEUESZ] = {0};
 volatile uint8_t queue_init = 0;
 volatile uint8_t queue_size = 0;
-uint8_t timer_flag = 0;
+volatile uint8_t timer_flag = 0;
 ev_point ehvecpointers[EVENTQTTY];
 
 void eh_init(void)
@@ -255,6 +255,16 @@ int8_t consume_event(void) //TODO:For some reason i cannot print from inside thi
 		return 1; // Success
 	}
 	else return -1; //Nothing to Consume
+}
+
+void timed_polling(void)
+{
+#if HAS_ULTRASONIC
+	if (read_ultrassonic() > us_threshold)
+	{
+		
+	}
+#endif 
 }
 
 	

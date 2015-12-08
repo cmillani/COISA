@@ -28,13 +28,10 @@ extern "C" {
 
 #include <stdint.h>
 
-#define F_CPU 8000000 //CPU CLOCK
-#define F_INT 20 //TIMER INTERRUPT FREQ
+#define F_CPU 16000 //CPU CLOCK MHz
 
 extern int threshold;
-extern volatile int counter;
-extern volatile int timerOvfcnt;
-uint16_t best_PS(void);
+extern volatile uint32_t timerOvfcnt;
 
 #endif
 
