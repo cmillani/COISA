@@ -26,6 +26,8 @@
 #include <encoder.h>
 #include <timer.h>
 
+#include <ultrasonic.h>
+
 #include <avr/io.h>
 
 #include <button.h>
@@ -72,17 +74,15 @@ void setup() {
 	// stop_motor_R();
 	while(1)
 	{
-		init_timer();
-		while(1)
-		{
-			if(timer_flag) 
-			{
-				print("FOE\n");
-				timer_flag = 0;
-			}
-			// printnum(timerOvfcnt);
-			// print("\n");
-		}
+		// init_timer();
+		// init_ultrassonic();
+		// while(1)
+		// {
+		// 	printnum(read_ultrassonic());
+		// 	print("\n");
+		// 	// printnum(timerOvfcnt);
+		// 	// print("\n");
+		// }
 		// setup_movement();
 		// ahead();
 		// while(1);

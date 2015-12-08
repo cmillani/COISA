@@ -24,6 +24,7 @@ extern "C" {
 	
 #ifndef ARCH_ULTRASONIC
 #define ARCH_ULTRASONIC
+uint8_t init_ultrassonic(void);
 uint8_t read_ultrassonic(void); //Defined on ARCH
 #endif //ARCH_ULTRASONIC
 
