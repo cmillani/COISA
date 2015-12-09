@@ -43,6 +43,11 @@ void test()
 void setup() {
 	// eh_init();
 	serial_configure(9600);
+	init_timer();
+	// init_ultrassonic();
+	// eh_init();
+	// register_handler(3, 0, "US_S", 15);
+	// while(1);
 	// init_button(BPORT, 5);
 	// register_handler(1, test, "BTOG");
 	

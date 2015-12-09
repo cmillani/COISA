@@ -51,12 +51,18 @@ uint8_t hal_call(uint32_t sensid, char identifier[])//Call to hardware I/O
 	#if PRINTING
 				printf("(HAL)Read Ultra called\n");
 	#endif // PRINTING
+				RF[2] = read_ultrassonic();
 				break;
 			}
 			case 1: {
 	#if PRINTING
 				printf("(HAL)Config Ultra called\n");
 	#endif // PRINTING
+				configure_ultrassonic(RF[4]);
+				break;
+			}
+			case 2: {
+				init_ultrassonic();
 				break;
 			}
 		}

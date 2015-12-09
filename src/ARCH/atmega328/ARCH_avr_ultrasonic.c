@@ -52,7 +52,7 @@ uint8_t init_ultrassonic(void)
 // 		width++;
 // 	}
 
-
+#include <serial.h>
 uint8_t read_ultrassonic(void)
 {
 	uint32_t temp = 0;
@@ -74,13 +74,12 @@ uint8_t read_ultrassonic(void)
 	PORTD &= ~(1 << PD4);
 	
 	temp = timerOvfcnt*256 + TCNT2;
-	while (PIND & (1 << PD5)) if (timerOvfcnt*256 + TCNT2 >= temp + timeout) return 0;
+	while (PIND & (1 << PD5)) if (timerOvfcnt*256 + TCNT2 >= temp + timeout) return 255;
 	temp = timerOvfcnt*256 + TCNT2;
-	while (!(PIND & (1 << PD5))) if (timerOvfcnt*256 + TCNT2 >= temp + timeout) return 0;
+	while (!(PIND & (1 << PD5))) if (timerOvfcnt*256 + TCNT2 >= temp + timeout) return 255;
 	temp = timerOvfcnt*256 + TCNT2;
 	while (PIND & (1 << PD5));
 	temp = timerOvfcnt*256 + TCNT2 - temp;
-	
 	return temp/conversion_factor;
 }
 	

@@ -27,6 +27,7 @@ extern "C" {
 #include <vm.h>
 #include <string.h>
 #include <HAL.h>
+#include <stdarg.h>
 	
 // #include <stdio.h>
 // void print_EH(void)
@@ -154,6 +155,15 @@ int8_t register_handler(uint8_t event_id, uint32_t handler, char * evname, ...)
 		
 	}
 	
+	if (!strcmp(evname, "US_S")) //US dist sensor has the threshold argument
+	{
+		va_list ap;
+		va_start(ap, 1);
+		uint32_t threshold = va_arg(ap, int);
+		us_threshold = threshold;
+		printnum(threshold);
+		print("\n");
+	}
 	//TODO:Remember to tell HAL to generate events!
 	
 	ehvecpointers[selected].sz++;
@@ -260,9 +270,10 @@ int8_t consume_event(void) //TODO:For some reason i cannot print from inside thi
 void timed_polling(void)
 {
 #if HAS_ULTRASONIC
-	if (read_ultrassonic() > us_threshold)
+	if (read_ultrassonic() < us_threshold)
 	{
-		
+		// print("EV HERE\n");
+		insert_event(1,"US_S");
 	}
 #endif 
 }
