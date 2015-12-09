@@ -30,6 +30,8 @@ extern "C" {
 
 extern uint8_t us_threshold;
 extern uint8_t conversion_factor; //Default: convert to cm (29/2), in is 148 (74/2)
+extern uint8_t is_close;
+
 void configure_ultrassonic(uint8_t mode); //Inches or centimeters
 
 #endif

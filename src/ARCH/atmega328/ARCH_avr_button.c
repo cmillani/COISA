@@ -28,11 +28,16 @@ extern "C" {
 #include <EH.h>
 #include <HAL.h>
 #include <timer.h>
+	
+#define debouncing_time 20000
+	
 uint8_t initialized;
 uint8_t mode;
+volatile uint32_t timestamp = 0;
 
 void init_button(uint8_t port, uint8_t pin)
 {
+	timestamp = timerOvfcnt*256 + TCNT2;
 	if (port == BPORT)
 	{
 		PORTB |= (1 << pin);
@@ -64,10 +69,10 @@ void init_button(uint8_t port, uint8_t pin)
 
 ISR(PCINT0_vect)
 {
-	if (~(PCIFR & (1 << PCIF2) | PCIFR & (1 << PCIF1) | PCIFR & (1 << PCIF0)))
+	if (timerOvfcnt*256 + TCNT2 - timestamp > debouncing_time)
 	{
 		insert_event(1,"BTOG");
-		PCIFR |= (1 << PCIF2) | (1 << PCIF1) | (1 << PCIF0);
+		timestamp = timerOvfcnt*256 + TCNT2;
 	}
 }
 ISR(PCINT1_vect, ISR_ALIASOF(PCINT0_vect));

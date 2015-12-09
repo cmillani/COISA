@@ -249,8 +249,13 @@ void timed_polling(void)
 #if HAS_ULTRASONIC
 	if (read_ultrassonic() < us_threshold)
 	{
-		insert_event(1,"US_S");
+		if (!is_close)
+		{
+			is_close = 1;
+			insert_event(1,"US_S");
+		}
 	}
+	else if (is_close) is_close = 0;
 #endif 
 }
 
