@@ -155,7 +155,7 @@ $(OBJDIR)/%.o: $(SRCDIR)/%.c
 
 ######################## Cleaning ###########################
 clean:
-	rm -r $(OBJDIR)/*[!avr_static] $(FOLDERS)
+	rm -r $(OBJDIR)/*[!avr_static] $(MODELS)/*
 clean_vm: 
 	rm -r $(OBJDIR)/*[!avr_static]
 #############################################################
