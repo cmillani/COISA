@@ -56,15 +56,8 @@ uint8_t init_ultrassonic(void)
 uint8_t read_ultrassonic(void)
 {
 	uint32_t temp = 0;
-	uint32_t timeout = 500;
-	// digitalWrite(trigPin, LOW);  // Added this line
-	//   delayMicroseconds(2); // Added this line
-	//   digitalWrite(trigPin, HIGH);
-	// //  delayMicroseconds(1000); - Removed this line
-	//   delayMicroseconds(10); // Added this line
-	//   digitalWrite(trigPin, LOW);
-	//   duration = pulseIn(echoPin, HIGH);
-	//   distance = (duration/2) / 29.1;
+	uint32_t timeout = 8000;
+
 	PORTD &= ~(1 << PD4);
 	temp = timerOvfcnt*256 + TCNT2;
 	while (timerOvfcnt*256 + TCNT2 < temp + 1);
@@ -78,7 +71,7 @@ uint8_t read_ultrassonic(void)
 	temp = timerOvfcnt*256 + TCNT2;
 	while (!(PIND & (1 << PD5))) if (timerOvfcnt*256 + TCNT2 >= temp + timeout) return 255;
 	temp = timerOvfcnt*256 + TCNT2;
-	while (PIND & (1 << PD5));
+	while (PIND & (1 << PD5)) if (timerOvfcnt*256 + TCNT2 >= temp + timeout) return 255;
 	temp = timerOvfcnt*256 + TCNT2 - temp;
 	return temp/conversion_factor;
 }
