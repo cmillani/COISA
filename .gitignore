@@ -35,4 +35,5 @@
 tests/*.o*
 
 #Binaries
-./bin/*
+bin/*[!avr_static]
+benchmarks/models/*
