@@ -81,8 +81,6 @@ void eh_init(void)
 
 int8_t register_handler(uint8_t event_id, uint32_t handler, char * evname, ...)
 {
-	// printnum((uint32_t)handler);
-	// print("\n");
 	if (!(vec_size < EHVECSZ)) return -1; //No space for one more handler
 	register uint8_t selected;
 	for (selected = 0; selected < EVENTQTTY; selected++)
@@ -98,7 +96,6 @@ int8_t register_handler(uint8_t event_id, uint32_t handler, char * evname, ...)
 		if (ehvecpointers[selected].id != -1) return -1;//No empty space
 		ehvecpointers[selected].id = event_id; //marks the empty space as the new event
 		strcpy(ehvecpointers[selected].name, evname);
-		// ehvecpointers[selected].name = evname;
 		for (ehvecpointers[selected].pos = 0; ehvecpointers[selected].pos < EHVECSZ; ehvecpointers[selected].pos++)
 		{
 			if (ehvec[ehvecpointers[selected].pos] == 0) break;
@@ -163,7 +160,8 @@ int8_t register_handler(uint8_t event_id, uint32_t handler, char * evname, ...)
 		us_threshold = va_arg(ap, int);
 	}
 #endif
-	//TODO:Remember to tell HAL to generate events!
+	
+	//TODO:Remember to tell HAL to generate events! -- Currently it always generate events
 	
 	ehvecpointers[selected].sz++;
 	vec_size++;
@@ -212,7 +210,6 @@ int8_t insert_event(uint8_t event_id, char * evname)
 	if (queue_size < EHQUEUESZ) //Still has space
 	{
 		ehqueue[(queue_init + queue_size) % EHQUEUESZ].id = event_id; //Its a vector list
-		// ehqueue[(queue_init + queue_size) % EHQUEUESZ].name = evname; //Its a vector list
 		strcpy(ehqueue[(queue_init + queue_size) % EHQUEUESZ].name, evname);
 		queue_size++;
 		return 1; //Success
@@ -221,13 +218,8 @@ int8_t insert_event(uint8_t event_id, char * evname)
 }
 int8_t consume_event(void) //TODO:For some reason i cannot print from inside this func
 {
-	// return 0;
-	// print("OUT\n");
-	// if(0);
 	if (queue_size > 0) //Has something
 	{
-		// print("IN\n");
-// 		// printf(">>Consuming event<<\n");
 		register int8_t selected;
 		{ //Block used to scope the event variable
 			new_event event = ehqueue[queue_init];
@@ -237,29 +229,15 @@ int8_t consume_event(void) //TODO:For some reason i cannot print from inside thi
 			//Gets the event pointer to
 			for (selected = 0; selected < EVENTQTTY; selected++)
 			{
-				
 				if (!strcmp(ehvecpointers[selected].name,event.name)) break; //Selected is now the position of the event on the vector
 			}
 			if (strcmp(ehvecpointers[selected].name,event.name) ) return -1; //No event with that id found -- ERROR
 		}
-		// print("Loop\n");
 		register  uint8_t loop;
-		// printnum(ehvecpointers[selected].sz);
-		// print("\nLOOOP\n");
 		for (loop = ehvecpointers[selected].pos; loop < ehvecpointers[selected].pos + ehvecpointers[selected].sz; loop++)
 		{
-			// printnum(ehvec[loop]);
-			// print("\nOdoJump\n");
-			// printnum()
-// 			// printf("EV: %d || Jump to:%p\n", ehvecpointers[selected].id ,ehvec[loop]);
-// 			print("EV:");
-// 			printnum(ehvecpointers[selected].id);
-// 			print("\nTO:");
-// 			printnum((uint32_t)ehvec[loop]);
-// 			print("\n");
 			RF[4] = ehvec[loop];
 			vm_cpu(hand_addr);
-			// vm_cpu(ehvec[loop]);
 		}
 		return 1; // Success
 	}
@@ -271,7 +249,6 @@ void timed_polling(void)
 #if HAS_ULTRASONIC
 	if (read_ultrassonic() < us_threshold)
 	{
-		// print("EV HERE\n");
 		insert_event(1,"US_S");
 	}
 #endif 

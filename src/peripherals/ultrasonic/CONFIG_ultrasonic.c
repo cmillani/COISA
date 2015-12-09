@@ -28,7 +28,7 @@ extern "C" {
 uint8_t conversion_factor = 29; //Default is CM
 uint8_t us_threshold = 0;
 
-void configure_ultrassonic(uint8_t mode)
+void configure_ultrassonic(uint8_t mode) //Changes de conversion_factor so US returns the distance in the desired Unit System
 {
 	if(mode == CM) conversion_factor = 29;
 	else if (mode == IN) conversion_factor = 74;

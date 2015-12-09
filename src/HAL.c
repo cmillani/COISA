@@ -32,11 +32,7 @@ extern "C" {
 #include <stdio.h>
 
 /*Defined peripherals ids:
-	Ultrasonic  0
-	Encoder     5
-	Serial      10
-	Moviment    15
-	
+	See file on doc/CallsDefinition.txt
 */
 
 uint8_t hal_call(uint32_t sensid, char identifier[])//Call to hardware I/O

@@ -34,46 +34,29 @@ uint8_t init_ultrassonic(void)
 	DDRD &= ~(1 << PD5); //Echo as Input
 }
 
-//
-// 	// wait for any previous pulse to end
-// 	while ((*portInputRegister(port) & bit) == stateMask)
-// 		if (numloops++ == maxloops)
-// 			return 0;
-//
-// 	// wait for the pulse to start
-// 	while ((*portInputRegister(port) & bit) != stateMask)
-// 		if (numloops++ == maxloops)
-// 			return 0;
-//
-// 	// wait for the pulse to stop
-// 	while ((*portInputRegister(port) & bit) == stateMask) {
-// 		if (numloops++ == maxloops)
-// 			return 0;
-// 		width++;
-// 	}
-
 #include <serial.h>
 uint8_t read_ultrassonic(void)
 {
-	uint32_t temp = 0;
+	uint32_t temp = 0; //Used to store time along the function
 	uint32_t timeout = 8000;
 
-	PORTD &= ~(1 << PD4);
+	PORTD &= ~(1 << PD4); //First sets to zero the trig pin
+	temp = timerOvfcnt*256 + TCNT2; 
+	while (timerOvfcnt*256 + TCNT2 < temp + 1); //Waits 2us
+	PORTD |= (1 << PD4); //Sends Pulse through trig pin
 	temp = timerOvfcnt*256 + TCNT2;
-	while (timerOvfcnt*256 + TCNT2 < temp + 1);
-	PORTD |= (1 << PD4);
-	temp = timerOvfcnt*256 + TCNT2;
-	while (timerOvfcnt*256 + TCNT2 < temp + 5);
-	PORTD &= ~(1 << PD4);
+	while (timerOvfcnt*256 + TCNT2 < temp + 5); //Pulse has the duration of 10us
+	PORTD &= ~(1 << PD4); //Sets pin to low again
 	
+	//Here we have the timeout to prevent an infinite loop
 	temp = timerOvfcnt*256 + TCNT2;
-	while (PIND & (1 << PD5)) if (timerOvfcnt*256 + TCNT2 >= temp + timeout) return 255;
+	while (PIND & (1 << PD5)) if (timerOvfcnt*256 + TCNT2 >= temp + timeout) return 255; //Wait until echo is low
 	temp = timerOvfcnt*256 + TCNT2;
-	while (!(PIND & (1 << PD5))) if (timerOvfcnt*256 + TCNT2 >= temp + timeout) return 255;
+	while (!(PIND & (1 << PD5))) if (timerOvfcnt*256 + TCNT2 >= temp + timeout) return 255; //Wait until echo is high
 	temp = timerOvfcnt*256 + TCNT2;
-	while (PIND & (1 << PD5)) if (timerOvfcnt*256 + TCNT2 >= temp + timeout) return 255;
-	temp = timerOvfcnt*256 + TCNT2 - temp;
-	return temp/conversion_factor;
+	while (PIND & (1 << PD5)) if (timerOvfcnt*256 + TCNT2 >= temp + timeout) return 255; //Starts counting until echo is low again
+	temp = timerOvfcnt*256 + TCNT2 - temp;//Gets the high time of the pulse
+	return temp/conversion_factor;//Converts it to the configured Unit System
 }
 	
 #ifdef __cplusplus
