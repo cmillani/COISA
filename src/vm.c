@@ -158,7 +158,7 @@ void vm_cpu(uint32_t newPC)
 				uint8_t funct = (instr >> 0) & 0x3F;
 			  
 				switch (funct) {
-					case 0b001011: { // movn	001010 				if(rt!=0) rd = rs
+					case 0b001011: { // movn	001011 				if(rt!=0) rd = rs
 						if (RF[rt] != 0) RF[rd] = RF[rs];
 						break;
 					}

@@ -41,20 +41,22 @@ This is a table of all the different types of instruction as they appear in the 
 
 Encoding	Syntax	Template	Comments
 Register	
-ArithLog	f $d, $s, $t
-DivMult	f $s, $t
-Shift	f $d, $t, a
-ShiftV	f $d, $t, $s
-JumpR	f $s
-MoveFrom	f $d
-MoveTo	f $s
-Immediate	ArithLogI	o $t, $s, i
-LoadI	o $t, immed32	i is high or low 16 bits of immed32
-Branch	o $s, $t, label	i is calculated as (label - (current + 4)) >> 2
-BranchZ	o $s, label	i is calculated as (label - (current + 4)) >> 2
-LoadStore	o $t, i ($s)
-Jump	Jump	o label	i is calculated as (label - (current + 4)) >> 2
-Trap	o i
+ArithLog	f  $d, $s, $t
+DivMult 	f  $s, $t
+Shift   	f  $d, $t, a
+ShiftV  	f  $d, $t, $s
+JumpR   	f  $s
+MoveFrom	f  $d
+MoveTo  	f  $s
+Immediate
+ArithLogI	o  $t, $s, i
+LoadI   	o  $t, immed32	i is high or low 16 bits of immed32
+Branch  	o  $s, $t, label	i is calculated as (label - (current + 4)) >> 2
+BranchZ  	o  $s, label	i is calculated as (label - (current + 4)) >> 2
+LoadStore	o  $t, i ($s)
+Jump	
+Jump    	o  label	i is calculated as (label - (current + 4)) >> 2
+Trap    	o  i
 Opcode Table
 
 These tables list all of the available operations in MIPS. For each instruction, the 6-bit opcode or function is shown. The syntax column indicates which syntax is used to write the instruction in assembly text files. Note that which syntax is used for an instruction also determines which encoding is to be used. Finally the operation column describes what the operation does in pseudo-Java plus some special notation as follows:
