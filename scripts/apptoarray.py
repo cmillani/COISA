@@ -15,6 +15,9 @@ for f in files:
     allfile = file.read()
     for c in allfile:
         output.append(ord(c))
+    print "================================================================="
+    print f
+    print "================================================================="
     print output
     print len(output)
     output = []
