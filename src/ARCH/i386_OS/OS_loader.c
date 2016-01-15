@@ -87,13 +87,13 @@ int main(int argc, char * argv[])
 	vm_cpu(0);
 	// print_EH();
 	// print_EH();
-	vm_cpu(ehvec[0]);
+	// vm_cpu(ehvec[0]);
 #endif
 #if MEASURING	
 	time_t toc = clock();
 	printf("TIMESPENT.%ld\n", (toc - tic));
 #endif
-	i = 0;
+	// i = 0;
 	
 	return 0;
 }

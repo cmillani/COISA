@@ -122,7 +122,7 @@ void vm_cpu(uint32_t newPC)
 		uint8_t op = (instr >> 26) & 0x3F;
 #if DEBUGING
 		char a;
-		while (PC >= 0x160 && PC <= 0x2bc && (a = getchar()) != 'c')
+		while (PC >= 0x960 && PC <= 0x9bc && (a = getchar()) != 'c')
 		{
 			switch (a)
 			{

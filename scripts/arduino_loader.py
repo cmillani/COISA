@@ -11,6 +11,8 @@ executable = file.read()
 # zero = serial.Serial("/dev/tty.Zero-DevB") # Upload using bluetooth
 if len(sys.argv) >= 3 and sys.argv[2] == "-bt":
     zero = serial.Serial("/dev/tty.Zero-DevB") # Upload using bluetooth
+elif len(sys.argv) >= 4 and sys.argv[2] == "-sim":
+    zero = serial.Serial(sys.argv[3])
 else:
     zero = serial.Serial("/dev/cu.usbmodem1411") # Upload using USB
 time.sleep(2) # make sure the connection is ok
