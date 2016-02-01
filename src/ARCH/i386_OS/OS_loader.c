@@ -31,7 +31,7 @@ int main(int argc, char * argv[])
 	// print_EH();
 	// register_handler(1, blah+5, a);
 	// insert_event(1, a);
-// 	insert_event(2);
+	// insert_event(2, b);
 // 	insert_event(3);
 // 	insert_event(1);
 	// print_EH();
@@ -40,6 +40,7 @@ int main(int argc, char * argv[])
 // 	consume_event();
 // 	consume_event();
 	// print_EH();
+	// print("Will Work");
 // 	insert_event(1);
 // 	insert_event(2);
 // 	insert_event(3);

@@ -25,10 +25,10 @@ extern "C" {
 	
 #include <EH.h>
 #include <vm.h>
-#include <string.h>
+#include <stdutils.h>
 #include <HAL.h>
-#include <stdarg.h>
-	
+// #include <stdarg.h>
+//
 // #include <stdio.h>
 // void print_EH(void)
 // {
@@ -79,7 +79,7 @@ void eh_init(void)
 }
 
 
-int8_t register_handler(uint8_t event_id, uint32_t handler, char * evname, ...)
+int8_t register_handler(uint8_t event_id, uint32_t handler, char * evname, void * argv[], uint8_t argc)
 {
 	if (!(vec_size < EHVECSZ)) return -1; //No space for one more handler
 	register uint8_t selected;
@@ -155,9 +155,10 @@ int8_t register_handler(uint8_t event_id, uint32_t handler, char * evname, ...)
 #if HAS_ULTRASONIC
 	if (!strcmp(evname, "US_S")) //US dist sensor has the threshold argument
 	{
-		va_list ap;
-		va_start(ap, 1);
-		us_threshold = va_arg(ap, int);
+		if (argc == 1)
+		{
+			us_threshold = (int)argv[0];
+		}
 	}
 #endif
 	

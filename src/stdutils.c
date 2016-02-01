@@ -18,25 +18,36 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-/*Definitions for an atmega328 based device*/
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-
-/* Is processor already defined? */
-#ifndef PROCESSOR
-#define PROCESSOR "ATMEGA328"
+#include <stdutils.h>
 	
-#define BPORT 0
-#define CPORT 1
-#define DPORT 2
+uint8_t result = 1;
+char temp;
+uint8_t counter;
 	
-#define MAX_PS 1024
-#define PROCESSOR_MEMORY_SZ 1700
+void strcpy(char dest[], char origin[])
+{
+	for(counter = 0; origin[counter] != '\0'; counter++)
+	{
+		dest[counter] = origin[counter];
+	}
+}
 
-#endif /*PROCESSOR*/
+uint8_t strcmp(char one[], char two[])
+{
+	result = 0; //Starts as true (string.h strcmp like)
+	counter = 0;
+	do {
+		result = !(one[counter] == two[counter]); //Compares the two strings and output the result to the variable (as 0 means equal, we need the NOT)
+		counter++;
+	} while (one[counter] != '\0' && two[counter] != '\0' && result == 0); //Breaks with the first \0 to avoid segfault or as soon as it`s not true anymore
+	return result;
+}
+
 
 #ifdef __cplusplus
 }

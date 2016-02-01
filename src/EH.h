@@ -50,14 +50,24 @@ typedef struct event
 	char name[5];
 } new_event;
 
-#define EHVECSZ 10 //Size of the vector of handlers
-#define EHQUEUESZ 10 //Size of the event queue
+/*
+		DESCRIPTION:
+	There are 3 vectors: the vector of handlers, the queue of events and a pointer to the handler of an event.
+The vector of handlers has the address of the function that is called when an event is generated.
+The queue of events is a FIFO data structure responsible for holding the generated events until they are consumed.
+The last one, the pointer vector, holds the number of handlers and the position of the handler in the first vector for all the registered events.
+One event may have more than one handler, that`s why there are more than one structure to hold the handler`s info.
+*/
+
+
+#define EHVECSZ 5 //Size of the vector of handlers
+#define EHQUEUESZ 3 //Size of the event queue
 extern uint32_t ehvec[EHVECSZ]; //Vector of handlers
 extern new_event ehqueue[EHQUEUESZ]; //Events queue	
 volatile extern uint8_t queue_init;
 volatile extern uint8_t queue_size;
 
-#define EVENTQTTY 4 //Number of different events that can be generated
+#define EVENTQTTY 3 //Number of different events that can be generated
 extern ev_point ehvecpointers[EVENTQTTY]; //Pointer to the part of the handler vector that corresponds to that event
 
 /*******************************************************************/
@@ -102,7 +112,7 @@ void eh_init(void);
 ** Register 'handler' as a callback to be executed when the event  **
 ** of id 'event_id' happens                                        **
 ********************************************************************/
-int8_t register_handler(uint8_t event_id, uint32_t handler, char * evname, ...);
+int8_t register_handler(uint8_t event_id, uint32_t handler, char * evname, void * argv[], uint8_t argc);
 
 /********************************************************************
 ** remove_handler(uint8_t event_id, void (*handler)(void))         **

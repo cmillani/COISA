@@ -24,12 +24,11 @@ extern "C" {
 
 #include "HAL.h"
 #include "vm.h"
-#include <string.h>
+#include <stdutils.h>
 	
 #if PRINTING
 #include <stdio.h>
 #endif
-#include <stdio.h>
 
 /*Defined peripherals ids:
 	See file on doc/CallsDefinition.txt
