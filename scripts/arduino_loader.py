@@ -17,8 +17,9 @@ else:
     zero = serial.Serial("/dev/cu.usbmodem1411") # Upload using USB
 time.sleep(2) # make sure the connection is ok
 
-# print len(executable)
-
+print len(executable)
+# print (len(executable) & 0xFF)
+# print ((len(executable) >> 8) & 0xFF)
 zero.write(chr(len(executable) & 0xFF))
 zero.write(chr((len(executable) >> 8) & 0xFF))
 
@@ -27,6 +28,7 @@ count = 0
 
 for c in executable:
     zero.write(chr(ord(c)))
+    # time.sleep(0.01)
     # print(ord(c))
     
 print "###########################################"

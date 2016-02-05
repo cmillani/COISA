@@ -64,7 +64,7 @@ uint8_t syscall(uint8_t trap_code)
 			break;
 		}
 		case 14: { //Register Event Handler
-			register_handler((uint8_t)RF[4], (uintptr_t)RF[5], (char *)&VM_memory[RF[6]], RF[7], RF[8]);
+			register_handler((uint8_t)RF[4], (uintptr_t)RF[5], (char *)&VM_memory[RF[6]], (void *)&RF[7], RF[8]);
 			break;
 		}
 		case 15: { //Remove Event Handler

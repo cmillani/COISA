@@ -34,7 +34,7 @@ extern "C" {
 #define DPORT 2
 	
 #define MAX_PS 1024
-#define PROCESSOR_MEMORY_SZ 1700
+#define PROCESSOR_MEMORY_SZ 1000
 
 #endif /*PROCESSOR*/
 

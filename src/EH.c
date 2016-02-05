@@ -79,7 +79,7 @@ void eh_init(void)
 }
 
 
-int8_t register_handler(uint8_t event_id, uint32_t handler, char * evname, void * argv[], uint8_t argc)
+int8_t register_handler(uint8_t event_id, uint32_t handler, char * evname, void * argv, uint8_t argc)
 {
 	if (!(vec_size < EHVECSZ)) return -1; //No space for one more handler
 	register uint8_t selected;

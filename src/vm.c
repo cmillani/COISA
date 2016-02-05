@@ -87,7 +87,6 @@ void advance_pc(int32_t offset)
 void vm_cpu(uint32_t newPC)
 {
 	// print("Oi!!!\n");
-	// printnum(newPC);
 	// print("\n");
 #if COUNTING
 	int instruct_cnt = 0;
@@ -105,6 +104,8 @@ void vm_cpu(uint32_t newPC)
 
 	while (!halted) 
 	{
+		// printnum(PC);
+		// print("\n");
 		// if (PC == 1) break; //PC should never be a non-multiple of 4, so 1 indicates something
 		// print("Oi?\n");
 		if (timer_flag)

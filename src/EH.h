@@ -112,7 +112,7 @@ void eh_init(void);
 ** Register 'handler' as a callback to be executed when the event  **
 ** of id 'event_id' happens                                        **
 ********************************************************************/
-int8_t register_handler(uint8_t event_id, uint32_t handler, char * evname, void * argv[], uint8_t argc);
+int8_t register_handler(uint8_t event_id, uint32_t handler, char * evname, void * argv, uint8_t argc);
 
 /********************************************************************
 ** remove_handler(uint8_t event_id, void (*handler)(void))         **

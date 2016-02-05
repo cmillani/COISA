@@ -63,10 +63,15 @@ void setup() {
         
 		uint16_t tot_size = (uint16_t)size1 | ((uint16_t)size2 << 8);
 		int i;
-
+        // printnum(size1);
+        // print("\n");
+        // printnum(size2);
+        // print("\n");
 		for (i = 0; i < tot_size; i++)
 		{
 			VM_memory[i] = read_byte();
+            // printnum(i);
+            // print("\n");
 		}
     
 #endif
