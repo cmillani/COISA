@@ -30,7 +30,7 @@ extern "C" {
 
 
 #include "vm.h"
-#include <inttypes.h>
+#include <stdint.h>
 
 #ifndef SYSCALL
 #define SYSCALL

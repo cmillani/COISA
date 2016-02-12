@@ -30,7 +30,6 @@ extern "C" {
 #include "syscall.h"
 #include "HAL.h"
 #include <EH.h>
-#include <stdio.h>	
 #if PRINTING
 #include <stdio.h>
 #endif

@@ -30,7 +30,6 @@ extern "C" {
 
 #include "vm.h"
 #include "syscall.h"
-#include <inttypes.h>
 #include <EH.h>
 
 #if DEBUGING

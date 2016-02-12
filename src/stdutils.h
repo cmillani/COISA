@@ -26,7 +26,7 @@ extern "C" {
 #ifndef STDUTILS_H
 #define STDUTILS_H
 	
-#include <inttypes.h>
+#include <stdint.h>
 	
 void strcpy(char dest[], char origin[]);
 uint8_t strcmp(char one[], char two[]);

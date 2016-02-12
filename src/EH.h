@@ -27,7 +27,7 @@ extern "C" {
 #define EH_H
 
 #include "config.h"
-#include <inttypes.h>
+#include <stdint.h>
 
 extern volatile uint8_t timer_flag; //Flag to indicate that data must be processed
 

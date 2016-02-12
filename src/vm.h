@@ -26,7 +26,7 @@ extern "C" {
 #define VM_H
 
 #include "config.h"
-#include <inttypes.h>
+#include <stdint.h>
 
 #define VM_MEMORY_SZ PROCESSOR_MEMORY_SZ /* Available memory from the microprocessor  */
 /* Register file. */

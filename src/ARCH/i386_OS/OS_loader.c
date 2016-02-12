@@ -1,7 +1,7 @@
 #include "vm.h"
 #include "HAL.h"
 #include <stdio.h>
-#include <inttypes.h>
+#include <stdint.h>
 #include <time.h>
 #include <EH.h>
 
