@@ -153,11 +153,15 @@ int8_t register_handler(uint8_t event_id, uint32_t handler, char * evname, void 
 	}
 	
 #if HAS_ULTRASONIC
+	// print("Uhm\n");
 	if (!strcmp(evname, "US_S")) //US dist sensor has the threshold argument
 	{
+		// print("IuhullUM\n");
 		if (argc == 1)
 		{
-			us_threshold = (int)argv[0];
+			// printnum(((int*)argv)[0]);
+			// print("<<Iuhull\n");
+			us_threshold = ((int*)argv)[0];
 		}
 	}
 #endif
@@ -248,7 +252,10 @@ int8_t consume_event(void) //TODO:For some reason i cannot print from inside thi
 void timed_polling(void)
 {
 #if HAS_ULTRASONIC
-	if (read_ultrassonic() < us_threshold)
+	// printnum(read_ultrassonic());
+	// print("<<\n");
+	uint8_t dist = read_ultrassonic();
+	if (dist < us_threshold + 3)
 	{
 		if (!is_close)
 		{
@@ -256,7 +263,14 @@ void timed_polling(void)
 			insert_event(1,"US_S");
 		}
 	}
-	else if (is_close) is_close = 0;
+	else if (dist > us_threshold - 3)
+	{
+		if (is_close)
+		{
+			is_close = 0;
+			insert_event(1,"US_F");
+		}
+	}
 #endif 
 }
 

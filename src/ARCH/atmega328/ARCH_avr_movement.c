@@ -35,7 +35,7 @@ extern "C" {
 #define MOVE_DURATION 30
 #define KP 0.005
 #define KI 0.001
-#define BASE_POW 210
+#define BASE_POW 250
 #define MIN_POW 160
 
 #define HOLE_COUNT 20.0

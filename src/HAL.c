@@ -169,6 +169,26 @@ uint8_t hal_call(uint32_t sensid, char identifier[])//Call to hardware I/O
 	#endif		
 				break;
 			}
+			case 21: { //Forward
+				ahead_L();
+				ahead_R();
+				break;
+			}
+			case 22: { //Left
+				ahead_R();
+				back_L();
+				break;
+			}
+			case 23: { //Right
+				ahead_L();
+				back_R();
+				break;
+			}
+			case 24: { //Stop
+				stop_motor_L();
+				stop_motor_R();
+				break;
+			}
 		}
 #endif
 	}

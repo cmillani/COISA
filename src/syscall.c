@@ -36,6 +36,9 @@ extern "C" {
  
 uint8_t syscall(uint8_t trap_code)
 {
+	// printnum(trap_code);
+	// print("trap_code\n");
+		
 	switch (trap_code)
 	{
 		case 9: {
@@ -64,6 +67,7 @@ uint8_t syscall(uint8_t trap_code)
 		}
 		case 14: { //Register Event Handler
 			register_handler((uint8_t)RF[4], (uintptr_t)RF[5], (char *)&VM_memory[RF[6]], (void *)&RF[7], RF[8]);
+			// print((char *)&VM_memory[RF[6]]);
 			break;
 		}
 		case 15: { //Remove Event Handler
