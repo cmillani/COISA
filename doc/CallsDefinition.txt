@@ -40,4 +40,8 @@ Halcalls:
 	BTOG
 	21:Init Button
 	
+	LEDS
+	0:Led On
+	1:Led Off
+	
 	TIMR - TODO

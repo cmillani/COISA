@@ -49,7 +49,7 @@ void setup() {
     eh_init();
 	serial_configure(9600);
 	init_timer();
-    
+	
 	while(1)
 	{
 #if SIMAVR

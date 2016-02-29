@@ -37,7 +37,9 @@ extern "C" {
 uint8_t hal_call(uint32_t sensid, char identifier[])//Call to hardware I/O
 {
 	// print(identifier);
-	
+	// printnum(sensid);
+	// print("<>");
+	// printnum(RF[4]);
 	// print("\n");
 	uint8_t retval = 0;
 	if (!strcmp(identifier,"US_S"))
@@ -63,6 +65,20 @@ uint8_t hal_call(uint32_t sensid, char identifier[])//Call to hardware I/O
 				init_ultrassonic();
 				break;
 			}
+		}
+#endif
+	}
+	else if (!strcmp(identifier,"LEDS"))
+	{
+#if HAS_LEDS
+		switch (sensid)
+		{
+			case 0: //Led On
+				ledon(RF[4]);
+				break;
+			case 1: //Led Off
+				ledoff(RF[4]);
+				break;
 		}
 #endif
 	}

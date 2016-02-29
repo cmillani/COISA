@@ -35,7 +35,7 @@ extern "C" {
 #define MOVE_DURATION 30
 #define KP 0.005
 #define KI 0.001
-#define BASE_POW 250
+#define BASE_POW 210
 #define MIN_POW 160
 
 #define HOLE_COUNT 20.0
@@ -60,6 +60,11 @@ float pow_left = BASE_POW;
 void setup_movement(void)
 {
 	serial_configure(9600);
+	DDRC |= (1 << DDC4);
+	DDRC |= (1 << DDC0);
+	PORTC |= (1 << PC4);
+	PORTC |= (1 << PC0);
+	//a4 and a0 pc4 and pc0
 	set_PWM(LEF1, 0);
 	set_PWM(LEF0, 0);
 	set_PWM(RIG0, 0);

@@ -18,62 +18,44 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
+
 #ifdef __cplusplus
 extern "C" {
-#endif
-    
-
-#ifndef CONFIG
-#define CONFIG
-
-/*Debuging and testing info*/
-#define DEBUGING 0
-	
-#define PRINTING 0
-	
-#define PRINTING_INST 0
-/*-------------------------*/
-
-/*Selects which arch will be used*/
-#if ARCH
-#include "ARCH/i386_OS/i386_OS.h"
-#else
-#include "ARCH/atmega328/atmega328.h"
-#endif
-/*-------------------------------*/
-
-/*Define which sensors and peripherals are available*/
-#define HAS_MOTORS 1
-	
-#define HAS_BUTTON 1
-
-#define HAS_LEDS 1
-
-#define HAS_ACCELEROMETER 0 //  TODO Define pins
-	
-#define HAS_GYROSCOPE 0
-	
-#define HAS_INFRARED 0
-	
-#define HAS_ENCODER 1
-#if HAS_ENCODER
-#define PIN_ENCODER1 
-#define PIN_ENCODER2
-#endif
-	
-#define HAS_ULTRASONIC 1
-#if HAS_ULTRASONIC
-#define PIN_ECHO
-#define PIN_TRIG
-#endif
-
-#define HAS_SERIAL 1
-#if HAS_SERIAL
 #endif 
-/*--------------------------------------------------*/
 	
-#endif /*CONFIG*/
-    
+#include <ARCH_leds.h>
+#include <avr/io.h>
+	
+void ledon (int led)
+{
+	switch (led) 
+	{
+		case 1:
+			DDRC |= (1 << DDC3);
+			PORTC |= (1 << PC3);
+			break;
+		case 2:
+			DDRC |= (1 << DDC1);
+			PORTC |= (1 << PC1);
+			break;
+	}
+}
+
+void ledoff (int led)
+{
+	switch (led) 
+	{
+		case 1:
+			DDRC &= ~(1 << DDC3);
+			PORTC &= ~(1 << PC3);
+			break;
+		case 2:
+			DDRC &= ~(1 << DDC1);
+			PORTC &= ~(1 << PC1);
+			break;
+	}
+}
+	
 #ifdef __cplusplus
 }
 #endif
