@@ -42,11 +42,16 @@ void serial_configure(unsigned int baudrate)
 	
 	UCSR0B |= (1 << RXEN0) | (1 << TXEN0);
 }
-void printnum(uint32_t number)
+void printnum(int32_t number)
 {
-	uint32_t temp = number;
-	uint32_t max = 10;
-	uint32_t counter = 0;
+	if (number < 0) 
+	{
+		number = -number;
+		send_byte('-');
+	}
+	int32_t temp = number;
+	int32_t max = 10;
+	int32_t counter = 0;
 	do
 	{
 		temp /= 10;

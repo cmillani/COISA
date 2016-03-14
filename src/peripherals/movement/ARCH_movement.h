@@ -38,6 +38,8 @@ void back_L(void);
 void stop_motor_L(void);//Turn off left motor
 void stop_motor_R(void);//Turn off right motor 
 void control(void);
+void PID(void);
+void PID_ON(void);
 
 #endif
 

@@ -49,7 +49,7 @@ void setup() {
     eh_init();
 	serial_configure(9600);
 	init_timer();
-	
+
 	while(1)
 	{
 #if SIMAVR
@@ -80,6 +80,78 @@ void setup() {
 		unsigned long tic = micros();
 	#endif
 	#if RUN_VM
+		start_encoder();
+		ahead_L();
+		ahead_R();
+		float a = read_encoder_time(LEFT);
+		float b = 0;
+		float c = read_encoder_time(RIGHT);
+		float d = 0;
+		int last_counter = 0;
+		int last_counter_R = 0;
+		
+		int counter = 0;
+		PID_ON();
+		while(1)
+		{
+			// uint32_t a = 400;
+			// int b = 395;
+			// float c = b - (int)a;
+			// printnum((int)c);
+			// print("\n");
+			if(timer_flag) 
+			{
+				counter++;
+				timer_flag = 0;
+			}
+			if (counter >= 2)
+			{
+				PID();
+				ahead_L();
+				ahead_R();
+				counter = 0;
+			}
+			// int counter = read_encoder_counter(LEFT);
+			// int counter_R = read_encoder_counter(RIGHT);
+			// if (last_counter != counter)
+// 			{
+// 				last_counter = counter;
+// 				b = a*0.8 + read_encoder_time(LEFT)*0.2;
+// 				a = b;
+// 				printnum(int(a));
+// 				// printnum(read_encoder_time(LEFT));
+// 				print("\t");
+// 				printnum(counter);
+// 				print("\t");
+// 			} else {
+// 				print("\t\t");
+// 			}
+// 			if (last_counter_R != counter_R)
+// 			{
+// 				last_counter_R = counter_R;
+// 				d = c*0.8 + read_encoder_time(RIGHT)*0.2;
+// 				c = d;
+// 				printnum(int(c));
+// 				// printnum(read_encoder_time(RIGHT));
+// 				print("\t");
+// 				printnum(counter_R);
+// 				print("\t");
+// 			} else {
+// 				print("\t\t");
+// 			}
+// 			print("\r\n");
+		}
+		// while(1)
+// 		{
+//
+// 		}
+		// init_ultrassonic();
+		// while(1)
+		// {
+		// 	printnum(read_ultrassonic());
+		// 	print("\n");
+		// }
+		
         vm_cpu(0);
     #if MEASURING
     	unsigned long toc = micros();

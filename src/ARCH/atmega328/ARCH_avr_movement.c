@@ -35,7 +35,7 @@ extern "C" {
 #define MOVE_DURATION 30
 #define KP 0.005
 #define KI 0.001
-#define BASE_POW 210
+#define BASE_POW 180
 #define MIN_POW 160
 
 #define HOLE_COUNT 20.0
@@ -54,8 +54,8 @@ extern "C" {
 #define LEF0 2 //10 on arduino
 #define LEF1 3 //11 on arduino
 	
-float pow_right = BASE_POW;
-float pow_left = BASE_POW;
+float pow_right = 0;
+float pow_left = 0;
 	
 void setup_movement(void)
 {
@@ -280,6 +280,84 @@ void control(void)
 // 	print(" ");
 // 	printnum(pow_left);
 // 	print("\n");
+}
+
+float Kp = 0.5;
+float Ki = 0.15;
+
+float il = 0;
+float ir = 0;
+int target = 80;
+
+int last_r = 0;
+int last_l = 0;
+int now_r = 0;
+int now_l = 0;
+int last_time = 0;
+
+int last_rpm_r = 0;
+int last_rpm_l = 0;
+
+void PID_ON(void)
+{
+	last_time = timer0_ovf_count;
+}
+
+void PID(void)
+{
+	now_r = read_encoder_counter(RIGHT);
+	now_l = read_encoder_counter(LEFT);
+	
+	int now_time = timer0_ovf_count;
+	
+	int rpm_r = (now_r-last_r)*23437.5/(now_time-last_time);
+	int rpm_l = (now_l-last_l)*23437.5/(now_time-last_time);
+
+	int filtered_r = 0.5*last_rpm_r + 0.5*rpm_r;
+	int filtered_l = 0.5*last_rpm_l + 0.5*rpm_l;
+	
+	// printnum(now_r);
+	// print("\t");
+	// printnum(now_time);
+	// print("\n");
+	// printnum(now_time);
+	// printnum(now_time-last_time);
+	printnum(rpm_l);
+	// printnum((now_r-last_r)*23437.5);
+	// printnum(now_l-last_l);
+	print("\t");
+	// printnum(last_time);
+	printnum(rpm_r);
+	// print("\t");
+	// printnum(filtered_l);
+	// print("\t");
+	// printnum(filtered_r);
+	// printnum((now_l-last_l)*23437.5);
+	// printnum(now_r-last_r);
+	print("\r\n");
+	float pl = target - rpm_l;
+	float pr = target - rpm_r;
+	il += pl;
+	ir += pr;
+	float resl = Kp * pl + Ki * il;
+	float resr = Kp * pr + Ki * ir;
+	
+	pow_right = resr;
+	pow_left = resl;
+	
+	if (pow_right > 255) pow_right = 255;
+	else if (pow_right < 0) pow_right = 0;
+
+	if (pow_left > 255) pow_left = 255;
+	else if (pow_left < 0) pow_left = 0;
+	
+	last_r = now_r;
+	last_l = now_l;
+	
+	last_time = now_time;
+	
+	last_rpm_l = filtered_l;
+	last_rpm_r = filtered_r;
 }
 
 #ifdef __cplusplus
