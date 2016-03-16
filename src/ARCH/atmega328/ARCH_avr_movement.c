@@ -284,6 +284,7 @@ void control(void)
 
 float Kp = 0.5;
 float Ki = 0.15;
+float Kd = 0.2;
 
 float il = 0;
 float ir = 0;
@@ -298,9 +299,17 @@ int last_time = 0;
 int last_rpm_r = 0;
 int last_rpm_l = 0;
 
+float i_xdiff = 0;
+float last_xdiff = 0;
+
 void PID_ON(void)
 {
 	last_time = timer0_ovf_count;
+}
+
+void set_targetRPM(int rpm)
+{
+	target = rpm;
 }
 
 void PID(void)
@@ -308,13 +317,17 @@ void PID(void)
 	now_r = read_encoder_counter(RIGHT);
 	now_l = read_encoder_counter(LEFT);
 	
+	float xdiff = (now_r - now_l)*0.8 + last_xdiff * 0.2;
+	i_xdiff += xdiff;
+	float d_xdiff = xdiff - last_xdiff;
+	
 	int now_time = timer0_ovf_count;
 	
-	int rpm_r = (now_r-last_r)*23437.5/(now_time-last_time);
-	int rpm_l = (now_l-last_l)*23437.5/(now_time-last_time);
+	float rpm_r = (now_r-last_r)*23437.5/(now_time-last_time);
+	float rpm_l = (now_l-last_l)*23437.5/(now_time-last_time);
 
-	int filtered_r = 0.5*last_rpm_r + 0.5*rpm_r;
-	int filtered_l = 0.5*last_rpm_l + 0.5*rpm_l;
+	float filtered_r = 0.5*last_rpm_r + 0.5*rpm_r;
+	float filtered_l = 0.5*last_rpm_l + 0.5*rpm_l;
 	
 	// printnum(now_r);
 	// print("\t");
@@ -322,12 +335,16 @@ void PID(void)
 	// print("\n");
 	// printnum(now_time);
 	// printnum(now_time-last_time);
-	printnum(rpm_l);
+	printnum(last_xdiff);
+	print("\t");
+	// printnum(pow_left);
+	printnum(i_xdiff);
 	// printnum((now_r-last_r)*23437.5);
 	// printnum(now_l-last_l);
 	print("\t");
 	// printnum(last_time);
-	printnum(rpm_r);
+	// printnum(pow_right);
+	printnum(xdiff);
 	// print("\t");
 	// printnum(filtered_l);
 	// print("\t");
@@ -339,11 +356,11 @@ void PID(void)
 	float pr = target - rpm_r;
 	il += pl;
 	ir += pr;
-	float resl = Kp * pl + Ki * il;
-	float resr = Kp * pr + Ki * ir;
+	float resl = Kp * pl + Ki * il + 2 * xdiff + 0.5 * i_xdiff;
+	float resr = Kp * pr + Ki * ir - 2 * xdiff - 0.5 * i_xdiff;
 	
-	pow_right = resr;
-	pow_left = resl;
+	pow_right = (int)resr;
+	pow_left = (int)resl;
 	
 	if (pow_right > 255) pow_right = 255;
 	else if (pow_right < 0) pow_right = 0;
@@ -358,6 +375,7 @@ void PID(void)
 	
 	last_rpm_l = filtered_l;
 	last_rpm_r = filtered_r;
+	last_xdiff = xdiff;
 }
 
 #ifdef __cplusplus

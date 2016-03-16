@@ -40,6 +40,7 @@ void stop_motor_R(void);//Turn off right motor
 void control(void);
 void PID(void);
 void PID_ON(void);
+void set_targetRPM(int rpm);
 
 #endif
 

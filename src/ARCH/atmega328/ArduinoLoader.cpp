@@ -91,6 +91,7 @@ void setup() {
 		int last_counter_R = 0;
 		
 		int counter = 0;
+		int second_counter = 0;
 		PID_ON();
 		while(1)
 		{
@@ -103,14 +104,28 @@ void setup() {
 			{
 				counter++;
 				timer_flag = 0;
+				// second_counter++;
 			}
-			if (counter >= 2)
+			if (counter >= 4 && second_counter < 100)
 			{
+				// int now_r = read_encoder_counter(RIGHT);
+				// int now_l = read_encoder_counter(LEFT);
+				// printnum(now_r);
+				// print("\t");
+				// printnum(now_l);
+				// print("\n");
 				PID();
 				ahead_L();
 				ahead_R();
 				counter = 0;
 			}
+			// if(second_counter > 100) {
+// 				stop_motor_R();
+// 				stop_motor_L();
+// 			}
+// 			if (second_counter > 200) {
+// 				second_counter = 0;
+// 			}
 			// int counter = read_encoder_counter(LEFT);
 			// int counter_R = read_encoder_counter(RIGHT);
 			// if (last_counter != counter)
