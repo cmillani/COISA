@@ -104,7 +104,7 @@ void setup() {
 			{
 				counter++;
 				timer_flag = 0;
-				// second_counter++;
+				second_counter++;
 			}
 			if (counter >= 4 && second_counter < 100)
 			{
@@ -114,18 +114,22 @@ void setup() {
 				// print("\t");
 				// printnum(now_l);
 				// print("\n");
+				set_targetRPM_L(80);
+				set_targetRPM_R(80);
 				PID();
-				ahead_L();
-				ahead_R();
 				counter = 0;
 			}
-			// if(second_counter > 100) {
-// 				stop_motor_R();
-// 				stop_motor_L();
-// 			}
-// 			if (second_counter > 200) {
-// 				second_counter = 0;
-// 			}
+			if(counter >= 4 && second_counter > 100) {
+				// stop_motor_R();
+				// stop_motor_L();
+				set_targetRPM_L(0);
+				set_targetRPM_R(0);
+				PID();
+				counter = 0;
+			}
+			if (second_counter > 500) {
+				second_counter = 0;
+			}
 			// int counter = read_encoder_counter(LEFT);
 			// int counter_R = read_encoder_counter(RIGHT);
 			// if (last_counter != counter)

@@ -248,6 +248,9 @@ void stop_motor_R(void)//Turn off right motor
 	set_PWM(RIG0, 0);
 	set_PWM(RIG1, 0);
 }
+
+void update_powers(void);
+
 void control(void)
 {
 	if (read_encoder_time(LEFT) == 0 || read_encoder_time(RIGHT) == 0) return;
@@ -288,7 +291,8 @@ float Kd = 0.2;
 
 float il = 0;
 float ir = 0;
-int target = 80;
+int target_r = 80;
+int target_l = 80;
 
 int last_r = 0;
 int last_l = 0;
@@ -307,9 +311,13 @@ void PID_ON(void)
 	last_time = timer0_ovf_count;
 }
 
-void set_targetRPM(int rpm)
+void set_targetRPM_R(int rpm)
 {
-	target = rpm;
+	target_r = rpm;
+}
+void set_targetRPM_L(int rpm)
+{
+	target_l = rpm;
 }
 
 void PID(void)
@@ -329,44 +337,61 @@ void PID(void)
 	float filtered_r = 0.5*last_rpm_r + 0.5*rpm_r;
 	float filtered_l = 0.5*last_rpm_l + 0.5*rpm_l;
 	
+	// if (now_r < 2 && now_l < 2)
+// 	{
+// 		last_r = now_r;
+// 		last_l = now_l;
+//
+// 		last_time = now_time;
+//
+// 		last_rpm_l = rpm_r;
+// 		last_rpm_r = rpm_l;
+// 		last_xdiff = now_r - now_l;
+// 		return;
+// 	}
+	
 	// printnum(now_r);
 	// print("\t");
 	// printnum(now_time);
 	// print("\n");
 	// printnum(now_time);
 	// printnum(now_time-last_time);
-	printnum(last_xdiff);
-	print("\t");
+	// printnum(last_xdiff);
+	// print("\t");
 	// printnum(pow_left);
-	printnum(i_xdiff);
+	// printnum(i_xdiff);
 	// printnum((now_r-last_r)*23437.5);
 	// printnum(now_l-last_l);
-	print("\t");
+	// print("\t");
 	// printnum(last_time);
 	// printnum(pow_right);
-	printnum(xdiff);
+	// printnum(xdiff);
 	// print("\t");
 	// printnum(filtered_l);
 	// print("\t");
 	// printnum(filtered_r);
 	// printnum((now_l-last_l)*23437.5);
 	// printnum(now_r-last_r);
-	print("\r\n");
-	float pl = target - rpm_l;
-	float pr = target - rpm_r;
+	// print("\r\n");
+	float pl = target_l - rpm_l;
+	float pr = target_r - rpm_r;
 	il += pl;
 	ir += pr;
 	float resl = Kp * pl + Ki * il + 2 * xdiff + 0.5 * i_xdiff;
-	float resr = Kp * pr + Ki * ir - 2 * xdiff - 0.5 * i_xdiff;
+	float resr = Kp * pr + 1.1*Ki * ir - 2 * xdiff - 0.5 * i_xdiff;
 	
 	pow_right = (int)resr;
 	pow_left = (int)resl;
 	
 	if (pow_right > 255) pow_right = 255;
-	else if (pow_right < 0) pow_right = 0;
-
+	else if (pow_right < -255) pow_right = -255;
+	else if (filtered_r < 5 && target_r == 0) pow_right = 0;
+	
 	if (pow_left > 255) pow_left = 255;
-	else if (pow_left < 0) pow_left = 0;
+	else if (pow_left < -255) pow_left = -255;
+	else if (filtered_l < 5 && target_l == 0) pow_left = 0;
+	
+	update_powers();
 	
 	last_r = now_r;
 	last_l = now_l;
@@ -376,6 +401,35 @@ void PID(void)
 	last_rpm_l = filtered_l;
 	last_rpm_r = filtered_r;
 	last_xdiff = xdiff;
+}
+
+void update_powers()
+{
+	if (pow_right > 0)
+	{
+		ahead_R();
+	} 
+	else if (pow_right < 0)
+	{
+		back_R();
+	}
+	else if (pow_right == 0)
+	{
+		stop_motor_R();
+	} 
+	
+	if (pow_left >= 0)
+	{
+		ahead_L();
+	}
+	else if (pow_left < 0)
+	{
+		back_L();
+	}
+	else if (pow_left == 0)
+	{
+		stop_motor_L();
+	}
 }
 
 #ifdef __cplusplus
