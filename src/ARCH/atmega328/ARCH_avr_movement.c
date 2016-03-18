@@ -285,14 +285,25 @@ void control(void)
 // 	print("\n");
 }
 
-float Kp = 0.5;
-float Ki = 0.15;
-float Kd = 0.2;
+float KpL = 1.0;//2.5;
+float KiL = 0.35;// 0.75;
+float KdL = 0.8;//1.7;
+
+float KpR = 1.1;//2.5;
+float KiR = 0.37;// 0.75;
+float KdR = 0.82;//1.7;
+
+float KpT = 0;//0.5;
+float KiT = 0;//0.15;
+float KdT = 0;//0.2;
 
 float il = 0;
 float ir = 0;
-int target_r = 80;
-int target_l = 80;
+int target_r = 0;
+int target_l = 0;
+
+float last_pr = 0;
+float last_pl = 0;
 
 int last_r = 0;
 int last_l = 0;
@@ -300,11 +311,14 @@ int now_r = 0;
 int now_l = 0;
 int last_time = 0;
 
-int last_rpm_r = 0;
-int last_rpm_l = 0;
+float last_rpm_r = 0;
+float last_rpm_l = 0;
 
 float i_xdiff = 0;
 float last_xdiff = 0;
+
+float resr = 0;
+float resl = 0;
 
 void PID_ON(void)
 {
@@ -328,57 +342,46 @@ void PID(void)
 	float xdiff = (now_r - now_l)*0.8 + last_xdiff * 0.2;
 	i_xdiff += xdiff;
 	float d_xdiff = xdiff - last_xdiff;
-	
+	//Ver relação entre rpms pra definir relação entre ticks e fazer essa conta aqui de cima direito
 	int now_time = timer0_ovf_count;
 	
-	float rpm_r = (now_r-last_r)*23437.5/(now_time-last_time);
-	float rpm_l = (now_l-last_l)*23437.5/(now_time-last_time);
+	float rpm_r = 0;
+	float rpm_l = 0;
+	if (now_time != last_time)
+	{
+		rpm_r = (now_r-last_r)*23437.5/(now_time-last_time);
+		if (resr < 0) rpm_r *= -1;
+		rpm_l = (now_l-last_l)*23437.5/(now_time-last_time);
+		if (resl < 0) rpm_l *= -1;
+	}
 
 	float filtered_r = 0.5*last_rpm_r + 0.5*rpm_r;
 	float filtered_l = 0.5*last_rpm_l + 0.5*rpm_l;
 	
-	// if (now_r < 2 && now_l < 2)
-// 	{
-// 		last_r = now_r;
-// 		last_l = now_l;
-//
-// 		last_time = now_time;
-//
-// 		last_rpm_l = rpm_r;
-// 		last_rpm_r = rpm_l;
-// 		last_xdiff = now_r - now_l;
-// 		return;
-// 	}
-	
-	// printnum(now_r);
-	// print("\t");
-	// printnum(now_time);
-	// print("\n");
-	// printnum(now_time);
-	// printnum(now_time-last_time);
-	// printnum(last_xdiff);
-	// print("\t");
-	// printnum(pow_left);
-	// printnum(i_xdiff);
-	// printnum((now_r-last_r)*23437.5);
-	// printnum(now_l-last_l);
-	// print("\t");
-	// printnum(last_time);
-	// printnum(pow_right);
-	// printnum(xdiff);
-	// print("\t");
-	// printnum(filtered_l);
-	// print("\t");
-	// printnum(filtered_r);
-	// printnum((now_l-last_l)*23437.5);
-	// printnum(now_r-last_r);
-	// print("\r\n");
-	float pl = target_l - rpm_l;
-	float pr = target_r - rpm_r;
+	float pl = target_l - filtered_l;
+	float pr = target_r - filtered_r;
 	il += pl;
 	ir += pr;
-	float resl = Kp * pl + Ki * il + 2 * xdiff + 0.5 * i_xdiff;
-	float resr = Kp * pr + 1.1*Ki * ir - 2 * xdiff - 0.5 * i_xdiff;
+	float dr = pr - last_pl;
+	float dl = pl - last_pr;
+	
+	resl = (KpL * pl + KiL * il + KdL * dl) + (KpT * xdiff + KiT * i_xdiff);
+	resr = (KpR * pr + KiR * ir + KdR * dr) - (KpT * xdiff + KiT * i_xdiff);
+	
+	// printnum(Kp * pl);
+	// print("\t");
+	// printnum(Ki * il);
+	// print("\t");
+	// printnum(Kd * dl);
+	// print("\t");
+	// printnum(resl);
+	// print("\t");
+	// printnum(filtered_l);
+	// print("\r\n");
+	printnum(now_r);
+	print("\t");
+	printnum(now_l);
+	print("\r\n");
 	
 	pow_right = (int)resr;
 	pow_left = (int)resl;
@@ -390,11 +393,13 @@ void PID(void)
 	if (pow_left > 255) pow_left = 255;
 	else if (pow_left < -255) pow_left = -255;
 	else if (filtered_l < 5 && target_l == 0) pow_left = 0;
-	
+
 	update_powers();
 	
 	last_r = now_r;
 	last_l = now_l;
+	last_pr = pr;
+	last_pl = pl;
 	
 	last_time = now_time;
 	
