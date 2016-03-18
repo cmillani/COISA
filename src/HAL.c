@@ -155,21 +155,21 @@ uint8_t hal_call(uint32_t sensid, char identifier[])//Call to hardware I/O
 	#if PRINTING
 				printf("(HAL)Ahead called\n");
 	#endif		
-				ahead();
+				// ahead();
 				break;
 			}
 			case 16: { 
 	#if PRINTING
 				printf("(HAL)Right called\n");
 	#endif		
-				turn_right();
+				// turn_right();
 				break;
 			}
 			case 17: {
 	#if PRINTING
 				printf("(HAL)Left called\n");
 	#endif		
-				turn_left();
+				// turn_left();
 				break;
 			}
 			case 18: {
@@ -186,18 +186,18 @@ uint8_t hal_call(uint32_t sensid, char identifier[])//Call to hardware I/O
 				break;
 			}
 			case 21: { //Forward
-				ahead_L();
-				ahead_R();
+				set_targetRPM_L(80);
+				set_targetRPM_R(80);
 				break;
 			}
 			case 22: { //Left
-				ahead_R();
-				back_L();
+				set_targetRPM_L(-80);
+				set_targetRPM_R(80);
 				break;
 			}
 			case 23: { //Right
-				ahead_L();
-				back_R();
+				set_targetRPM_L(80);
+				set_targetRPM_R(-80);
 				break;
 			}
 			case 24: { //Stop

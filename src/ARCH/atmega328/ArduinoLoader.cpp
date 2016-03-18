@@ -48,8 +48,6 @@ const uint8_t progBin[] PROGMEM = {36, 2, 0, 11, 0, 0, 0, 12, 12, 0, 0, 6, 0, 0,
 void setup() {
     eh_init();
 	serial_configure(9600);
-	init_timer();
-
 	while(1)
 	{
 #if SIMAVR
@@ -80,59 +78,8 @@ void setup() {
 		unsigned long tic = micros();
 	#endif
 	#if RUN_VM
+		init_timer();
 		start_encoder();
-		// ahead_L();
-		// ahead_R();
-		// float a = read_encoder_time(LEFT);
-		// float b = 0;
-		// float c = read_encoder_time(RIGHT);
-		// float d = 0;
-		int last_counter = 0;
-		int last_counter_R = 0;
-		
-		int counter = 0;
-		int second_counter = 0;
-		set_targetRPM_R(0);
-		set_targetRPM_L(0);
-		// PID_ON();
-		PID();
-
-		while(1)
-		{
-			if(timer_flag) 
-			{
-				counter++;
-				timer_flag = 0;
-				second_counter++;
-			}
-			if (counter >= 4 && second_counter < 200)
-			{
-				print("ONEE\n");
-				// int now_r = read_encoder_counter(RIGHT);
-				// int now_l = read_encoder_counter(LEFT);
-				// printnum(now_r);
-				// print("\t");
-				// printnum(now_l);
-				// print("\n");
-				// PID();
-				set_targetRPM_L(0);
-				set_targetRPM_R(0);
-				PID();
-				counter = 0;
-			}
-			if(counter >= 4 && second_counter > 200) {
-				// print("NEEXT\n");
-				// stop_motor_R();
-				// stop_motor_L();
-				set_targetRPM_L(80);
-				set_targetRPM_R(80);
-				PID();
-				counter = 0;
-			}
-			if (second_counter > 400) {
-				// second_counter = 0;
-			}
-		}
         vm_cpu(0);
     #if MEASURING
     	unsigned long toc = micros();
@@ -150,12 +97,19 @@ void setup() {
         sleep_disable();
     #endif //SIMAVR
     #if EVENT_ON
+		int counter = 0;
         while(1)
         {
 			if(timer_flag) 
 			{
+				counter++;
 				timed_polling();
 				timer_flag = 0;
+				if (counter >= 4)
+				{
+					PID();
+					counter = 0;
+				}
 			}
 			consume_event();
 		}

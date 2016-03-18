@@ -71,172 +71,28 @@ void setup_movement(void)
 	set_PWM(RIG1, 0);
 	start_encoder();
 }
-void ahead(void)
-{
-	// printnum(read_encoder_counter(RIGHT));
-	// print("\n");
-	pow_left = BASE_POW;
-	pow_right = BASE_POW;
-	reset_counter(LEFT);
-	reset_counter(RIGHT);
-	// changed = 0;
-	while(read_encoder_counter(RIGHT) < MOVE_DURATION && read_encoder_counter(LEFT) < MOVE_DURATION)
-	{
-		ahead_R();
-		ahead_L();
-		// if (changed)
-// 		{
-// 			changed = 0;
-// 			if (read_encoder_counter(RIGHT) > read_encoder_counter(LEFT))
-// 			{
-// 				if (pow_right > MIN_POW) pow_right-= 1;
-// 				if (pow_left < 255) pow_left+= 1;
-// 			}
-// 			else if (read_encoder_counter(RIGHT) < read_encoder_counter(LEFT))
-// 			{
-// 				if (pow_right < 255) pow_right+= 1;
-// 				if (pow_left > MIN_POW) pow_left-= 1;
-// 			}
-// 		}
-		// printnum(read_encoder_counter(RIGHT));
-		// print("\n");
-		control();
-	}
-	// if (read_encoder_counter(RIGHT) < MOVE_DURATION )
-// 	{
-// 		stop_motor_L();
-// 		while (read_encoder_counter(RIGHT) < MOVE_DURATION )
-// 		{
-// 			ahead_R();
-// 		}
-// 		stop_motor_R();
-// 	}
-// 	else if (read_encoder_counter(LEFT) < MOVE_DURATION )
-// 	{
-// 		stop_motor_R();
-// 		while (read_encoder_counter(LEFT) < MOVE_DURATION )
-// 		{
-// 			ahead_L();
-// 		}
-// 		stop_motor_L();
-// 	}
-	stop_motor_L();
-	stop_motor_R();
-	pow_right = BASE_POW;
-	pow_left = BASE_POW;
-}
-void turn_left(void)
-{
-	pow_left = BASE_POW;
-	pow_right = BASE_POW;
-	reset_counter(LEFT);
-	reset_counter(RIGHT);
-	while(read_encoder_counter(RIGHT) < (int)(QUARTER_TURN+0.5) && read_encoder_counter(LEFT) < (int)(QUARTER_TURN-0.5))
-	{
-		ahead_R();
-		back_L();
-		if (read_encoder_counter(RIGHT) > read_encoder_counter(LEFT))
-		{
-			if (pow_right > MIN_POW) pow_right--;
-			if (pow_left < 255) pow_left++;
-		}
-		else if (read_encoder_counter(RIGHT) < read_encoder_counter(LEFT))
-		{
-			if (pow_right < 255) pow_right++;
-			if (pow_left > MIN_POW) pow_left--;
-		}
-		// control();
-	}
-	// if (read_encoder_counter(RIGHT) < (int)(QUARTER_TURN+0.5) )
-// 	{
-// 		stop_motor_L();
-// 		while (read_encoder_counter(RIGHT) < (int)(QUARTER_TURN+0.5) )
-// 		{
-// 			ahead_R();
-// 		}
-// 		stop_motor_R();
-// 	}
-// 	else if (read_encoder_counter(LEFT) < (int)(QUARTER_TURN-0.5) )
-// 	{
-// 		stop_motor_R();
-// 		while (read_encoder_counter(LEFT) < (int)(QUARTER_TURN-0.5) )
-// 		{
-// 			back_L();
-// 		}
-// 		stop_motor_L();
-// 	}
-	stop_motor_L();
-	stop_motor_R();
-	pow_right = BASE_POW;
-	pow_left = BASE_POW;
-}
-void turn_right(void)
-{
-	pow_left = BASE_POW;
-	pow_right = BASE_POW;
-	reset_counter(LEFT);
-	reset_counter(RIGHT);
-	while(read_encoder_counter(RIGHT) < (int)(QUARTER_TURN-0.5) && read_encoder_counter(LEFT) < (int)(QUARTER_TURN+0.5))
-	{
-		back_R();
-		ahead_L();
-		// if (read_encoder_counter(RIGHT) > read_encoder_counter(LEFT))
-// 		{
-// 			if (pow_right > MIN_POW) pow_right--;
-// 			if (pow_left < 255) pow_left++;
-// 		}
-// 		else if (read_encoder_counter(RIGHT) < read_encoder_counter(LEFT))
-// 		{
-// 			if (pow_right < 255) pow_right++;
-// 			if (pow_left > MIN_POW) pow_left--;
-// 		}
-		control();
-	}
-	// if (read_encoder_counter(RIGHT) < (int)(QUARTER_TURN-0.5) )
-// 	{
-// 		stop_motor_L();
-// 		while (read_encoder_counter(RIGHT) < (int)(QUARTER_TURN-0.5) )
-// 		{
-// 			back_R();
-// 		}
-// 		stop_motor_R();
-// 	}
-// 	else if (read_encoder_counter(LEFT) < (int)(QUARTER_TURN+0.5) )
-// 	{
-// 		stop_motor_R();
-// 		while (read_encoder_counter(LEFT) < (int)(QUARTER_TURN+0.5) )
-// 		{
-// 			ahead_L();
-// 		}
-// 		stop_motor_L();
-// 	}
-	stop_motor_L();
-	stop_motor_R();
-	pow_right = BASE_POW;
-	pow_left = BASE_POW;
-}
 /**************************************************************/
 
 /**************************************************************/
-void ahead_L(void)
+void ahead_L(int power)
 {
-	set_PWM(LEF0, (int)pow_left);
+	set_PWM(LEF0, power);
 	set_PWM(LEF1, 0);
 }
-void ahead_R(void)
+void ahead_R(int power)
 {
-	set_PWM(RIG0, (int)pow_right);
+	set_PWM(RIG0, power);
 	set_PWM(RIG1, 0);
 }
-void back_R(void)
+void back_R(int power)
 {
 	set_PWM(RIG0, 0);
-	set_PWM(RIG1, (int)pow_right);
+	set_PWM(RIG1, power);
 }
-void back_L(void)
+void back_L(int power)
 {
 	set_PWM(LEF0, 0);
-	set_PWM(LEF1, (int)pow_left);
+	set_PWM(LEF1, power);
 }
 void stop_motor_L(void)//Turn off left motor
 {
@@ -368,20 +224,20 @@ void PID(void)
 	resl = (KpL * pl + KiL * il + KdL * dl) + (KpT * xdiff + KiT * i_xdiff);
 	resr = (KpR * pr + KiR * ir + KdR * dr) - (KpT * xdiff + KiT * i_xdiff);
 	
-	// printnum(Kp * pl);
-	// print("\t");
-	// printnum(Ki * il);
-	// print("\t");
-	// printnum(Kd * dl);
-	// print("\t");
-	// printnum(resl);
-	// print("\t");
-	// printnum(filtered_l);
-	// print("\r\n");
-	printnum(now_r);
+	printnum(KpL * pl);
 	print("\t");
-	printnum(now_l);
+	printnum(KiL * il);
+	print("\t");
+	printnum(KdL * dl);
+	print("\t");
+	printnum(resl);
+	print("\t");
+	printnum(filtered_l);
 	print("\r\n");
+	// printnum(now_r);
+	// print("\t");
+	// printnum(now_l);
+	// print("\r\n");
 	
 	pow_right = (int)resr;
 	pow_left = (int)resl;
@@ -412,11 +268,11 @@ void update_powers()
 {
 	if (pow_right > 0)
 	{
-		ahead_R();
+		ahead_R(pow_right);
 	} 
 	else if (pow_right < 0)
 	{
-		back_R();
+		back_R(-pow_right);
 	}
 	else if (pow_right == 0)
 	{
@@ -425,11 +281,11 @@ void update_powers()
 	
 	if (pow_left >= 0)
 	{
-		ahead_L();
+		ahead_L(pow_left);
 	}
 	else if (pow_left < 0)
 	{
-		back_L();
+		back_L(-pow_left);
 	}
 	else if (pow_left == 0)
 	{

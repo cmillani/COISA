@@ -31,10 +31,10 @@ void turn_right(void);
 void setup_movement(void);
 
 
-void ahead_L(void);
-void ahead_R(void);
-void back_R(void);
-void back_L(void);
+void ahead_L(int power);
+void ahead_R(int power);
+void back_R(int power);
+void back_L(int power);
 void stop_motor_L(void);//Turn off left motor
 void stop_motor_R(void);//Turn off right motor 
 void control(void);
