@@ -58,8 +58,9 @@ void setup() {
 #else
 		uint8_t size1 = read_byte();
 		uint8_t size2 = read_byte();
-        
+		
 		uint16_t tot_size = (uint16_t)size1 | ((uint16_t)size2 << 8);
+
 		int i;
         // printnum(size1);
         // print("\n");

@@ -224,16 +224,16 @@ void PID(void)
 	resl = (KpL * pl + KiL * il + KdL * dl) + (KpT * xdiff + KiT * i_xdiff);
 	resr = (KpR * pr + KiR * ir + KdR * dr) - (KpT * xdiff + KiT * i_xdiff);
 	
-	printnum(KpL * pl);
-	print("\t");
-	printnum(KiL * il);
-	print("\t");
-	printnum(KdL * dl);
-	print("\t");
-	printnum(resl);
-	print("\t");
-	printnum(filtered_l);
-	print("\r\n");
+	// printnum(KpL * pl);
+	// print("\t");
+	// printnum(KiL * il);
+	// print("\t");
+	// printnum(KdL * dl);
+	// print("\t");
+	// printnum(resl);
+	// print("\t");
+	// printnum(filtered_l);
+	// print("\r\n");
 	// printnum(now_r);
 	// print("\t");
 	// printnum(now_l);
