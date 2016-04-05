@@ -56,6 +56,17 @@ void setup() {
             VM_memory[i] = pgm_read_word_near(progBin+i);
         }
 #else
+		handshake: //Handshake to sync the device with the SDK
+		char check1 = read_byte();
+		char check2 = read_byte();
+		
+		// send_byte(check1);
+		// send_byte(check2);
+		
+		if (check1 != 'H' || check2 != 'I') goto handshake;
+		send_byte('O');
+		send_byte('K');
+		
 		uint8_t size1 = read_byte();
 		uint8_t size2 = read_byte();
 		
