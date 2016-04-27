@@ -64,7 +64,7 @@ void print_registers(void);
 
 
 /*
- * Central processing unit. It continuously fetches and executes
+ * Central processing unit. It fetches and executes
  * instructions.
  */
 
@@ -83,16 +83,13 @@ void advance_pc(int32_t offset)
 	nPC  += offset;
 }
 
+void vm_continue(void){
+	vm_cpu(PC); //TODO: Refactor to optimize this
+}
+
+
 void vm_cpu(uint32_t newPC)
 {
-	// print("Oi!!!\n");
-	// print("\n");
-#if COUNTING
-	int instruct_cnt = 0;
-#endif
-#if COUNTING_STACK
-	int max_stack = VM_MEMORY_SZ;
-#endif
 	PC = newPC;
 	nPC = PC + 4;
 	RF[0] = 0; //Register $zero must always be zero
@@ -101,48 +98,12 @@ void vm_cpu(uint32_t newPC)
 	uint32_t offset = 4;
 	uint8_t halted = 0;
 
-	while (!halted) 
+	if (!halted) //TODO: optmize: if not halted shoudn't call vc_cpu at all
 	{
-		// printnum(PC);
-		// print("\n");
-		// if (PC == 1) break; //PC should never be a non-multiple of 4, so 1 indicates something
-		// print("Oi?\n");
-		if (timer_flag)
-		{
-			timed_polling();
-			timer_flag = 0;
-		}
-#if COUNTING
-		instruct_cnt++;
-#endif
-#if COUNTING_STACK
-		if (max_stack > RF[29] && RF[29] != 0) max_stack = RF[29]; //Stack == 0 means it`s not yet initialized
-#endif
+		//Fetch intstruction
 		uint32_t instr = fetch(PC);
+		//Separate intruction to get registers, immediate, function and adress, to use depending on instruction encoding
 		uint8_t op = (instr >> 26) & 0x3F;
-#if DEBUGING
-		char a;
-		while (PC >= 0x960 && PC <= 0x9bc && (a = getchar()) != 'c')
-		{
-			switch (a)
-			{
-				case 'a':
-				print_memory();
-				break;
-				case 'b':
-				print_registers();
-				break;
-				default:
-				break;
-			}
-		}
-		printf("\n<Instr:%x op:%x\n\n", instr, op);
-#endif
-#if PRINTING_INST
-		printf("|-----------------------------------------------|\n");
-		printf("|PC:%x\tInstr:%x\tOp:%x\n", PC, instr,op);
-		printf("|-----------------------------------------------|\n");
-#endif
 		uint8_t rs = (instr >> 21) & 0x1F;
 		uint8_t rt = (instr >> 16) & 0x1F;
 		uint8_t rd = (instr >> 11) & 0x1F;
@@ -150,8 +111,8 @@ void vm_cpu(uint32_t newPC)
 		uint32_t address = (instr >> 0) & 0x3FFFFFF;
 		
 		offset = 4; //default offset for non-branching instructions
-		//TODO Handle events here!
-		switch (op) 
+		
+		switch (op) //Executes the instruction
 		{
 			case 0x0: { // 000000 => Register encoding.
 				uint8_t shamt = (instr >> 6) & 0x1F;
@@ -259,12 +220,12 @@ void vm_cpu(uint32_t newPC)
 						RF[31] = PC+8;
 						PC = nPC;
 						nPC = RF[rs];
-						continue;
+						return;
 					}
 					case 0b001000: { // jr		001000	JumpR		pc = $s 
 						PC = nPC;
 						nPC = RF[rs];
-						continue;
+						return;
 					}
 					case 0b010000: { // mfhi	010000	MoveFrom	$d = hi
 						RF[rd] = HI;
@@ -286,17 +247,12 @@ void vm_cpu(uint32_t newPC)
 						if (syscall((uint8_t)RF[2])) //registers $4 and $5 useb by hallcall (sensid and retval respectively)
 						{
 							halted = 1; //Syscall returned 1, exit code
-#if PRINTING
-							printf("Vm stopped by exit signal\n");
-#endif
 						}
 						break; 
 					}	
 					default:
 					{
-		#if PRINTING
-						if (instr != 0)	printf("\n(ERROR)Invalid instruction %x at PC: %x\n",instr, PC);
-		#endif
+						//TODO: throw an error
 					}
 					break;
 				}      
@@ -347,7 +303,7 @@ void vm_cpu(uint32_t newPC)
 					if ((int32_t)RF[rs] >= 0)
 					{
 						advance_pc(immediate << 2);
-						continue;
+						return;
 					}
 					else
 					{
@@ -360,7 +316,7 @@ void vm_cpu(uint32_t newPC)
 					{
 						RF[31] = PC + 8;
 						advance_pc(immediate << 2);
-						continue;
+						return;
 					}
 					else
 					{
@@ -372,7 +328,7 @@ void vm_cpu(uint32_t newPC)
 					if ((int32_t)RF[rs] < 0)
 					{
 						advance_pc(immediate << 2);
-						continue;
+						return;
 					}
 					else
 					{
@@ -385,7 +341,7 @@ void vm_cpu(uint32_t newPC)
 					{
 						RF[31] = PC + 8;
 						advance_pc(immediate << 2);
-						continue;
+						return;
 					}
 					else
 					{
@@ -398,7 +354,7 @@ void vm_cpu(uint32_t newPC)
 				if (RF[rs] == RF[rt])
 				{
 					advance_pc(immediate << 2);
-					continue;
+					return;
 				}
 				else
 				{
@@ -410,7 +366,7 @@ void vm_cpu(uint32_t newPC)
 				if ((int32_t)RF[rs] > 0)
 				{
 					advance_pc(immediate << 2);
-					continue;
+					return;
 				}
 				else
 				{
@@ -422,7 +378,7 @@ void vm_cpu(uint32_t newPC)
 				if ((int32_t)RF[rs] <= 0)
 				{
 					advance_pc(immediate << 2);
-					continue;
+					return;
 				}
 				else
 				{
@@ -437,7 +393,7 @@ void vm_cpu(uint32_t newPC)
 				if (RF[rs] != RF[rt])
 				{
 					advance_pc(immediate << 2);
-					continue;
+					return;
 				}
 				else
 				{
@@ -487,16 +443,13 @@ void vm_cpu(uint32_t newPC)
 			case 0b000010: { //j       000010  Jump    pc = i << 2
 				PC = nPC;
 				nPC = address << 2;
-				continue;
+				return;
 			}
 			case 0b000011: { //jal     000011  Jump    $31 = pc; pc = i << 2
-#if DEBUGING
-				printf(">>RA:%x\tAddress:%x\n", RF[31], address<<2);
-#endif
 				RF[31] = PC + 8;
 				PC = nPC;
 				nPC = address << 2;
-				continue;
+				return;
 			}
 			case 0b011010: { //trap    011010  Trap    Dependent on operating system; different values for immed26 specify different operations. See the list of traps for information on what the different trap codes do.
 				syscall((uint8_t)(address&0xFF));
@@ -528,55 +481,19 @@ void vm_cpu(uint32_t newPC)
 			break; //op
 			default:
 			{
-#if PRINTING
-				if (instr != 0)	printf("\n(ERROR)Invalid instruction %x at PC: %x\n",instr, PC);
-#endif
 				break;
 			}
 		}
 		advance_pc(offset);//Advances the PC
 	}
-#if COUNTING
-	print("INSTCOUNT.");
-	printnum(instruct_cnt);
-	print(".");
-	print("\n");
-#endif
-#if COUNTING_STACK
-	print("MAXSTACK");
-	printnum(VM_MEMORY_SZ - max_stack);
-	print("\n");
-#endif
 }
 
 uint32_t fetch(uint32_t PC)
 {
-#if DEBUGING
-	printf("<Will fetch %x\n", PC);
-#endif	
 	uint32_t ret_val = (((uint32_t)VM_memory[PC] <<24) | ((uint32_t)VM_memory[PC+1] <<16) | ((uint32_t)VM_memory[PC+2] <<8) | ((uint32_t)VM_memory[PC+3]));
 	return ret_val;
 }
-    
-#if DEBUGING
-void print_memory(void)
-{
-	int i;
-	for (i = 0; i < VM_MEMORY_SZ; i = i+4)
-	{
-		printf ("%2x%2x%2x%2x\n", VM_memory[i], VM_memory[i + 1], VM_memory[i + 2], VM_memory[i + 3]);
-	}
-}
-void print_registers(void)
-{
-	int i;
-	for (i = 0; i < 32; i++)
-	{
-		printf ("%d:%x\n",i+1 ,RF[i]);
-	}
-}
-#endif
-	
+    	
 #ifdef __cplusplus
 }
 #endif

@@ -23,7 +23,27 @@ extern "C" {
 #endif
 	
 #include "ARCH_serial.h"
+#include <stdint.h>
 #include <avr/io.h>
+#include <avr/interrupt.h>
+
+volatile char rx_buff[2] = {0};
+volatile uint8_t rx_buff_pos = 0;
+// char tx_buff[2] = {0};
+
+volatile uint8_t has_command = 0;
+volatile char command[2] = {0};
+
+ISR(UART0_RX_vect) {
+	has_command = 1;
+	// rx_buff[rx_buff_pos] = UDR0;
+// 	if (++rx_buff_pos == 2 && !has_command) {
+// 		has_command = 1;
+// 		rx_buff_pos = 0;
+// 		command[0] = rx_buff[0];
+// 		command[1] = rx_buff[1];
+// 	}
+}
 
 void send_byte(unsigned char byte)
 {
@@ -37,10 +57,12 @@ char read_byte(void)
 }
 void serial_configure(unsigned int baudrate)
 {
+	has_command = 1;
 	UBRR0H = (16000000/16/baudrate -1 >> 8); //Configure baudrate generator
 	UBRR0L = (16000000/16/baudrate -1); //Configure baudrate generator
 	
-	UCSR0B |= (1 << RXEN0) | (1 << TXEN0);
+	UCSR0B |= (1 << RXEN0) | (1 << TXEN0) | (1 << RXCIE0);// | (1 << TXCIE0); //TODO: Use TX interrupt too
+	sei(); //Enables interruption
 }
 void printnum(int32_t number)
 {

@@ -18,25 +18,73 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
+
 #ifdef __cplusplus
 extern "C" {
 #endif
-	
-#ifndef ARCH_SERIAL	
-#define ARCH_SERIAL
-#include <stdint.h>
-	
-extern volatile uint8_t has_command;
-extern volatile char command[2];
-	
-void send_byte(unsigned char byte);
-char read_byte(void);	
-void serial_configure(unsigned int baudrate); //Allow user to enable and disable interruptions later
-void printnum(int32_t number);
-void print(char *str);
 
-#endif //ARCH_SERIAL
+#include <TM.h>
+#include <HAL.h>
+#include <EH.h>
+#include <vm.h>
+#include <inttypes.h>
+
+uint32_t tm_counter = 0;
+
+void (*state)(void);
+
+void idle(void) {
+	//TODO: should sleep here :)
+}
+	
+void receiving_x(void) {
+	
+}
+
+void executing(void) {
+	
+}
+
+void stopping(void) {
+	
+}
+
+void tm_init(void) {
+	/*COISA's Initialization*/
+	eh_init();
+	serial_configure(9600);
+	init_timer();
+	start_encoder();
+	/*Everything initialized*/
+	state = idle;
+	while(1)
+	{
+		if (has_command)
+		{
+			has_command = 0;
+			print("HAHAHA\n");
+		}
+	}
+	/*Coisa VM cpu, HAL, EH and TM loop*/
+    while(1)
+    {
+		state();
+		if(timer_flag) 
+		{
+			tm_counter++;
+			timed_polling();
+			timer_flag = 0;
+			if (tm_counter >= 4) //Every 4 timer interruptions, should check for PID controlling
+			{
+				PID();
+				tm_counter = 0;
+			}
+		}
+		consume_event();
+	}
+}
 	
 #ifdef __cplusplus
 }
 #endif
+	

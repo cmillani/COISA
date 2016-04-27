@@ -27,24 +27,24 @@ extern "C" {
 	
 uint8_t result = 1;
 char temp;
-uint8_t counter;
+uint8_t stdu_counter;
 	
 void strcpy(char dest[], char origin[])
 {
-	for(counter = 0; origin[counter] != '\0'; counter++)
+	for(stdu_counter = 0; origin[stdu_counter] != '\0'; stdu_counter++)
 	{
-		dest[counter] = origin[counter];
+		dest[stdu_counter] = origin[stdu_counter];
 	}
 }
 
 uint8_t strcmp(char one[], char two[])
 {
 	result = 0; //Starts as true (string.h strcmp like)
-	counter = 0;
+	stdu_counter = 0;
 	do {
-		result = !(one[counter] == two[counter]); //Compares the two strings and output the result to the variable (as 0 means equal, we need the NOT)
-		counter++;
-	} while (one[counter] != '\0' && two[counter] != '\0' && result == 0); //Breaks with the first \0 to avoid segfault or as soon as it`s not true anymore
+		result = !(one[stdu_counter] == two[stdu_counter]); //Compares the two strings and output the result to the variable (as 0 means equal, we need the NOT)
+		stdu_counter++;
+	} while (one[stdu_counter] != '\0' && two[stdu_counter] != '\0' && result == 0); //Breaks with the first \0 to avoid segfault or as soon as it`s not true anymore
 	return result;
 }
 

@@ -21,22 +21,21 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-	
-#ifndef ARCH_SERIAL	
-#define ARCH_SERIAL
-#include <stdint.h>
-	
-extern volatile uint8_t has_command;
-extern volatile char command[2];
-	
-void send_byte(unsigned char byte);
-char read_byte(void);	
-void serial_configure(unsigned int baudrate); //Allow user to enable and disable interruptions later
-void printnum(int32_t number);
-void print(char *str);
+    
+#ifndef TM_H
+#define TM_H
+/********************************************************************
+** tm_init(void)                                                   **
+**                                                                 **
+**    Responsible for initializing all COISA stack, such as the    **
+** timer, the serial communication and the event handler. It will  **
+** then monitor for incomming commands and events, controlling the **
+** vm_cpu.                                                         **
+********************************************************************/
+void tm_init(void);
 
-#endif //ARCH_SERIAL
-	
+#endif	
+
 #ifdef __cplusplus
 }
 #endif

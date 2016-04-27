@@ -1,2 +1,2 @@
-# IniciacaoCientifica_PensamentoComputacional
-Projeto de Iniciação científica.
+# COISA
+A Compact OpenISA virtual platform for IoT devices
