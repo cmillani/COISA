@@ -34,15 +34,16 @@ volatile uint8_t rx_buff_pos = 0;
 volatile uint8_t has_command = 0;
 volatile char command[2] = {0};
 
-ISR(UART0_RX_vect) {
-	has_command = 1;
-	// rx_buff[rx_buff_pos] = UDR0;
-// 	if (++rx_buff_pos == 2 && !has_command) {
-// 		has_command = 1;
-// 		rx_buff_pos = 0;
-// 		command[0] = rx_buff[0];
-// 		command[1] = rx_buff[1];
-// 	}
+ISR(USART_RX_vect) {
+	//Every command has 2 chars, which is enought for out TM :)
+	//When this buffer is full, we copy it to save data and set a flag, so TM can handle it
+	rx_buff[rx_buff_pos] = UDR0; //TODO: may have some sync problems, pack it later
+	if (!has_command && ++rx_buff_pos == 2) {
+		has_command = 1;
+		rx_buff_pos = 0;
+		command[0] = rx_buff[0];
+		command[1] = rx_buff[1];
+	}
 }
 
 void send_byte(unsigned char byte)

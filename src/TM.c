@@ -49,6 +49,12 @@ void stopping(void) {
 	
 }
 
+void parse_Command(volatile char *command) {
+	has_command = 0;
+	send_byte(command[0]);
+	send_byte(command[1]);
+}
+
 void tm_init(void) {
 	/*COISA's Initialization*/
 	eh_init();
@@ -56,18 +62,16 @@ void tm_init(void) {
 	init_timer();
 	start_encoder();
 	/*Everything initialized*/
+	
+	/*Sets initial State*/
 	state = idle;
-	while(1)
-	{
-		if (has_command)
-		{
-			has_command = 0;
-			print("HAHAHA\n");
-		}
-	}
+	
 	/*Coisa VM cpu, HAL, EH and TM loop*/
     while(1)
     {
+		if (has_command) {
+			parse_Command(command);
+		}
 		state();
 		if(timer_flag) 
 		{
@@ -79,8 +83,8 @@ void tm_init(void) {
 				PID();
 				tm_counter = 0;
 			}
+			consume_event();
 		}
-		consume_event();
 	}
 }
 	
