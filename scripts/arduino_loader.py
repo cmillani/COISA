@@ -18,14 +18,20 @@ else:
 time.sleep(2) # make sure the connection is ok
 
 print len(executable)
-zero.write(chr(72))
-zero.write(chr(73))
 print 'Waiting'
-sys.stdout.write(zero.read())
-sys.stdout.write(zero.read())
 print '\nStarting'
 # print (len(executable) & 0xFF)
 # print ((len(executable) >> 8) & 0xFF)
+
+zero.write(chr(82))
+zero.write(chr(68))
+
+sys.stdout.write(zero.read())
+sys.stdout.write(zero.read())
+sys.stdout.write(zero.read())
+sys.stdout.write(zero.read())
+sys.stdout.write(zero.read())
+
 zero.write(chr(len(executable) & 0xFF))
 zero.write(chr((len(executable) >> 8) & 0xFF))
 
@@ -34,8 +40,7 @@ count = 0
 
 for c in executable:
     zero.write(chr(ord(c)))
-    # time.sleep(0.01)
-    # print(ord(c))
+    time.sleep(0.05)
     
 print "###########################################"
 while True:

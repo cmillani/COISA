@@ -32,7 +32,7 @@ volatile uint8_t rx_buff_pos = 0;
 // char tx_buff[2] = {0};
 
 volatile uint8_t has_command = 0;
-volatile char command[2] = {0};
+volatile char command[3] = {0};
 
 ISR(USART_RX_vect) {
 	//Every command has 2 chars, which is enought for out TM :)
@@ -43,6 +43,7 @@ ISR(USART_RX_vect) {
 		rx_buff_pos = 0;
 		command[0] = rx_buff[0];
 		command[1] = rx_buff[1];
+		UCSR0B &= ~(1 << RXCIE0); // Stops receiving commands, so we can handle the received first
 	}
 }
 
@@ -58,13 +59,19 @@ char read_byte(void)
 }
 void serial_configure(unsigned int baudrate)
 {
-	has_command = 1;
+	command[2] = '\0';
 	UBRR0H = (16000000/16/baudrate -1 >> 8); //Configure baudrate generator
 	UBRR0L = (16000000/16/baudrate -1); //Configure baudrate generator
 	
 	UCSR0B |= (1 << RXEN0) | (1 << TXEN0) | (1 << RXCIE0);// | (1 << TXCIE0); //TODO: Use TX interrupt too
 	sei(); //Enables interruption
 }
+
+void enable_commands(void) {
+	UCSR0B |= (1 << RXCIE0);
+	sei();
+}
+
 void printnum(int32_t number)
 {
 	if (number < 0) 

@@ -27,32 +27,71 @@ extern "C" {
 #include <HAL.h>
 #include <EH.h>
 #include <vm.h>
+#include <stdutils.h>
 #include <inttypes.h>
 
 uint32_t tm_counter = 0;
+uint16_t tot_size = 0;
 
+void idle(void);
+void receiving_sz(void);
+void receiving_x(void);
+void executing(void);
+void reseting(void);
+	
 void (*state)(void);
 
 void idle(void) {
 	//TODO: should sleep here :)
 }
 	
+void receiving_sz(void) {
+	uint8_t size1 = read_byte();
+	uint8_t size2 = read_byte();
+
+	tot_size = (uint16_t)size1 | ((uint16_t)size2 << 8);
+	printnum(tot_size);
+	print("\n");
+	state = receiving_x;
+}
+
 void receiving_x(void) {
-	
+	uint16_t i;
+	for (i = 0; i < tot_size; i++) {
+		VM_memory[i] = read_byte();
+	}
+	state = executing;
+	enable_commands();
 }
 
 void executing(void) {
-	
+	vm_continue();
 }
 
-void stopping(void) {
-	
+void reseting(void) {
+	uint16_t i;
+	for (i = 0; i < VM_MEMORY_SZ; i++) {
+		VM_memory[i] = 0;
+	}
+	state = idle;
 }
 
-void parse_Command(volatile char *command) {
+void parse_Command(volatile char * command) {
 	has_command = 0;
-	send_byte(command[0]);
-	send_byte(command[1]);
+	if (!strcmp((char *)command,"RD")) {
+		print("RD-OK");
+		state = receiving_sz;
+	} else if (!strcmp((char *)command,"RS")) {
+		print("RS-OK");
+		state = reseting;
+		enable_commands();
+	} else {
+		send_byte(command[0]);
+		send_byte(command[1]);
+		send_byte('-');
+		send_byte('?');
+		send_byte('?');
+	}
 }
 
 void tm_init(void) {

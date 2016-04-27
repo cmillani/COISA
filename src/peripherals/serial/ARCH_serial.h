@@ -27,8 +27,9 @@ extern "C" {
 #include <stdint.h>
 	
 extern volatile uint8_t has_command;
-extern volatile char command[2];
-	
+extern volatile char command[3];
+
+void enable_commands(void);
 void send_byte(unsigned char byte);
 char read_byte(void);	
 void serial_configure(unsigned int baudrate); //Allow user to enable and disable interruptions later
