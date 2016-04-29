@@ -26,11 +26,11 @@ print '\nStarting'
 zero.write(chr(82))
 zero.write(chr(68))
 
-sys.stdout.write(zero.read())
-sys.stdout.write(zero.read())
-sys.stdout.write(zero.read())
-sys.stdout.write(zero.read())
-sys.stdout.write(zero.read())
+resp = zero.read(5)
+print (resp)
+if (resp != "RD-OK"):
+    print "Wrong command :("
+    exit()
 
 zero.write(chr(len(executable) & 0xFF))
 zero.write(chr((len(executable) >> 8) & 0xFF))
@@ -40,7 +40,12 @@ count = 0
 
 for c in executable:
     zero.write(chr(ord(c)))
-    time.sleep(0.02)
+    received = zero.read()
+    if (received != 'k'):
+        print "Didn't got my byte.x :("
+        break;
+        # print "YAHEEEI"
+    # time.sleep(0.02)
     
 print "###########################################"
 while True:

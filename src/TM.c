@@ -58,6 +58,7 @@ void receiving_x(void) {
 	uint16_t i;
 	for (i = 0; i < tot_size; i++) {
 		VM_memory[i] = read_byte();
+		send_byte('k');
 	}
 	state = executing;
 	enable_commands();
