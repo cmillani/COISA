@@ -50,8 +50,7 @@ void receiving_sz(void) {
 	uint8_t size2 = read_byte();
 
 	tot_size = (uint16_t)size1 | ((uint16_t)size2 << 8);
-	printnum(tot_size);
-	print("\n");
+
 	state = receiving_x;
 }
 
@@ -62,10 +61,12 @@ void receiving_x(void) {
 	}
 	state = executing;
 	enable_commands();
+	vm_init(0);
+	print("Exec\n");
 }
 
 void executing(void) {
-	vm_continue();
+	vm_cpu();
 }
 
 void reseting(void) {
@@ -112,18 +113,18 @@ void tm_init(void) {
 			parse_Command(command);
 		}
 		state();
-		if(timer_flag) 
-		{
-			tm_counter++;
-			timed_polling();
-			timer_flag = 0;
-			if (tm_counter >= 4) //Every 4 timer interruptions, should check for PID controlling
-			{
-				PID();
-				tm_counter = 0;
-			}
-			consume_event();
-		}
+		// if(timer_flag)
+// 		{
+// 			tm_counter++;
+// 			timed_polling();
+// 			timer_flag = 0;
+// 			if (tm_counter >= 4) //Every 4 timer interruptions, should check for PID controlling
+// 			{
+// 				PID();
+// 				tm_counter = 0;
+// 			}
+// 			consume_event();
+// 		}
 	}
 }
 	

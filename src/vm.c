@@ -69,7 +69,7 @@ void print_registers(void);
  */
 
 /* Register file. */
-uint32_t RF[32];
+uint32_t RF[32]; //Register $zero must always be zero
 uint32_t hand_addr;
 /*VM memory vector*/
 uint8_t VM_memory[VM_MEMORY_SZ] = {0};
@@ -83,21 +83,23 @@ void advance_pc(int32_t offset)
 	nPC  += offset;
 }
 
-void vm_continue(void){
-	vm_cpu(PC); //TODO: Refactor to optimize this
-}
+uint32_t HI = 0, LO = 0;  
+uint32_t offset = 4;
+uint8_t halted = 0;
 
-
-void vm_cpu(uint32_t newPC)
+void vm_init(uint32_t newPC)
 {
 	PC = newPC;
 	nPC = PC + 4;
 	RF[0] = 0; //Register $zero must always be zero
 	RF[31] = 1; //Return default (if the program does not set to zero, should put error)
-	uint32_t HI = 0, LO = 0;  
-	uint32_t offset = 4;
-	uint8_t halted = 0;
+	HI = 0, LO = 0;  
+	offset = 4;
+	halted = 0;
+}
 
+void vm_cpu(void)
+{
 	if (!halted) //TODO: optmize: if not halted shoudn't call vc_cpu at all
 	{
 		//Fetch intstruction

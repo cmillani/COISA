@@ -40,7 +40,7 @@ count = 0
 
 for c in executable:
     zero.write(chr(ord(c)))
-    time.sleep(0.05)
+    time.sleep(0.02)
     
 print "###########################################"
 while True:
@@ -49,7 +49,7 @@ while True:
     sys.stdout.write(received)
     # received = zero.read()
     
-    if (received == '\0'):
-        break
+    # if (received == '\0'):
+    #     break
 zero.close()
 print "End"
