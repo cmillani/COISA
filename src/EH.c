@@ -223,6 +223,7 @@ int8_t insert_event(uint8_t event_id, char * evname)
 }
 int8_t consume_event(void) //TODO:For some reason i cannot print from inside this func
 {
+	if (RF == eventRF) return -2; //Is already handling event
 	if (queue_size > 0) //Has something
 	{
 		register int8_t selected;
@@ -242,7 +243,9 @@ int8_t consume_event(void) //TODO:For some reason i cannot print from inside thi
 		for (loop = ehvecpointers[selected].pos; loop < ehvecpointers[selected].pos + ehvecpointers[selected].sz; loop++)
 		{
 			RF[4] = ehvec[loop];
-			vm_cpu(hand_addr);
+			changeToEvent(hand_addr);
+			vm_cpu();
+			changeToUser();
 		}
 		return 1; // Success
 	}

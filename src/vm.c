@@ -69,13 +69,23 @@ void print_registers(void);
  */
 
 /* Register file. */
-uint32_t RF[32]; //Register $zero must always be zero
+
+uint32_t userRF[32]; //Register $zero must always be zero
+uint32_t eventRF[32]; //Register $zero must always be zero
+
+uint32_t * RF = &userRF[0];
+
+// uint32_t RF[32]; //Register $zero must always be zero
+
 uint32_t hand_addr;
 /*VM memory vector*/
 uint8_t VM_memory[VM_MEMORY_SZ] = {0};
 
 uint32_t PC = 0;
 uint32_t nPC = 4;
+
+uint32_t tPC = PC;
+uint32_t tnPC = nPC;
 
 void advance_pc(int32_t offset)
 {
@@ -96,6 +106,24 @@ void vm_init(uint32_t newPC)
 	HI = 0, LO = 0;  
 	offset = 4;
 	halted = 0;
+}
+
+void changeToEvent(uint32_t newPC)
+{
+	RF = eventRF;
+	RF[29] = userRF[29];
+	RF[30] = userRF[30];
+	tPC = PC; //TODO: only works with these 2 modes event and user
+	tnPC = nPC;
+	PC = newPC;
+	nPC = PC + 4;
+}
+
+void changeToUser(void)
+{
+	RF = userRF;
+	PC = tPC;
+	nPC = tnPC;
 }
 
 void vm_cpu(void)

@@ -30,7 +30,12 @@ extern "C" {
 
 #define VM_MEMORY_SZ PROCESSOR_MEMORY_SZ /* Available memory from the microprocessor  */
 /* Register file. */
-extern uint32_t RF[32];
+	
+extern uint32_t userRF[32]; //Register $zero must always be zero
+extern uint32_t eventRF[32]; //Register $zero must always be zero
+
+extern uint32_t * RF;
+	
 extern uint32_t hand_addr;
 /*VM memory vector*/
 extern uint8_t VM_memory[VM_MEMORY_SZ];
@@ -39,7 +44,8 @@ uint32_t fetch(uint32_t PC);
 void vm_init(uint32_t newPC);
 void vm_cpu(void);
 void advance_pc(int32_t offset);
-
+void changeToUser(void);
+void changeToEvent(uint32_t newPC);
 #endif // VM_H
 
 #ifdef __cplusplus
