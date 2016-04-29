@@ -66,7 +66,7 @@ void receiving_x(void) {
 }
 
 void executing(void) {
-	vm_cpu();
+	if (vm_cpu()) state = idle;
 }
 
 void reseting(void) {
@@ -112,19 +112,21 @@ void tm_init(void) {
 		if (has_command) {
 			parse_Command(command);
 		}
+		if(timer_flag && state == idle)
+		{	
+			state = executing; //TODO: do i really need to set this here, can iterate for nothing :(
+			tm_counter++;
+			timed_polling();
+			timer_flag = 0;
+			if (tm_counter >= 4) //Every 4 timer interruptions, should check for PID controlling
+			{
+				PID();
+				tm_counter = 0;
+			}
+			consume_event();
+		}
 		state();
-		// if(timer_flag)
-// 		{
-// 			tm_counter++;
-// 			timed_polling();
-// 			timer_flag = 0;
-// 			if (tm_counter >= 4) //Every 4 timer interruptions, should check for PID controlling
-// 			{
-// 				PID();
-// 				tm_counter = 0;
-// 			}
-// 			consume_event();
-// 		}
+		
 	}
 }
 	
