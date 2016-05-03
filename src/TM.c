@@ -52,6 +52,7 @@ void receiving_sz(void) {
 	tot_size = (uint16_t)size1 | ((uint16_t)size2 << 8);
 
 	state = receiving_x;
+	send_byte('k');
 }
 
 void receiving_x(void) {
@@ -63,7 +64,7 @@ void receiving_x(void) {
 	state = executing;
 	enable_commands();
 	vm_init(0);
-	print("Exec\n");
+	// print("Exec\n");
 }
 
 void executing(void) {
