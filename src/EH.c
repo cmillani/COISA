@@ -256,7 +256,7 @@ void timed_polling(void)
 	// printnum(read_ultrassonic());
 	// print("<<\n");
 	uint8_t dist = read_ultrassonic();
-	if (dist < us_threshold - 3) //Hysteresis
+	if (dist < us_threshold - 1) //Hysteresis
 	{
 		if (!is_close)
 		{
@@ -264,7 +264,7 @@ void timed_polling(void)
 			insert_event(1,"US_S");
 		}
 	}
-	else if (dist > us_threshold + 3)
+	else if (dist > us_threshold + 1)
 	{
 		if (is_close)
 		{
