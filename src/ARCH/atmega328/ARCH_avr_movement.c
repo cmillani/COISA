@@ -59,7 +59,6 @@ float pow_left = 0;
 	
 void setup_movement(void)
 {
-	serial_configure(9600);
 	DDRC |= (1 << DDC4);
 	DDRC |= (1 << DDC0);
 	PORTC |= (1 << PC4);
@@ -69,6 +68,7 @@ void setup_movement(void)
 	set_PWM(LEF0, 0);
 	set_PWM(RIG0, 0);
 	set_PWM(RIG1, 0);
+	
 	start_encoder();
 }
 /**************************************************************/

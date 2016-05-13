@@ -104,6 +104,8 @@ void tm_init(void) {
 	serial_configure(9600);
 	init_timer();
 	start_encoder();
+	
+	
 	/*Everything initialized*/
 	
 	/*Sets initial State*/

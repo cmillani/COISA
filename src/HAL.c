@@ -201,8 +201,8 @@ uint8_t hal_call(uint32_t sensid, char identifier[])//Call to hardware I/O
 				break;
 			}
 			case 24: { //Stop
-				stop_motor_L();
-				stop_motor_R();
+				set_targetRPM_L(0);
+				set_targetRPM_R(0);
 				break;
 			}
 		}
