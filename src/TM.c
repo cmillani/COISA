@@ -59,8 +59,9 @@ void receiving_x(void) {
 	uint16_t i;
 	for (i = 0; i < tot_size; i++) {
 		VM_memory[i] = read_byte();
-		send_byte('k');
+		if ((i+1)%20 == 0) send_byte('k');
 	}
+	if (tot_size%20 != 0) send_byte('k');
 	state = executing;
 	enable_commands();
 	vm_init(0);
@@ -114,9 +115,9 @@ void tm_init(void) {
 		if (has_command) {
 			parse_Command(command);
 		}
-		if(timer_flag && state == idle)
+		if(timer_flag)
 		{	
-			state = executing; //TODO: do i really need to set this here, can iterate for nothing :(
+			
 			tm_counter++;
 			timed_polling();
 			timer_flag = 0;
@@ -125,7 +126,11 @@ void tm_init(void) {
 				PID();
 				tm_counter = 0;
 			}
-			consume_event();
+			if (state == idle) //Doesn't interrupts other functions - All funcs must be non blocking
+			{
+				state = executing; //TODO: do i really need to set this here, can iterate for nothing :(
+				consume_event();
+			}
 		}
 		state();
 		
