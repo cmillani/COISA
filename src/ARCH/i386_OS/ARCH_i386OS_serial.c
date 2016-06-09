@@ -25,6 +25,9 @@ extern "C" {
 #include <stdio.h>
 #include "ARCH_serial.h"
 
+volatile uint8_t has_command = 0;
+volatile char command[3] = {0};
+
 void send_byte(unsigned char byte)
 {
 	printf("%c", byte);
@@ -39,7 +42,10 @@ void serial_configure(unsigned int baudrate)
 {
 
 }
-void printnum(uint32_t number)
+void enable_commands(void) {
+	
+}
+void printnum(int32_t number)
 {
 	printf("%d",number);
 }

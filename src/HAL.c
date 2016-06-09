@@ -186,21 +186,25 @@ uint8_t hal_call(uint32_t sensid, char identifier[])//Call to hardware I/O
 				break;
 			}
 			case 21: { //Forward
+				reset_variables();
 				set_targetRPM_L(80);
 				set_targetRPM_R(80);
 				break;
 			}
 			case 22: { //Left
+				reset_variables();
 				set_targetRPM_L(-80);
 				set_targetRPM_R(80);
 				break;
 			}
 			case 23: { //Right
+				reset_variables();
 				set_targetRPM_L(80);
 				set_targetRPM_R(-80);
 				break;
 			}
 			case 24: { //Stop
+				reset_variables();
 				set_targetRPM_L(0);
 				set_targetRPM_R(0);
 				break;

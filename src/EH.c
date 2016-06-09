@@ -272,7 +272,11 @@ void timed_polling(void)
 			insert_event(1,"US_F");
 		}
 	}
-#endif 
+#endif
+#if HAS_ENCODER
+	uint8_t count = read_encoder_counter(RIGHT);
+	
+#endif	 
 }
 
 	

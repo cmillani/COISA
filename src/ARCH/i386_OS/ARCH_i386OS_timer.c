@@ -18,34 +18,12 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifdef __cplusplus
-extern "C" {
-#endif
+
+#include <timer.h>
+#include <EH.h>
+#include <HAL.h>
+
+void init_timer(void)
+{	
 	
-#ifndef ARCH_MOVEMENT
-#define ARCH_MOVEMENT
-	
-void ahead(void);
-void turn_left(void);
-void turn_right(void);
-void setup_movement(void);
-
-void reset_variables();
-
-void ahead_L(int power);
-void ahead_R(int power);
-void back_R(int power);
-void back_L(int power);
-void stop_motor_L(void);//Turn off left motor
-void stop_motor_R(void);//Turn off right motor 
-void control(void);
-void PID(void);
-void PID_ON(void);
-void set_targetRPM_R(int rpm);
-void set_targetRPM_L(int rpm);
-
-#endif
-
-#ifdef __cplusplus
 }
-#endif

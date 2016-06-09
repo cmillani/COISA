@@ -103,7 +103,10 @@ void tm_init(void) {
 	eh_init();
 	serial_configure(9600);
 	init_timer();
+	
+#if HAS_ENCODER
 	start_encoder();
+#endif
 	
 	
 	/*Everything initialized*/
@@ -123,11 +126,13 @@ void tm_init(void) {
 			tm_counter++;
 			timed_polling();
 			timer_flag = 0;
+		#if HAS_MOTORS
 			if (tm_counter >= 4) //Every 4 timer interruptions, should check for PID controlling
 			{
 				PID();
 				tm_counter = 0;
 			}
+		#endif
 			if (state == idle) //Doesn't interrupts other functions - All funcs must be non blocking
 			{
 				state = executing; //TODO: do i really need to set this here, can iterate for nothing :(

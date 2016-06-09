@@ -22,6 +22,8 @@
 extern "C" {
 #endif
 
+uint8_t encd_threshold = ~0;
+
 #ifdef __cplusplus
 }
 #endif

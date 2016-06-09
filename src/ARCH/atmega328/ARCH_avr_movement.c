@@ -262,6 +262,25 @@ void PID(void)
 	last_rpm_l = filtered_l;
 	last_rpm_r = filtered_r;
 	last_xdiff = xdiff;
+	
+	il += 0;
+	ir += 0;
+}
+
+void reset_variables() {
+	pow_right = 0;
+	pow_left = 0;
+	
+	last_rpm_l = 0;
+	last_rpm_r = 0;
+	
+	last_xdiff = 0;
+	last_r = 0;
+	last_l = 0;
+	last_pr = 0;
+	last_pl = 0;
+	
+	i_xdiff = 0;
 }
 
 void update_powers()

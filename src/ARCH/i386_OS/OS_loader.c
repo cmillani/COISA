@@ -15,53 +15,6 @@ void blah(void)
 
 int main(int argc, char * argv[])
 {
-	/*Debugging EH*/
-	// char a[] = "A";
-	// char b[] = "B";
-	// char c[] = "C";
-	// char d[] = "D";
-	// print_EH();
-	// eh_init();
-	// print_EH();
-	// register_handler(1, blah, a);
-	// register_handler(2, blah + 1, b);
-	// register_handler(2, blah + 2, c);
-	// register_handler(2, blah + 3, d);
-	// register_handler(2, blah + 4, "E");
-	// print_EH();
-	// register_handler(1, blah+5, a);
-	// insert_event(1, a);
-	// insert_event(2, b);
-// 	insert_event(3);
-// 	insert_event(1);
-	// print_EH();
-	// consume_event();
-// 	consume_event();
-// 	consume_event();
-// 	consume_event();
-	// print_EH();
-	// print("Will Work");
-// 	insert_event(1);
-// 	insert_event(2);
-// 	insert_event(3);
-// 	insert_event(1);
-// 	print_EH();
-// 	consume_event();
-// 	consume_event();
-// 	consume_event();
-// 	consume_event();
-// 	print_EH();
-// 	insert_event(1);
-// 	insert_event(2);
-// 	insert_event(3);
-// 	insert_event(1);
-// 	print_EH();
-// 	consume_event();
-// 	consume_event();
-// 	consume_event();
-// 	consume_event();
-// 	print_EH();
-	/*End Debugging EH*/
 	FILE * binary;
 	int i = 0, j = 0;
 	uint8_t byte;
@@ -85,7 +38,11 @@ int main(int argc, char * argv[])
 	time_t tic = clock();
 #endif
 #if RUN_VM
-	vm_cpu(0);
+	vm_init(0);
+	while(1) {
+		if (vm_cpu()) break;
+	}
+	
 	// print_EH();
 	// print_EH();
 	// vm_cpu(ehvec[0]);

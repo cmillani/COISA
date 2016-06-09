@@ -24,6 +24,8 @@ extern "C" {
 	
 #ifndef CONFIG_ENCODER
 #define CONFIG_ENCODER
+
+extern uint8_t encd_threshold;
 	
 #endif //CONFIG_ENCODER
 	
