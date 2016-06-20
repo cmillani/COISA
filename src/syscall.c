@@ -57,7 +57,7 @@ uint8_t syscall(uint8_t trap_code)
 #endif
 			break;
 		}
-		case 12: { //Hall Call
+		case 12: { //Hal Call
 			RF[2] = hal_call(RF[3], (char *)&VM_memory[RF[12]]);
 			break;
 		}

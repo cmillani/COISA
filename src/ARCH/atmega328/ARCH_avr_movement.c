@@ -268,6 +268,10 @@ void PID(void)
 }
 
 void reset_variables() {
+	
+	reset_counter(RIGHT);
+	reset_counter(LEFT);
+	
 	pow_right = 0;
 	pow_left = 0;
 	
@@ -279,6 +283,9 @@ void reset_variables() {
 	last_l = 0;
 	last_pr = 0;
 	last_pl = 0;
+	
+	il = 0;
+	ir = 0;
 	
 	i_xdiff = 0;
 }
