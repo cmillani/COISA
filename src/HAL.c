@@ -22,7 +22,7 @@
 extern "C" {
 #endif    
 
-#include "HAL.h"
+#include <HAL.h>
 #include "vm.h"
 #include <stdutils.h>
 	
@@ -99,6 +99,10 @@ uint8_t hal_call(uint32_t sensid, char identifier[])//Call to hardware I/O
 				printf("(HAL)Read Encoder Time called\n");
 	#endif // PRINTING	
 				break;
+			}
+			
+			case 7 : {
+				encd_threshold = RF[4]; //Sets threshold for the encoder
 			}
 		}
 #endif

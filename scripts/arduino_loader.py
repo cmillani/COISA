@@ -10,7 +10,7 @@ executable = file.read()
 
 # zero = serial.Serial("/dev/tty.Zero-DevB") # Upload using bluetooth
 if len(sys.argv) >= 3 and sys.argv[2] == "-bt":
-    zero = serial.Serial("/dev/tty.Zero-DevB") # Upload using bluetooth
+    zero = serial.Serial("/dev/tty.CoisaBot-DevB") # Upload using bluetooth
 elif len(sys.argv) >= 4 and sys.argv[2] == "-sim":
     zero = serial.Serial(sys.argv[3])
 else:
@@ -23,8 +23,8 @@ print '\nStarting'
 # print (len(executable) & 0xFF)
 # print ((len(executable) >> 8) & 0xFF)
 
-zero.write(chr(82))
-zero.write(chr(68))
+zero.write(chr(82))# - R
+zero.write(chr(68))# - D
 
 resp = zero.read(5)
 print (resp)
@@ -32,20 +32,27 @@ if (resp != "RD-OK"):
     print "Wrong command :("
     exit()
 
+print("Sending length")
 zero.write(chr(len(executable) & 0xFF))
 zero.write(chr((len(executable) >> 8) & 0xFF))
 
+received = zero.read()
+print(received)
+if (received != 'k'):
+    print "Didn't got my byte.x :("
+    
 print "Sending"
 count = 0
 
 for c in executable:
     zero.write(chr(ord(c)))
-    received = zero.read()
-    if (received != 'k'):
-        print "Didn't got my byte.x :("
-        break;
+    # received = zero.read()
+    # print(received)
+    # if (received != 'k'):
+        # print "Didn't got my byte.x :("
+        # break;
         # print "YAHEEEI"
-    # time.sleep(0.02)
+    time.sleep(0.01)
     
 print "###########################################"
 while True:

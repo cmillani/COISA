@@ -56,6 +56,8 @@ extern "C" {
 	
 float pow_right = 0;
 float pow_left = 0;
+int target_r = 0;
+int target_l = 0;
 	
 void setup_movement(void)
 {
@@ -68,6 +70,9 @@ void setup_movement(void)
 	set_PWM(LEF0, 0);
 	set_PWM(RIG0, 0);
 	set_PWM(RIG1, 0);
+	
+	target_r = 0;
+	target_l = 0;
 	
 	start_encoder();
 }
@@ -155,8 +160,6 @@ float KdT = 0;//0.2;
 
 float il = 0;
 float ir = 0;
-int target_r = 0;
-int target_l = 0;
 
 float last_pr = 0;
 float last_pl = 0;

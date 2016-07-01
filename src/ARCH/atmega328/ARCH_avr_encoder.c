@@ -96,6 +96,12 @@ void start_encoder(void)
 	EICRA |= (1 << ISC01) | (1 << ISC00) | (1 << ISC11) | (1 << ISC10); //Configures interrupt on the falling edge
 	EIMSK |= (1 << INT0) | (1 << INT1); //Enables encoder interrupt
 	TIMSK0 |= (1 << TOIE0);//Enables timer overflow interrupt
+	//Resets everything;
+	right_count = 0;
+	pulse_right = 0;
+	left_count = 0;
+	pulse_left = 0;
+	//Initial state configured
 	sei();
 }
 

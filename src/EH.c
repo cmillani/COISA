@@ -274,7 +274,12 @@ void timed_polling(void)
 	}
 #endif
 #if HAS_ENCODER
-	uint8_t count = read_encoder_counter(RIGHT);
+	uint8_t count_r = read_encoder_counter(RIGHT);
+	uint8_t count_l = read_encoder_counter(LEFT);
+	
+	if (count_l >= encd_threshold) {
+		insert_event(1,"ENCD");
+	}
 	
 #endif	 
 }

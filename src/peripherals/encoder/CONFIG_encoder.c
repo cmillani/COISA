@@ -21,6 +21,8 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+	
+#include <CONFIG_encoder.h>
 
 uint8_t encd_threshold = ~0;
 

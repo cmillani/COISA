@@ -73,6 +73,14 @@ void executing(void) {
 }
 
 void reseting(void) {
+	eh_init();
+	serial_configure(9600);
+	init_timer();
+	setup_movement();
+	
+#if HAS_ENCODER
+	start_encoder();
+#endif
 	uint16_t i;
 	for (i = 0; i < VM_MEMORY_SZ; i++) {
 		VM_memory[i] = 0;
@@ -103,6 +111,7 @@ void tm_init(void) {
 	eh_init();
 	serial_configure(9600);
 	init_timer();
+	setup_movement();
 	
 #if HAS_ENCODER
 	start_encoder();
@@ -122,7 +131,6 @@ void tm_init(void) {
 		}
 		if(timer_flag)
 		{	
-			
 			tm_counter++;
 			timed_polling();
 			timer_flag = 0;

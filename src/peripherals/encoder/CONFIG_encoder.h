@@ -22,6 +22,8 @@
 extern "C" {
 #endif
 	
+#include <inttypes.h>
+	
 #ifndef CONFIG_ENCODER
 #define CONFIG_ENCODER
 
