@@ -46,6 +46,11 @@ void idle(void) {
 }
 	
 void receiving_sz(void) {
+	eh_init();
+	setup_movement();
+	ledoff(1);
+	ledoff(2);
+	
 	uint8_t size1 = read_byte();
 	uint8_t size2 = read_byte();
 
@@ -77,6 +82,8 @@ void reseting(void) {
 	serial_configure(9600);
 	init_timer();
 	setup_movement();
+	ledoff(1);
+	ledoff(2);
 	
 #if HAS_ENCODER
 	start_encoder();
@@ -86,6 +93,7 @@ void reseting(void) {
 		VM_memory[i] = 0;
 	}
 	state = idle;
+	enable_commands();
 }
 
 void parse_Command(volatile char * command) {
@@ -96,7 +104,6 @@ void parse_Command(volatile char * command) {
 	} else if (!strcmp((char *)command,"RS")) {
 		print("RS-OK");
 		state = reseting;
-		enable_commands();
 	} else {
 		send_byte(command[0]);
 		send_byte(command[1]);
