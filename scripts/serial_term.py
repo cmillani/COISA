@@ -6,7 +6,7 @@ import time
 print "Starting"
 
 if len(sys.argv) >= 2 and sys.argv[1] == "-bt":
-    zero = serial.Serial("/dev/tty.CoisaBot-DevB") # Upload using bluetooth
+    zero = serial.Serial("/dev/tty.COLABOT2-DevB") # Upload using bluetooth
 else:
     zero = serial.Serial("/dev/cu.usbmodem1411") # Upload using USB
 

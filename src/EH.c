@@ -250,6 +250,8 @@ int8_t consume_event(void) //TODO:For some reason i cannot print from inside thi
 	else return -1; //Nothing to Consume
 }
 
+uint8_t even = 0;
+
 void timed_polling(void)
 {
 #if HAS_ULTRASONIC
@@ -277,8 +279,10 @@ void timed_polling(void)
 	uint8_t count_r = read_encoder_counter(RIGHT);
 	uint8_t count_l = read_encoder_counter(LEFT);
 	
-	if (count_l >= encd_threshold) {
+	if (count_l >= encd_threshold + even) {
 		insert_event(1,"ENCD");
+		if (even) even = 0;
+		else even = 1;
 	}
 	
 #endif	 
