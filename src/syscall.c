@@ -75,6 +75,25 @@ uint8_t syscall(uint8_t trap_code)
 			break;
 		}
 		
+		case 16: { //Register new movement
+			register_handler(1, (uintptr_t)RF[5], "ENCD", 0, 0);
+			if (RF[6]) { //If should start now
+				hal_call(RF[7],"MOVM");
+			}
+			hal_call(7,"ENCD"); //Set threshold
+			break;
+		}
+		
+		case 17: { //Remove movement e registers next
+			remove_handler(1, RF[5], "ENCD");
+			hal_call(RF[6],"MOVM"); //Sets next movement
+			hal_call(7,"ENCD"); //Set threshold
+			if (RF[7]) { //If has next block
+				register_handler(1, (uintptr_t)RF[8], "ENCD", 0, 0); //Registers it
+			}
+			break;
+		}
+		
 		default: {
 			break;
 		}
