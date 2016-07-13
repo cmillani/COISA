@@ -48,6 +48,17 @@ uint8_t strcmp(char one[], char two[])
 	return result;
 }
 
+uint8_t strcmpsz(char one[], char two[], int sz)
+{
+	result = 0; //Starts as true (string.h strcmp like)
+	stdu_counter = -1;
+	do {
+		stdu_counter++;
+		result = !(one[stdu_counter] == two[stdu_counter]); //Compares the two strings and output the result to the variable (as 0 means equal, we need the NOT)	
+	} while (one[stdu_counter] != '\0' && two[stdu_counter] != '\0' && result == 0 && stdu_counter < sz); //Breaks with the first \0 to avoid segfault or as soon as it`s not true anymore
+	return result;
+}
+
 
 #ifdef __cplusplus
 }

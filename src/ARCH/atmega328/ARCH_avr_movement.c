@@ -294,7 +294,7 @@ void reset_variables() {
 }
 
 void update_powers()
-{
+{	
 	if (pow_right > 0)
 	{
 		ahead_R(pow_right);

@@ -26,8 +26,11 @@ extern "C" {
 #define ARCH_SERIAL
 #include <stdint.h>
 	
+#define BUFFER_SZ 2
+	
 extern volatile uint8_t has_command;
-extern volatile char command[3];
+extern volatile char inBuffer[BUFFER_SZ+1];
+extern volatile char outBuffer[BUFFER_SZ];
 
 void enable_commands(void);
 void send_byte(unsigned char byte);

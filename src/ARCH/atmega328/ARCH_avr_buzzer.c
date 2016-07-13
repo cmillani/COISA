@@ -23,17 +23,9 @@
 extern "C" {
 #endif
 	
-#ifndef STDUTILS_H
-#define STDUTILS_H
+	uint8_t
 	
-#include <stdint.h>
 	
-void strcpy(char dest[], char origin[]);
-uint8_t strcmp(char one[], char two[]);
-uint8_t strcmpsz(char one[], char two[], int sz);
-
-#endif
-
 #ifdef __cplusplus
 }
 #endif

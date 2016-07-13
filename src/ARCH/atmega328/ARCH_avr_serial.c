@@ -27,22 +27,29 @@ extern "C" {
 #include <avr/io.h>
 #include <avr/interrupt.h>
 
-volatile char rx_buff[2] = {0};
+volatile char rx_buff[BUFFER_SZ] = {0};
 volatile uint8_t rx_buff_pos = 0;
 // char tx_buff[2] = {0};
 
 volatile uint8_t has_command = 0;
-volatile char command[3] = {0};
+volatile char inBuffer[BUFFER_SZ+1] = {0};
+volatile char outBuffer[BUFFER_SZ] = {0};
+
+/*
+	Buffer:
+	2B:CommandID||18B:Body
+	
+*/
 
 ISR(USART_RX_vect) {
 	//Every command has 2 chars, which is enought for out TM :)
 	//When this buffer is full, we copy it to save data and set a flag, so TM can handle it
 	rx_buff[rx_buff_pos] = UDR0; //TODO: may have some sync problems, pack it later
-	if (!has_command && ++rx_buff_pos == 2) {
+	if (!has_command && ++rx_buff_pos == BUFFER_SZ) { //Buffer full, ack and then interprets
 		has_command = 1;
 		rx_buff_pos = 0;
-		command[0] = rx_buff[0];
-		command[1] = rx_buff[1];
+		inBuffer[0] = rx_buff[0];
+		inBuffer[1] = rx_buff[1];
 		UCSR0B &= ~(1 << RXCIE0); // Stops receiving commands, so we can handle the received first
 	}
 }
@@ -59,7 +66,7 @@ char read_byte(void)
 }
 void serial_configure(unsigned int baudrate)
 {
-	command[2] = '\0';
+	inBuffer[0] = '\0';
 	UBRR0H = (16000000/16/baudrate -1 >> 8); //Configure baudrate generator
 	UBRR0L = (16000000/16/baudrate -1); //Configure baudrate generator
 	

@@ -38,6 +38,7 @@ extern uint8_t VM_memory[VM_MEMORY_SZ];
 void vm_init(uint32_t newPC);
 uint32_t fetch(uint32_t PC);
 int8_t vm_cpu(void);
+void release(void);
 void advance_pc(int32_t offset);
 void vm_continue(void);
 

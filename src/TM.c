@@ -38,6 +38,7 @@ void receiving_sz(void);
 void receiving_x(void);
 void executing(void);
 void reseting(void);
+void hold(void);
 	
 void (*state)(void);
 
@@ -74,7 +75,9 @@ void receiving_x(void) {
 }
 
 void executing(void) {
-	if (vm_cpu()) state = idle;
+	uint8_t res = vm_cpu();
+	if (res == 1) state = idle;
+	else if (res == 2) state = hold;
 }
 
 void reseting(void) {
@@ -96,17 +99,33 @@ void reseting(void) {
 	enable_commands();
 }
 
+void hold(void) {
+	uint8_t count_r = read_encoder_counter(RIGHT);
+	uint8_t count_l = read_encoder_counter(LEFT);
+	// printnum(count_l);
+	//print("\t");
+	// printnum(encd_movdone-count_l);
+	// print("\n");
+	if (count_l >= encd_movdone) { //If {sensor condition} true, return to VM
+		reset_variables();
+		set_targetRPM_L(0);
+		set_targetRPM_R(0);
+		release();
+		state = executing;
+	}
+}
+
 void parse_Command(volatile char * command) {
 	has_command = 0;
-	if (!strcmp((char *)command,"RD")) {
+	if (!strcmpsz((char *)command,"RD", 2)) {
 		print("RD-OK");
 		state = receiving_sz;
-	} else if (!strcmp((char *)command,"RS")) {
+	} else if (!strcmpsz((char *)command,"RS", 2)) {
 		print("RS-OK");
 		state = reseting;
 	} else {
-		send_byte(command[0]);
-		send_byte(command[1]);
+		send_byte(inBuffer[0]);
+		send_byte(inBuffer[1]);
 		send_byte('-');
 		send_byte('?');
 		send_byte('?');
@@ -124,6 +143,10 @@ void tm_init(void) {
 	start_encoder();
 #endif
 	
+	//set_targetRPM_L(200);
+	// set_targetRPM_R(80);
+	//ahead_L(200);
+	// while(1);
 	
 	/*Everything initialized*/
 	
@@ -134,7 +157,7 @@ void tm_init(void) {
     while(1)
     {
 		if (has_command) {
-			parse_Command(command);
+			parse_Command(inBuffer);
 		}
 		if(timer_flag)
 		{	

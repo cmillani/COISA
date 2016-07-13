@@ -38,7 +38,7 @@ uint8_t syscall(uint8_t trap_code)
 {
 	// printnum(trap_code);
 	// print("trap_code\n");
-		
+	// print("HALOU\n");
 	switch (trap_code)
 	{
 		case 9: {
@@ -76,24 +76,30 @@ uint8_t syscall(uint8_t trap_code)
 		}
 		
 		case 16: { //Register new movement
-			register_handler(1, (uintptr_t)RF[5], "ENCD", 0, 0);
-			if (RF[6]) { //If should start now
-				hal_call(RF[7],"MOVM");
+			register_handler(1, (uintptr_t)RF[5], "ENCD", 0, 0); //--------$5 a1
+			if (RF[6]) { //If should start now --------$6 a2
+				hal_call(RF[7],"MOVM"); //--------$7 a3
 			}
-			hal_call(7,"ENCD"); //Set threshold
+			hal_call(7,"ENCD"); //Set threshold --------$4 a0
 			break;
 		}
 		
 		case 17: { //Remove movement e registers next
-			remove_handler(1, RF[5], "ENCD");
-			hal_call(RF[6],"MOVM"); //Sets next movement
-			hal_call(7,"ENCD"); //Set threshold
-			if (RF[7]) { //If has next block
-				register_handler(1, (uintptr_t)RF[8], "ENCD", 0, 0); //Registers it
+			remove_handler(1, RF[5], "ENCD");// --------$5 a1
+			hal_call(RF[6],"MOVM"); //Sets next movement --------$6 a2
+			hal_call(7,"ENCD"); //Set threshold --------%4 a0
+			if (RF[7]) { //If has next block --------%7 a3
+				register_handler(1, (uintptr_t)RF[8], "ENCD", 0, 0); //Registers it --------%8 t0
 			}
 			break;
 		}
-		
+		#if HAS_ENCODER		
+		case 18: { // Hold for movement
+			encd_movdone = RF[4];
+			return 2;
+			break;
+		}
+		#endif		
 		default: {
 			break;
 		}
