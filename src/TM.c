@@ -102,10 +102,6 @@ void reseting(void) {
 void hold(void) {
 	uint8_t count_r = read_encoder_counter(RIGHT);
 	uint8_t count_l = read_encoder_counter(LEFT);
-	// printnum(count_l);
-	//print("\t");
-	// printnum(encd_movdone-count_l);
-	// print("\n");
 	if (count_l >= encd_movdone) { //If {sensor condition} true, return to VM
 		reset_variables();
 		set_targetRPM_L(0);
