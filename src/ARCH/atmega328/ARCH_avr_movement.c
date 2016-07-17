@@ -146,16 +146,16 @@ void control(void)
 // 	print("\n");
 }
 
-float KpL = 1.0;
-float KiL = 0.35;
+float KpL = 0.98;
+float KiL = 0.27;
 float KdL = 0.79;
 
 float KpR = 1.1;
-float KiR = 0.37;
+float KiR = 0.31;
 float KdR = 0.82;
 
-float KpT = 0.02;
-float KiT = 0.01;
+float KpT = 0.09;
+float KiT = 0.03;
 float KdT = 0.02;
 
 float il = 0;
