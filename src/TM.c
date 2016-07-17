@@ -84,10 +84,10 @@ void executing(void) {
 void moving(void) {
 	uint8_t count_r = read_encoder_counter(RIGHT);
 	uint8_t count_l = read_encoder_counter(LEFT);
-	printnum(count_l);
-	print("\t");
-	printnum(count_r);
-	print("\n");
+	// printnum(count_l);
+	// print("\t");
+	// printnum(count_r);
+	// print("\n");
 	if (count_l >= encd_movdone) {
 		set_targetRPM_L(0);
 	}
@@ -107,7 +107,7 @@ void moving(void) {
 uint16_t breaking_count = 0;
 void breaking(void) {
 	if (breaking_count > 50000) {
-		print("NEEXT\n");
+		// print("NEEXT\n");
 		breaking_count = 0;
 		state = executing;
 	};
