@@ -104,6 +104,9 @@ uint8_t hal_call(uint32_t sensid, char identifier[])//Call to hardware I/O
 			case 7 : {
 				encd_threshold = RF[4]; //Sets threshold for the encoder
 			}
+			case 8 : {
+				encd_movdone = RF[4];
+			}
 		}
 #endif
 	}

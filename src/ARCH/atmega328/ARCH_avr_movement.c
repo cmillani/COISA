@@ -146,17 +146,17 @@ void control(void)
 // 	print("\n");
 }
 
-float KpL = 1.0;//2.5;
-float KiL = 0.35;// 0.75;
-float KdL = 0.8;//1.7;
+float KpL = 1.0;
+float KiL = 0.35;
+float KdL = 0.79;
 
-float KpR = 1.1;//2.5;
-float KiR = 0.37;// 0.75;
-float KdR = 0.82;//1.7;
+float KpR = 1.1;
+float KiR = 0.37;
+float KdR = 0.82;
 
-float KpT = 0;//0.5;
-float KiT = 0;//0.15;
-float KdT = 0;//0.2;
+float KpT = 0.02;
+float KiT = 0.01;
+float KdT = 0.02;
 
 float il = 0;
 float ir = 0;
@@ -198,7 +198,7 @@ void PID(void)
 	now_r = read_encoder_counter(RIGHT);
 	now_l = read_encoder_counter(LEFT);
 	
-	float xdiff = (now_r - now_l)*0.8 + last_xdiff * 0.2;
+	float xdiff = (now_r*(target_l) - now_l*(target_r))*0.8 + last_xdiff * 0.2;
 	i_xdiff += xdiff;
 	float d_xdiff = xdiff - last_xdiff;
 	//Ver relação entre rpms pra definir relação entre ticks e fazer essa conta aqui de cima direito

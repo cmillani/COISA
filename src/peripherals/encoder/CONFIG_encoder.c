@@ -25,6 +25,7 @@ extern "C" {
 #include <CONFIG_encoder.h>
 
 uint8_t encd_threshold = ~0;
+uint8_t encd_movdone = ~0;
 
 #ifdef __cplusplus
 }

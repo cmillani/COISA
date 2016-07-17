@@ -28,6 +28,7 @@ extern "C" {
 #define CONFIG_ENCODER
 
 extern uint8_t encd_threshold;
+extern uint8_t encd_movdone;
 	
 #endif //CONFIG_ENCODER
 	

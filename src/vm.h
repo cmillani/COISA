@@ -40,6 +40,7 @@ uint32_t fetch(uint32_t PC);
 int8_t vm_cpu(void);
 void advance_pc(int32_t offset);
 void vm_continue(void);
+void vm_release(void);
 
 #endif // VM_H
 

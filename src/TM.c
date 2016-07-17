@@ -38,6 +38,8 @@ void receiving_sz(void);
 void receiving_x(void);
 void executing(void);
 void reseting(void);
+void moving(void);
+void breaking(void);
 	
 void (*state)(void);
 
@@ -74,7 +76,41 @@ void receiving_x(void) {
 }
 
 void executing(void) {
-	if (vm_cpu()) state = idle;
+	uint8_t res = vm_cpu();
+	if (res == 1) state = idle;
+	else if (res == 2) state = moving;
+}
+
+void moving(void) {
+	uint8_t count_r = read_encoder_counter(RIGHT);
+	uint8_t count_l = read_encoder_counter(LEFT);
+	printnum(count_l);
+	print("\t");
+	printnum(count_r);
+	print("\n");
+	if (count_l >= encd_movdone) {
+		set_targetRPM_L(0);
+	}
+	if (count_r >= encd_movdone) {
+		set_targetRPM_R(0);
+	}
+	if (count_l >= encd_movdone && count_r >= encd_movdone) //If {sensor condition} true, return to VM
+	{ 
+		// reset_variables();
+		// set_targetRPM_L(0);
+		// set_targetRPM_R(0);
+		vm_release();
+		state = breaking;
+	}
+}
+
+uint16_t breaking_count = 0;
+void breaking(void) {
+	if (breaking_count > 50000) {
+		print("NEEXT\n");
+		breaking_count = 0;
+		state = executing;
+	};
 }
 
 void reseting(void) {
@@ -119,7 +155,6 @@ void tm_init(void) {
 	serial_configure(9600);
 	init_timer();
 	setup_movement();
-	
 #if HAS_ENCODER
 	start_encoder();
 #endif
@@ -136,6 +171,9 @@ void tm_init(void) {
 		if (has_command) {
 			parse_Command(command);
 		}
+		if (state == breaking) {
+			breaking_count++;
+		}
 		if(timer_flag)
 		{	
 			tm_counter++;
@@ -150,8 +188,7 @@ void tm_init(void) {
 		#endif
 			if (state == idle) //Doesn't interrupts other functions - All funcs must be non blocking
 			{
-				state = executing; //TODO: do i really need to set this here, can iterate for nothing :(
-				consume_event();
+				if (consume_event()) state = executing; //TODO: see on consume_event: problem with more than 1 handler
 			}
 		}
 		state();

@@ -74,6 +74,15 @@ uint8_t syscall(uint8_t trap_code)
 			remove_handler((uint8_t)RF[4], RF[5], (char *)&VM_memory[RF[6]]);
 			break;
 		}
+			
+		case 18: { // Hold for movement
+			// encd_movdone = RF[4];
+			// print("Held!\n");
+			hal_call(8, "ENCD");
+			return 2;
+			break;
+		}
+
 		
 		default: {
 			break;

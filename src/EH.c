@@ -239,15 +239,16 @@ int8_t consume_event(void) //TODO:For some reason i cannot print from inside thi
 			if (strcmp(ehvecpointers[selected].name,event.name) ) return -1; //No event with that id found -- ERROR
 		}
 		register  uint8_t loop;
-		for (loop = ehvecpointers[selected].pos; loop < ehvecpointers[selected].pos + ehvecpointers[selected].sz; loop++)
+		for (loop = ehvecpointers[selected].pos; loop < ehvecpointers[selected].pos + ehvecpointers[selected].sz; loop++) //TODO: Need to find better way, bugs when more than 1 handler
 		{
 			RF[4] = ehvec[loop];
 			vm_init(hand_addr);
-			vm_cpu();
+			// vm_cpu();
+			return 1; // Success //TODO: this is temporary
 		}
 		return 1; // Success
 	}
-	else return -1; //Nothing to Consume
+	else return 0; //Nothing to Consume
 }
 
 uint8_t even = 0;
