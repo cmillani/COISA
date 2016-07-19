@@ -27,23 +27,25 @@ extern "C" {
 #include <avr/io.h>
 #include <avr/interrupt.h>
 
-volatile char rx_buff[2] = {0};
-volatile uint8_t rx_buff_pos = 0;
-// char tx_buff[2] = {0};
+volatile unsigned char buff_in[20];
+volatile uint8_t buff_in_pos = 0;
+volatile unsigned char buff_out[20];
+volatile uint8_t buff_out_pos = 0;
 
 volatile uint8_t has_command = 0;
-volatile char command[3] = {0};
+
+volatile uint8_t trash;
 
 ISR(USART_RX_vect) {
-	//Every command has 2 chars, which is enought for out TM :)
-	//When this buffer is full, we copy it to save data and set a flag, so TM can handle it
-	rx_buff[rx_buff_pos] = UDR0; //TODO: may have some sync problems, pack it later
-	if (!has_command && ++rx_buff_pos == 2) {
-		has_command = 1;
-		rx_buff_pos = 0;
-		command[0] = rx_buff[0];
-		command[1] = rx_buff[1];
-		UCSR0B &= ~(1 << RXCIE0); // Stops receiving commands, so we can handle the received first
+	
+	if (has_command) {
+		trash = UDR0;
+	} else {
+		buff_in[buff_in_pos++] = UDR0;
+		if (buff_in_pos == 20) { //Buffer full!
+			has_command = 1;
+			buff_in_pos = 0;
+		}
 	}
 }
 
@@ -52,24 +54,18 @@ void send_byte(unsigned char byte)
 	while (!(UCSR0A & (1 << UDRE0))); // Wait until buffer is empty (can send new data)
 	UDR0 = byte;
 }
-char read_byte(void)
-{
-	while (!(UCSR0A & (1 << RXC0))); // Wait until there is something to read
-	return UDR0;
-}
+// char read_byte(void)
+// {
+// 	while (!(UCSR0A & (1 << RXC0))); // Wait until there is something to read
+// 	return UDR0;
+// }
 void serial_configure(unsigned int baudrate)
 {
-	command[2] = '\0';
 	UBRR0H = (16000000/16/baudrate -1 >> 8); //Configure baudrate generator
 	UBRR0L = (16000000/16/baudrate -1); //Configure baudrate generator
 	
 	UCSR0B |= (1 << RXEN0) | (1 << TXEN0) | (1 << RXCIE0);// | (1 << TXCIE0); //TODO: Use TX interrupt too
 	sei(); //Enables interruption
-}
-
-void enable_commands(void) {
-	UCSR0B |= (1 << RXCIE0);
-	sei();
 }
 
 void printnum(int32_t number)
@@ -96,6 +92,15 @@ void printnum(int32_t number)
 		send_byte((number%(max))/(max/10) + '0');
 	}
 }
+
+void print_pckg(char * str) {
+	int i = 0;
+	while (i < 20)
+	{
+		send_byte(str[i++]);
+	}
+}
+
 void print(char *str)
 {
 	int i = 0;

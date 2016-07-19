@@ -27,14 +27,16 @@ extern "C" {
 #include <stdint.h>
 	
 extern volatile uint8_t has_command;
-extern volatile char command[3];
 
-void enable_commands(void);
+extern volatile unsigned char buff_in[20];
+extern volatile unsigned char buff_out[20];
+
 void send_byte(unsigned char byte);
-char read_byte(void);	
+// char read_byte(void);
 void serial_configure(unsigned int baudrate); //Allow user to enable and disable interruptions later
 void printnum(int32_t number);
 void print(char *str);
+void print_pckg(char *str);
 
 #endif //ARCH_SERIAL
 	

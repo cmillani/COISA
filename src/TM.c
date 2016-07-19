@@ -46,33 +46,47 @@ void (*state)(void);
 void idle(void) {
 	//TODO: should sleep here :)
 }
-	
+
+// uint8_t pckg_count = 0;
+uint16_t bytes_in = 0;
 void receiving_sz(void) {
-	eh_init();
-	setup_movement();
-	ledoff(1);
-	ledoff(2);
-	
-	uint8_t size1 = read_byte();
-	uint8_t size2 = read_byte();
 
-	tot_size = (uint16_t)size1 | ((uint16_t)size2 << 8);
+	tot_size = (uint16_t)buff_in[19] | ((uint16_t)buff_in[18] << 8);
 
-	state = receiving_x;
-	send_byte('k');
+	state = idle;
+	// printnum(tot_size);
+	// print("\n");
+	bytes_in = 0;
+	print_pckg("OK-RD\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0");
 }
 
 void receiving_x(void) {
-	uint16_t i;
-	for (i = 0; i < tot_size; i++) {
-		VM_memory[i] = read_byte();
-		if ((i+1)%20 == 0) send_byte('k');
+	
+	// for (i = 0; i < tot_size; i++) {
+// 		VM_memory[i] = read_byte();
+// 		if ((i+1)%20 == 0) send_byte('k');
+// 	}
+// 	if (tot_size%20 != 0) send_byte('k');
+	
+	for (bytes_in; bytes_in < tot_size; bytes_in++) {
+		// printnum(buff_in[bytes_in%18 + 2]);
+		// print("-");
+		VM_memory[bytes_in] = buff_in[bytes_in%18 + 2];
+		if (bytes_in%18 == 17) {
+			bytes_in++;
+			break;
+		}
 	}
-	if (tot_size%20 != 0) send_byte('k');
-	state = executing;
-	enable_commands();
-	vm_init(0);
-	// print("Exec\n");
+	printnum(bytes_in);
+	print("\n");
+	print_pckg("OK-PK\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0");
+	
+	if (bytes_in == tot_size) {
+		vm_init(0);
+		state = executing;
+	} else {
+		state = idle;
+	}
 }
 
 void executing(void) {
@@ -129,23 +143,27 @@ void reseting(void) {
 		VM_memory[i] = 0;
 	}
 	state = idle;
-	enable_commands();
 }
 
-void parse_Command(volatile char * command) {
+void parse_Command(volatile unsigned char * command) {
 	has_command = 0;
-	if (!strcmp((char *)command,"RD")) {
-		print("RD-OK");
+	if (!strcmpsz((char *)command,"RD", 2)) {
+		// print_pckg("RD-OK\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"); //20 bytes - TODO: improve
 		state = receiving_sz;
-	} else if (!strcmp((char *)command,"RS")) {
-		print("RS-OK");
+	} else if (!strcmpsz((char *)command,"RS", 2)) {
+		print_pckg("RS-OK\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0");
 		state = reseting;
+	// } else if (!strcmpsz((char *)command,"SZ", 2)) {
+		// state = receiving_sz;
+	} else if (!strcmpsz((char *)command,"PK", 2)) {
+		state = receiving_x;
 	} else {
-		send_byte(command[0]);
-		send_byte(command[1]);
 		send_byte('-');
-		send_byte('?');
-		send_byte('?');
+		printnum(command[0]);
+		send_byte('-');
+		printnum(command[1]);
+		send_byte('-');
+		print_pckg("??-??\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0");
 	}
 }
 
@@ -169,7 +187,7 @@ void tm_init(void) {
     while(1)
     {
 		if (has_command) {
-			parse_Command(command);
+			parse_Command(buff_in);
 		}
 		if (state == breaking) {
 			breaking_count++;

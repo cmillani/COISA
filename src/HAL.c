@@ -126,7 +126,7 @@ uint8_t hal_call(uint32_t sensid, char identifier[])//Call to hardware I/O
 	#if PRINTING
 				printf("(HAL)Read Byte called\n");
 	#endif // PRINTING
-				RF[2] = read_byte();	
+				// RF[2] = read_byte();
 				break;	
 			}
 			case 12: {

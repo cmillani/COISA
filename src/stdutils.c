@@ -40,11 +40,22 @@ void strcpy(char dest[], char origin[])
 uint8_t strcmp(char one[], char two[])
 {
 	result = 0; //Starts as true (string.h strcmp like)
-	stdu_counter = 0;
+	stdu_counter = -1;
 	do {
-		result = !(one[stdu_counter] == two[stdu_counter]); //Compares the two strings and output the result to the variable (as 0 means equal, we need the NOT)
 		stdu_counter++;
-	} while (one[stdu_counter] != '\0' && two[stdu_counter] != '\0' && result == 0); //Breaks with the first \0 to avoid segfault or as soon as it`s not true anymore
+		result = !(one[stdu_counter] == two[stdu_counter]); //Compares the two strings and output the result to the variable (as 0 means equal, we need the NOT)
+	} while (one[stdu_counter] != '\0' && two[stdu_counter] != '\0' && result == 0); //Breaks with the first '\0' to avoid segfault or as soon as it`s not true anymore
+	return result;
+}
+
+uint8_t strcmpsz(char one[], char two[], uint8_t sz)
+{
+	result = 0; //Starts as true (string.h strcmp like)
+	stdu_counter = -1;
+	do {
+		stdu_counter++;
+		result = !(one[stdu_counter] == two[stdu_counter]); //Compares the two strings and output the result to the variable (as 0 means equal, we need the NOT)
+	} while (one[stdu_counter] != '\0' && two[stdu_counter] != '\0' && result == 0 && stdu_counter < sz-1); //Breaks with the first '\0' to avoid segfault or as soon as it`s not true anymore or as soon as size match
 	return result;
 }
 

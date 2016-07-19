@@ -30,6 +30,7 @@ extern "C" {
 	
 void strcpy(char dest[], char origin[]);
 uint8_t strcmp(char one[], char two[]);
+uint8_t strcmpsz(char one[], char two[], uint8_t sz);
 
 #endif
 

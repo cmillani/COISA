@@ -18,41 +18,54 @@ else:
 time.sleep(2) # make sure the connection is ok
 
 print len(executable)
+# print len(executable) & 0xFF
 print 'Waiting'
 print '\nStarting'
 # print (len(executable) & 0xFF)
 # print ((len(executable) >> 8) & 0xFF)
 
-zero.write(chr(82))# - R
-zero.write(chr(68))# - D
-
-resp = zero.read(5)
-print (resp)
-if (resp != "RD-OK"):
-    print "Wrong command :("
-    exit()
-
-print("Sending length")
-zero.write(chr(len(executable) & 0xFF))
+zero.write("R")# - R
+zero.write("D")# - D
+for i in range(16):
+    zero.write(chr(0))
+    
+    
+# zero.write(chr(0))
+# zero.write(chr(1))
 zero.write(chr((len(executable) >> 8) & 0xFF))
+zero.write(chr(len(executable) & 0xFF))
 
-received = zero.read()
-print(received)
-if (received != 'k'):
-    print "Didn't got my byte.x :("
+# leng = zero.readline();
+# print(leng)
+resp = zero.read(20)
+print (resp)
     
 print "Sending"
 count = 0
 
-for c in executable:
-    zero.write(chr(ord(c)))
-    # received = zero.read()
-    # print(received)
-    # if (received != 'k'):
-        # print "Didn't got my byte.x :("
-        # break;
-        # print "YAHEEEI"
-    time.sleep(0.01)
+while (count < len(executable)):
+    string = "PK"+executable[count:min(count+18, len(executable))]
+    while (len(string) < 20) :
+        string += "\0" #To complete last package if needed
+    count = count + min(18, len(executable) - count)
+    print(str(len(string)) + "-" + str(count) + "-" + str(len(executable)));
+    zero.write(string)
+    print("-----" + str(count))
+    print(zero.readline())
+    resp = zero.read(20)
+    print (resp)
+
+# print()
+
+# for c in executable:
+#     zero.write(chr(ord(c)))
+#     # received = zero.read()
+#     # print(received)
+#     # if (received != 'k'):
+#         # print "Didn't got my byte.x :("
+#         # break;
+#         # print "YAHEEEI"
+#     time.sleep(0.01)
     
 print "###########################################"
 while True:
