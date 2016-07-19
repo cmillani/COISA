@@ -176,7 +176,9 @@ void tm_init(void) {
 #if HAS_ENCODER
 	start_encoder();
 #endif
-	
+#if HAS_ULTRASONIC
+	init_ultrassonic();
+#endif
 	
 	/*Everything initialized*/
 	

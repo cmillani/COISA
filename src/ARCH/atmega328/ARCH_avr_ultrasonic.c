@@ -31,7 +31,7 @@ extern "C" {
 uint8_t init_ultrassonic(void)
 {
 	DDRD |= (1 << PD4); //Trig as Output
-	DDRD &= ~(1 << PD5); //Echo as Input
+	DDRD &= ~(1 << PD7); //Echo as Input
 }
 
 #include <serial.h>
@@ -50,11 +50,11 @@ uint8_t read_ultrassonic(void)
 	
 	//Here we have the timeout to prevent an infinite loop
 	temp = timerOvfcnt*256 + TCNT2;
-	while (PIND & (1 << PD5)) if (timerOvfcnt*256 + TCNT2 >= temp + timeout) return 255; //Wait until echo is low
+	while (PIND & (1 << PD7)) if (timerOvfcnt*256 + TCNT2 >= temp + timeout) return 255; //Wait until echo is low
 	temp = timerOvfcnt*256 + TCNT2;
-	while (!(PIND & (1 << PD5))) if (timerOvfcnt*256 + TCNT2 >= temp + timeout) return 255; //Wait until echo is high
+	while (!(PIND & (1 << PD7))) if (timerOvfcnt*256 + TCNT2 >= temp + timeout) return 255; //Wait until echo is high
 	temp = timerOvfcnt*256 + TCNT2;
-	while (PIND & (1 << PD5)) if (timerOvfcnt*256 + TCNT2 >= temp + timeout) return 255; //Starts counting until echo is low again
+	while (PIND & (1 << PD7)) if (timerOvfcnt*256 + TCNT2 >= temp + timeout) return 255; //Starts counting until echo is low again
 	temp = timerOvfcnt*256 + TCNT2 - temp;//Gets the high time of the pulse
 	return temp/conversion_factor;//Converts it to the configured Unit System
 }
