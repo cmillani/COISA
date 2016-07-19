@@ -48,24 +48,10 @@ while (count < len(executable)):
     while (len(string) < 20) :
         string += "\0" #To complete last package if needed
     count = count + min(18, len(executable) - count)
-    print(str(len(string)) + "-" + str(count) + "-" + str(len(executable)));
     zero.write(string)
-    print("-----" + str(count))
-    print(zero.readline())
+    
     resp = zero.read(20)
     print (resp)
-
-# print()
-
-# for c in executable:
-#     zero.write(chr(ord(c)))
-#     # received = zero.read()
-#     # print(received)
-#     # if (received != 'k'):
-#         # print "Didn't got my byte.x :("
-#         # break;
-#         # print "YAHEEEI"
-#     time.sleep(0.01)
     
 print "###########################################"
 while True:

@@ -77,8 +77,8 @@ void receiving_x(void) {
 			break;
 		}
 	}
-	printnum(bytes_in);
-	print("\n");
+	// printnum(bytes_in);
+	//print("\n");
 	print_pckg("OK-PK\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0");
 	
 	if (bytes_in == tot_size) {
