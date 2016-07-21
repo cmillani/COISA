@@ -119,6 +119,10 @@ int8_t vm_cpu(void)
 	int16_t immediate = (instr >> 0) & 0xFFFF;
 	uint32_t address = (instr >> 0) & 0x3FFFFFF;
 	
+	// print("************************");
+	// printnum(PC);
+	// print("\n");
+	
 	offset = 4; //default offset for non-branching instructions
 	
 	switch (op) //Executes the instruction
@@ -291,7 +295,7 @@ int8_t vm_cpu(void)
 			break;
 		}
 		case 0b001110: { //xori    001110  ArithLogI       $d = $s ^ ZE(i)
-			RF[rd] = RF[rs] ^ (uint32_t)immediate;
+			RF[rt] = RF[rs] ^ (uint32_t)immediate;
 			break;
 		}
 		case 0b001111: 	 //lui	   001111          Rdest, imm: Load Upper Immediate
@@ -365,9 +369,13 @@ int8_t vm_cpu(void)
 			break;
 		}
 		case 0b000100: { //beq     000100  Branch  if ($s == $t) pc += i << 2
+			//FIXME: Solve branch relative
 			if (RF[rs] == RF[rt])
 			{
-				advance_pc(immediate << 2);
+				// nPC = immediate << 2;
+				PC = nPC;
+				nPC = immediate << 2;	
+				// advance_pc(immediate << 2);
 				return 0;
 			}
 			else
@@ -404,9 +412,13 @@ int8_t vm_cpu(void)
 #if DEBUGING
 			printf(">>RA:%x\tAddress:%x\n", RF[31], immediate<<2);
 #endif
+			//FIXME: Solve branch relative
 			if (RF[rs] != RF[rt])
 			{
-				advance_pc(immediate << 2);
+				// nPC = immediate << 2;
+				PC = nPC;
+				nPC = immediate << 2;	
+				//advance_pc(immediate << 2);
 				return 0;
 			}
 			else
