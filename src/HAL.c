@@ -37,10 +37,10 @@ extern "C" {
 uint8_t hal_call(uint32_t sensid, char identifier[])//Call to hardware I/O
 {
 	// print(identifier);
-	// printnum(sensid);
-	// print("<>");
-	// printnum(RF[4]);
-	// print("\n");
+// 	printnum(sensid);
+// 	print("<>");
+// 	printnum(RF[4]);
+// 	print("\n");
 	uint8_t retval = 0;
 	if (!strcmp(identifier,"US_S"))
 	{
@@ -51,7 +51,10 @@ uint8_t hal_call(uint32_t sensid, char identifier[])//Call to hardware I/O
 	#if PRINTING
 				printf("(HAL)Read Ultra called\n");
 	#endif // PRINTING
-				RF[2] = read_ultrassonic();
+				retval = read_ultrassonic();
+				// print("LEITURA:");
+				// printnum(retval);
+				// print("\n");
 				break;
 			}
 			case 1: {
