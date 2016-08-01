@@ -196,27 +196,43 @@ uint8_t hal_call(uint32_t sensid, char identifier[])//Call to hardware I/O
 				break;
 			}
 			case 21: { //Forward
-				reset_variables();
-				set_targetRPM_L(80);
-				set_targetRPM_R(80);
+				// reset_variables();
+				// set_targetRPM_L(80);
+				// set_targetRPM_R(80);
+				reset_counter(RIGHT);
+				reset_counter(LEFT);
+				ahead_L(215);
+				ahead_R(235);
 				break;
 			}
 			case 22: { //Left
-				reset_variables();
-				set_targetRPM_L(-80);
-				set_targetRPM_R(80);
+				// reset_variables();
+				// set_targetRPM_L(-80);
+				// set_targetRPM_R(80);
+				reset_counter(RIGHT);
+				reset_counter(LEFT);
+				back_L(202);
+				ahead_R(235);
 				break;
 			}
 			case 23: { //Right
-				reset_variables();
-				set_targetRPM_L(80);
-				set_targetRPM_R(-80);
+				// reset_variables();
+				// set_targetRPM_L(80);
+				// set_targetRPM_R(-80);
+				reset_counter(RIGHT);
+				reset_counter(LEFT);
+				ahead_L(202);
+				back_R(235);
 				break;
 			}
 			case 24: { //Stop
-				reset_variables();
-				set_targetRPM_L(0);
-				set_targetRPM_R(0);
+				// reset_variables();
+				// set_targetRPM_L(0);
+				// set_targetRPM_R(0);
+				reset_counter(RIGHT);
+				reset_counter(LEFT);
+				ahead_R(0);
+				ahead_L(0);
 				break;
 			}
 		}

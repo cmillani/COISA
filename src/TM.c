@@ -96,25 +96,35 @@ void executing(void) {
 }
 
 void moving(void) {
-	uint8_t count_r = read_encoder_counter(RIGHT);
-	uint8_t count_l = read_encoder_counter(LEFT);
-	// printnum(count_l);
-	// print("\t");
-	// printnum(count_r);
-	// print("\n");
-	if (count_l >= encd_movdone) {
-		set_targetRPM_L(0);
-	}
-	if (count_r >= encd_movdone) {
-		set_targetRPM_R(0);
-	}
-	if (count_l >= encd_movdone && count_r >= encd_movdone) //If {sensor condition} true, return to VM
-	{ 
-		// reset_variables();
-		// set_targetRPM_L(0);
-		// set_targetRPM_R(0);
+	// uint8_t count_r = read_encoder_counter(RIGHT);
+	// uint8_t count_l = read_encoder_counter(LEFT);
+	// if (count_l >= encd_movdone) {
+// 		set_targetRPM_L(0);
+// 	}
+// 	if (count_r >= encd_movdone) {
+// 		set_targetRPM_R(0);
+// 	}
+	// if (count_l >= encd_movdone-2 || count_r >= encd_movdone-2) //If {sensor condition} true, return to VM
+// 	{
+// 		printnum(count_l);
+// 		print("\t");
+// 		printnum(count_r);
+// 		print("\n");
+// 		reset_variables();
+// 		set_targetRPM_L(0);
+// 		set_targetRPM_R(0);
+// 		vm_release();
+// 		state = breaking;
+//}
+	if (read_encoder_counter(RIGHT) >= encd_movdone-1){
 		vm_release();
-		state = breaking;
+		ahead_R(0);
+		ahead_L(0);
+		// printnum(read_encoder_counter(LEFT));
+		// print("\t");
+		// printnum(read_encoder_counter(RIGHT));
+		// print("\n");
+		state = executing;
 	}
 }
 
@@ -180,6 +190,17 @@ void tm_init(void) {
 	init_ultrassonic();
 #endif
 	
+	// ahead_R(235);
+// 	ahead_L(218);
+// 	while(read_encoder_counter(RIGHT) < 18);
+// 	reset_counter(RIGHT);
+// 	reset_counter(LEFT);
+// 	ahead_L(218);
+// 	back_R(235);
+// 	while(read_encoder_counter(RIGHT) < 8);
+// 	ahead_R(0);
+// 	ahead_L(0);
+// 	while(1);
 	/*Everything initialized*/
 	
 	/*Sets initial State*/
@@ -202,7 +223,7 @@ void tm_init(void) {
 		#if HAS_MOTORS
 			if (tm_counter >= 4) //Every 4 timer interruptions, should check for PID controlling
 			{
-				PID();
+				// PID();
 				tm_counter = 0;
 			}
 		#endif
