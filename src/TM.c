@@ -116,21 +116,21 @@ void moving(void) {
 // 		vm_release();
 // 		state = breaking;
 //}
-	if (read_encoder_counter(RIGHT) >= encd_movdone-1){
-		vm_release();
+	if (read_encoder_counter(RIGHT) >= encd_movdone){
 		ahead_R(0);
 		ahead_L(0);
+		vm_release();
 		// printnum(read_encoder_counter(LEFT));
 		// print("\t");
 		// printnum(read_encoder_counter(RIGHT));
 		// print("\n");
-		state = executing;
+		state = breaking;
 	}
 }
 
 uint16_t breaking_count = 0;
 void breaking(void) {
-	if (breaking_count > 50000) {
+	if (breaking_count > 4) {
 		// print("NEEXT\n");
 		breaking_count = 0;
 		state = executing;
@@ -212,20 +212,20 @@ void tm_init(void) {
 		if (has_command) {
 			parse_Command(buff_in);
 		}
-		if (state == breaking) {
-			breaking_count++;
-		}
 		if(timer_flag)
 		{	
-			tm_counter++;
+			if (state == breaking) {
+				breaking_count++;
+			}
+			// tm_counter++;
 			timed_polling();
 			timer_flag = 0;
 		#if HAS_MOTORS
-			if (tm_counter >= 4) //Every 4 timer interruptions, should check for PID controlling
-			{
+			// if (tm_counter >= 4) //Every 4 timer interruptions, should check for PID controlling
+			// {
 				// PID();
-				tm_counter = 0;
-			}
+				// tm_counter = 0;
+			// }
 		#endif
 			if (state == idle) //Doesn't interrupts other functions - All funcs must be non blocking
 			{

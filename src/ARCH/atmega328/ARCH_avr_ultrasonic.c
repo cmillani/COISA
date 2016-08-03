@@ -28,15 +28,25 @@ extern "C" {
 #include <ultrasonic.h>
 //Trig = Port D pin 4
 //Echo = Port D pin 5
+	
+
+#define debouncing_time 20000
+
+uint32_t us_timestamp = 0;
+	
 uint8_t init_ultrassonic(void)
 {
+	us_timestamp = timerOvfcnt*256 + TCNT2;
 	DDRD |= (1 << PD4); //Trig as Output
 	DDRD &= ~(1 << PD7); //Echo as Input
 }
 
 #include <serial.h>
+
 uint8_t read_ultrassonic(void)
 {
+	while (timerOvfcnt*256 + TCNT2 - us_timestamp < debouncing_time);
+	us_timestamp = timerOvfcnt*256 + TCNT2;
 	uint32_t temp = 0; //Used to store time along the function
 	uint32_t timeout = 8000;
 

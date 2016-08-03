@@ -29,17 +29,22 @@ extern "C" {
 #include <HAL.h>
 #include <timer.h>
 	
-#define debouncing_time 20000
+#define debouncing_time 100000
 	
 uint8_t initialized;
 uint8_t mode;
 volatile uint32_t timestamp = 0;
+//TODO: save each pin initialized
+volatile uint8_t current_pin;
+volatile uint8_t current_port;
 
 void init_button(uint8_t port, uint8_t pin)
 {
+	current_pin = pin;
 	timestamp = timerOvfcnt*256 + TCNT2;
 	if (port == BPORT)
 	{
+		current_port = BPORT;
 		PORTB |= (1 << pin);
 		DDRB &= ~(1 << pin);
 		PCICR |= (1 << PCIE0);
@@ -49,6 +54,7 @@ void init_button(uint8_t port, uint8_t pin)
 	}
 	else if (port == CPORT)
 	{
+		current_port = CPORT;
 		PORTC |= (1 << pin);
 		DDRC &= ~(1 << pin);
 		PCICR |= (1 << PCIE1);
@@ -58,6 +64,7 @@ void init_button(uint8_t port, uint8_t pin)
 	}
 	else if (port == DPORT)
 	{
+		current_port = DPORT;
 		PORTD |= (1 << pin);
 		DDRD &= ~(1 << pin);
 		PCICR |= (1 << PCIE2);
@@ -71,8 +78,11 @@ ISR(PCINT0_vect)
 {
 	if (timerOvfcnt*256 + TCNT2 - timestamp > debouncing_time)
 	{
-		insert_event(1,"BTOG");
 		timestamp = timerOvfcnt*256 + TCNT2;
+		if (current_port == DPORT && PIND & (1 << current_pin)) return;
+		if (current_port == CPORT && PINC & (1 << current_pin)) return;
+		if (current_port == BPORT && PINB & (1 << current_pin)) return;
+		insert_event(1,"BTOG");
 	}
 }
 ISR(PCINT1_vect, ISR_ALIASOF(PCINT0_vect));
