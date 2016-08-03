@@ -201,8 +201,8 @@ uint8_t hal_call(uint32_t sensid, char identifier[])//Call to hardware I/O
 				// set_targetRPM_R(80);
 				reset_counter(RIGHT);
 				reset_counter(LEFT);
-				ahead_L(215);
-				ahead_R(235);
+				ahead_L(218);
+				ahead_R(228);
 				break;
 			}
 			case 22: { //Left
@@ -211,8 +211,8 @@ uint8_t hal_call(uint32_t sensid, char identifier[])//Call to hardware I/O
 				// set_targetRPM_R(80);
 				reset_counter(RIGHT);
 				reset_counter(LEFT);
-				back_L(202);
-				ahead_R(235);
+				back_L(235);
+				ahead_R(218);
 				break;
 			}
 			case 23: { //Right
@@ -221,8 +221,8 @@ uint8_t hal_call(uint32_t sensid, char identifier[])//Call to hardware I/O
 				// set_targetRPM_R(-80);
 				reset_counter(RIGHT);
 				reset_counter(LEFT);
-				ahead_L(202);
-				back_R(235);
+				ahead_L(235);
+				back_R(218);
 				break;
 			}
 			case 24: { //Stop
