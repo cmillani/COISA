@@ -30,7 +30,7 @@ extern "C" {
 //Echo = Port D pin 5
 	
 
-#define debouncing_time 20000
+#define us_debouncing_time 1000
 
 uint32_t us_timestamp = 0;
 	
@@ -43,9 +43,11 @@ uint8_t init_ultrassonic(void)
 
 #include <serial.h>
 
+uint8_t last_read = ~0;
+
 uint8_t read_ultrassonic(void)
 {
-	while (timerOvfcnt*256 + TCNT2 - us_timestamp < debouncing_time);
+	if (timerOvfcnt*256 + TCNT2 - us_timestamp < us_debouncing_time) return last_read;
 	us_timestamp = timerOvfcnt*256 + TCNT2;
 	uint32_t temp = 0; //Used to store time along the function
 	uint32_t timeout = 8000;
@@ -66,7 +68,8 @@ uint8_t read_ultrassonic(void)
 	temp = timerOvfcnt*256 + TCNT2;
 	while (PIND & (1 << PD7)) if (timerOvfcnt*256 + TCNT2 >= temp + timeout) return 255; //Starts counting until echo is low again
 	temp = timerOvfcnt*256 + TCNT2 - temp;//Gets the high time of the pulse
-	return temp/conversion_factor;//Converts it to the configured Unit System
+	last_read = temp/conversion_factor;
+	return last_read;//Converts it to the configured Unit System
 }
 	
 #ifdef __cplusplus

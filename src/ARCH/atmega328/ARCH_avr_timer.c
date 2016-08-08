@@ -37,6 +37,10 @@ void init_timer(void)
 	sei();
 }
 
+unsigned int timer_get_ticks(void) {
+	return timerOvfcnt*256 + TCNT2;
+}
+
 ISR(TIMER2_OVF_vect)
 {
 	timerOvfcnt++;

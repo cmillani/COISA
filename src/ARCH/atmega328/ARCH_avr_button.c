@@ -29,32 +29,34 @@ extern "C" {
 #include <HAL.h>
 #include <timer.h>
 	
-#define debouncing_time 100000
+#define bt_debouncing_time 100000
 	
 uint8_t initialized;
 uint8_t mode;
-volatile uint32_t timestamp = 0;
+volatile uint32_t bt_timestamp = 0;
 //TODO: save each pin initialized
 volatile uint8_t current_pin;
-volatile uint8_t current_port;
 
 void init_button(uint8_t port, uint8_t pin)
 {
 	current_pin = pin;
-	timestamp = timerOvfcnt*256 + TCNT2;
+	bt_timestamp = timerOvfcnt*256 + TCNT2;
 	if (port == BPORT)
 	{
-		current_port = BPORT;
 		PORTB |= (1 << pin);
 		DDRB &= ~(1 << pin);
 		PCICR |= (1 << PCIE0);
 		PCMSK0 |= (1 << pin);
 		sei();
 		initialized = 1;
+		// while(1){
+// 			if (PINB & (1 << current_pin)) continue;
+// 			printnum(PINB & (1 << current_pin));
+// 			print("\n");
+// 		}
 	}
 	else if (port == CPORT)
 	{
-		current_port = CPORT;
 		PORTC |= (1 << pin);
 		DDRC &= ~(1 << pin);
 		PCICR |= (1 << PCIE1);
@@ -64,7 +66,6 @@ void init_button(uint8_t port, uint8_t pin)
 	}
 	else if (port == DPORT)
 	{
-		current_port = DPORT;
 		PORTD |= (1 << pin);
 		DDRD &= ~(1 << pin);
 		PCICR |= (1 << PCIE2);
@@ -76,17 +77,29 @@ void init_button(uint8_t port, uint8_t pin)
 
 ISR(PCINT0_vect)
 {
-	if (timerOvfcnt*256 + TCNT2 - timestamp > debouncing_time)
+	if (timerOvfcnt*256 + TCNT2 - bt_timestamp > bt_debouncing_time)
 	{
-		timestamp = timerOvfcnt*256 + TCNT2;
-		if (current_port == DPORT && PIND & (1 << current_pin)) return;
-		if (current_port == CPORT && PINC & (1 << current_pin)) return;
-		if (current_port == BPORT && PINB & (1 << current_pin)) return;
-		insert_event(1,"BTOG");
+		bt_timestamp = timerOvfcnt*256 + TCNT2;
+		if (PINB & (1 << current_pin)) return;
+		else insert_event(1,"BTOG");
 	}
 }
-ISR(PCINT1_vect, ISR_ALIASOF(PCINT0_vect));
-ISR(PCINT2_vect, ISR_ALIASOF(PCINT0_vect));
+ISR(PCINT1_vect) {
+	if (timerOvfcnt*256 + TCNT2 - bt_timestamp > bt_debouncing_time)
+	{
+		bt_timestamp = timerOvfcnt*256 + TCNT2;
+		if (PINC & (1 << current_pin)) return;
+		else insert_event(1,"BTOG");
+	}
+}
+ISR(PCINT2_vect) {
+	if (timerOvfcnt*256 + TCNT2 - bt_timestamp > bt_debouncing_time)
+	{
+		bt_timestamp = timerOvfcnt*256 + TCNT2;
+		if (PIND & (1 << current_pin)) return;	
+		else insert_event(1,"BTOG");
+	}
+}
 	
 #ifdef __cplusplus
 }

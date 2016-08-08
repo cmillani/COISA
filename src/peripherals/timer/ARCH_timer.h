@@ -27,6 +27,7 @@ extern "C" {
 #define ARCHTIM_H
 
 void init_timer(void);
+unsigned int timer_get_ticks(void);
 
 #endif
 

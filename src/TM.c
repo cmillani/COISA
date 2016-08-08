@@ -190,6 +190,10 @@ void tm_init(void) {
 	init_ultrassonic();
 #endif
 	
+	// while(1) {
+// 		printnum(read_ultrassonic());
+// 		print("\n");
+// 	}
 	// ahead_R(235);
 // 	ahead_L(218);
 // 	while(read_encoder_counter(RIGHT) < 18);
