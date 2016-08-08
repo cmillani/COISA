@@ -25,6 +25,7 @@ extern "C" {
 #include <inttypes.h>
 #include <avr/io.h>
 #include <timer.h>
+#include <HAL.h>
 #include <ultrasonic.h>
 //Trig = Port D pin 4
 //Echo = Port D pin 5
@@ -36,7 +37,7 @@ uint32_t us_timestamp = 0;
 	
 uint8_t init_ultrassonic(void)
 {
-	us_timestamp = timerOvfcnt*256 + TCNT2;
+	us_timestamp = timer_get_ticks();
 	DDRD |= (1 << PD4); //Trig as Output
 	DDRD &= ~(1 << PD7); //Echo as Input
 }
@@ -47,27 +48,27 @@ uint8_t last_read = ~0;
 
 uint8_t read_ultrassonic(void)
 {
-	if (timerOvfcnt*256 + TCNT2 - us_timestamp < us_debouncing_time) return last_read;
-	us_timestamp = timerOvfcnt*256 + TCNT2;
+	if (timer_get_ticks() - us_timestamp < us_debouncing_time) return last_read;
+	us_timestamp = timer_get_ticks();
 	uint32_t temp = 0; //Used to store time along the function
 	uint32_t timeout = 8000;
 
 	PORTD &= ~(1 << PD4); //First sets to zero the trig pin
-	temp = timerOvfcnt*256 + TCNT2; 
-	while (timerOvfcnt*256 + TCNT2 < temp + 1); //Waits 2us
+	temp = timer_get_ticks(); 
+	while (timer_get_ticks() < temp + 1); //Waits 2us
 	PORTD |= (1 << PD4); //Sends Pulse through trig pin
-	temp = timerOvfcnt*256 + TCNT2;
-	while (timerOvfcnt*256 + TCNT2 < temp + 5); //Pulse has the duration of 10us
+	temp = timer_get_ticks();
+	while (timer_get_ticks() < temp + 5); //Pulse has the duration of 10us
 	PORTD &= ~(1 << PD4); //Sets pin to low again
 	
 	//Here we have the timeout to prevent an infinite loop
-	temp = timerOvfcnt*256 + TCNT2;
-	while (PIND & (1 << PD7)) if (timerOvfcnt*256 + TCNT2 >= temp + timeout) return 255; //Wait until echo is low
-	temp = timerOvfcnt*256 + TCNT2;
-	while (!(PIND & (1 << PD7))) if (timerOvfcnt*256 + TCNT2 >= temp + timeout) return 255; //Wait until echo is high
-	temp = timerOvfcnt*256 + TCNT2;
-	while (PIND & (1 << PD7)) if (timerOvfcnt*256 + TCNT2 >= temp + timeout) return 255; //Starts counting until echo is low again
-	temp = timerOvfcnt*256 + TCNT2 - temp;//Gets the high time of the pulse
+	temp = timer_get_ticks();
+	while (PIND & (1 << PD7)) if (timer_get_ticks() >= temp + timeout) return 255; //Wait until echo is low
+	temp = timer_get_ticks();
+	while (!(PIND & (1 << PD7))) if (timer_get_ticks() >= temp + timeout) return 255; //Wait until echo is high
+	temp = timer_get_ticks();
+	while (PIND & (1 << PD7)) if (timer_get_ticks() >= temp + timeout) return 255; //Starts counting until echo is low again
+	temp = timer_get_ticks() - temp;//Gets the high time of the pulse
 	last_read = temp/conversion_factor;
 	return last_read;//Converts it to the configured Unit System
 }

@@ -169,19 +169,19 @@ void parse_Command(volatile unsigned char * command) {
 		state = receiving_x;
 	} else {
 		send_byte('-');
-		printnum(command[0]);
+		send_byte(command[0]);
 		send_byte('-');
-		printnum(command[1]);
+		send_byte(command[1]);
 		send_byte('-');
-		print_pckg("??-??\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0");
+		print_pckg("\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0");
 	}
 }
 
 void tm_init(void) {
 	/*COISA's Initialization*/
 	eh_init();
-	serial_configure(9600);
 	init_timer();
+	serial_configure(9600);
 	setup_movement();
 #if HAS_ENCODER
 	start_encoder();

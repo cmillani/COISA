@@ -37,7 +37,7 @@ void init_timer(void)
 	sei();
 }
 
-unsigned int timer_get_ticks(void) {
+uint32_t timer_get_ticks(void) {
 	return timerOvfcnt*256 + TCNT2;
 }
 

@@ -77,25 +77,25 @@ void init_button(uint8_t port, uint8_t pin)
 
 ISR(PCINT0_vect)
 {
-	if (timerOvfcnt*256 + TCNT2 - bt_timestamp > bt_debouncing_time)
+	if (timer_get_ticks() - bt_timestamp > bt_debouncing_time)
 	{
-		bt_timestamp = timerOvfcnt*256 + TCNT2;
+		bt_timestamp = timer_get_ticks();
 		if (PINB & (1 << current_pin)) return;
 		else insert_event(1,"BTOG");
 	}
 }
 ISR(PCINT1_vect) {
-	if (timerOvfcnt*256 + TCNT2 - bt_timestamp > bt_debouncing_time)
+	if (timer_get_ticks() - bt_timestamp > bt_debouncing_time)
 	{
-		bt_timestamp = timerOvfcnt*256 + TCNT2;
+		bt_timestamp = timer_get_ticks();
 		if (PINC & (1 << current_pin)) return;
 		else insert_event(1,"BTOG");
 	}
 }
 ISR(PCINT2_vect) {
-	if (timerOvfcnt*256 + TCNT2 - bt_timestamp > bt_debouncing_time)
+	if (timer_get_ticks() - bt_timestamp > bt_debouncing_time)
 	{
-		bt_timestamp = timerOvfcnt*256 + TCNT2;
+		bt_timestamp = timer_get_ticks();
 		if (PIND & (1 << current_pin)) return;	
 		else insert_event(1,"BTOG");
 	}

@@ -24,8 +24,11 @@ extern "C" {
 	
 #include "ARCH_serial.h"
 #include <stdint.h>
+#include <timer.h>
 #include <avr/io.h>
 #include <avr/interrupt.h>
+
+#define TIMEOUT 5000
 
 volatile unsigned char buff_in[20];
 volatile uint8_t buff_in_pos = 0;
@@ -35,12 +38,14 @@ volatile uint8_t buff_out_pos = 0;
 volatile uint8_t has_command = 0;
 
 volatile uint8_t trash;
+volatile uint32_t serial_timestamp = 0;
 
 ISR(USART_RX_vect) {
-	
 	if (has_command) {
 		trash = UDR0;
 	} else {
+		if (timer_get_ticks() - serial_timestamp > TIMEOUT) buff_in_pos = 0;
+		serial_timestamp = timer_get_ticks();
 		buff_in[buff_in_pos++] = UDR0;
 		if (buff_in_pos == 20) { //Buffer full!
 			has_command = 1;
@@ -59,6 +64,7 @@ void send_byte(unsigned char byte)
 // 	while (!(UCSR0A & (1 << RXC0))); // Wait until there is something to read
 // 	return UDR0;
 // }
+
 void serial_configure(unsigned int baudrate)
 {
 	UBRR0H = (16000000/16/baudrate -1 >> 8); //Configure baudrate generator
