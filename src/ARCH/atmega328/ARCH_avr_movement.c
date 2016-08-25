@@ -31,6 +31,8 @@ extern "C" {
 #include <stdint.h>
 #include <stdbool.h>
 #include <math.h>
+#include <magnetometer.h>
+#define PI (3.141592653589793)
 	
 #define MOVE_DURATION 30
 #define KP 0.005
@@ -63,9 +65,9 @@ void setup_movement(void)
 {
 	DDRC |= (1 << DDC4);
 	DDRC |= (1 << DDC0);
-	PORTC |= (1 << PC4);
+	PORTC |= (1 << PC2);
 	PORTC |= (1 << PC0);
-	//a4 and a0 pc4 and pc0
+	//a4 and a0 pc2 and pc0
 	set_PWM(LEF1, 0);
 	set_PWM(LEF0, 0);
 	set_PWM(RIG0, 0);
@@ -75,6 +77,8 @@ void setup_movement(void)
 	target_l = 0;
 	
 	start_encoder();
+	// mag_read();
+	// desired_theta = atan2(mag_x,mag_y) * 180 / PI;
 }
 /**************************************************************/
 
@@ -144,6 +148,149 @@ void control(void)
 // 	print(" ");
 // 	printnum(pow_left);
 // 	print("\n");
+}
+
+extern int desired_theta = 0;
+int32_t ac_theta = 0;
+int last_err_theta = 0;
+
+void theta_control(void) {
+	mag_read();
+	if (desired_theta > 180) {
+		desired_theta -= 360;
+	} else if (desired_theta < -179) {
+		desired_theta += 360;
+	}
+	
+	int theta = (atan2(mag_x,mag_y) * 180 / PI);
+	int error = desired_theta - theta;
+	
+	if (error > 180 ) {
+		error -= 360;
+	} else if (error < -179) {
+		error += 360;
+	}
+	
+	ac_theta += error;
+	if (ac_theta > 120) ac_theta = 120;
+	else if (ac_theta < -120) ac_theta = -120;
+	
+	int newPow = int(error * 4.25 + ac_theta * 0.5 + (error - last_err_theta) * 2);
+	// int newPow = int(ac_theta * 2.0);
+	newPow = newPow > 255? 255:(newPow < -255? -255:newPow);
+	
+	
+	printnum(theta);
+	print("\t");
+	printnum(desired_theta);
+	print("\t");
+	printnum(error);
+	print("\t");
+	printnum(newPow);
+	print("\t");
+	printnum(ac_theta);
+	print("\n");
+	
+	
+	return;
+	if (newPow > 0)
+	{
+		ahead_L(newPow);
+		back_R(newPow);
+	} 
+	else if (newPow < 0)
+	{
+		back_L(-newPow);
+		ahead_R(-newPow);
+	} else {
+		stop_motor_L();
+		stop_motor_R();
+	}
+	
+	last_err_theta = error;
+}
+
+int tick_l = 0;
+int desired_tick_l = 20;
+long int ac_err_l = 0;
+int last_err_l = 0;
+
+void tick_PID_l(void) {
+	tick_l = read_encoder_counter(LEFT);
+	int error = desired_tick_l - tick_l;
+	ac_err_l += error;
+	
+	if (ac_err_l >= 1300) ac_err_l -= error;
+	//kp = 7.5 ou 10
+	//ki = 
+	int newPow = error * 4.5  + ac_err_l * 0.02 + (error - last_err_l) * 2.0;
+	newPow *= (40/desired_tick_l);
+	// print("\t");
+	// printnum(ac_err);
+	// print("\n");
+	
+
+	
+	newPow = newPow > 255? 255:(newPow < -255? -255:newPow);
+	//
+	if (desired_tick_l <= tick_l) {
+		newPow = 0;
+		// print("HERE\n");
+	}
+	
+	if (newPow > 0)
+	{
+		ahead_L(newPow);
+	} 
+	else if (newPow < 0)
+	{
+		back_L(-newPow);
+	} else {
+		stop_motor_L();
+	}
+	last_err_l = error;
+}
+
+
+int tick_r = 0;
+int desired_tick_r = 20;
+long int ac_err_r = 0;
+int last_err_r = 0;
+
+void tick_PID_r(void) {
+	// P 40 ticks 4.5, 0.02 e 2
+	tick_r = read_encoder_counter(RIGHT);
+	int error = desired_tick_r - tick_r;
+	ac_err_r += error;
+	
+	if (ac_err_r >= 1300) ac_err_r -= error;
+	//kp = 7.5 ou 10
+	//ki = 
+	int newPow = error * 4.5 + ac_err_r * 0.02 + (error - last_err_r) * 2.0;
+	newPow *= newPow *= (40/desired_tick_r);
+	// print("\t");
+	// printnum(ac_err);
+	// print("\n");
+	
+	
+	newPow = newPow > 255? 255:(newPow < -255? -255:newPow);
+	//
+	if (desired_tick_r <= tick_r) {
+		newPow = 0;
+		// print("HERE\n");
+	}
+	
+	if (newPow > 0)
+	{
+		ahead_R(newPow);
+	} 
+	else if (newPow < 0)
+	{
+		back_R(-newPow);
+	} else {
+		stop_motor_R();
+	}
+	last_err_r = error;
 }
 
 float KpL = 1.0;

@@ -18,41 +18,25 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
+
 #ifdef __cplusplus
 extern "C" {
-#endif
+#endif 
 	
-#ifndef ARCH_MOVEMENT
-#define ARCH_MOVEMENT
+#ifndef ARCHI2C_H
+#define ARCHI2C_H
 	
-void ahead(void);
-void turn_left(void);
-void turn_right(void);
-void setup_movement(void);
+void i2c_init(void);
 
-void reset_variables();
-
-void ahead_L(int power);
-void ahead_R(int power);
-void back_R(int power);
-void back_L(int power);
-void stop_motor_L(void);//Turn off left motor
-void stop_motor_R(void);//Turn off right motor 
-void control(void);
-void PID(void);
-void PID_ON(void);
-void set_targetRPM_R(int rpm);
-void set_targetRPM_L(int rpm);
-
-void tick_PID_r(void);
-void tick_PID_l(void);
-extern int desired_tick_r;
-
-void theta_control(void);
-extern int desired_theta;
-
-#endif
-
+void i2c_start(void);
+void i2c_stop(void);
+void i2c_write(uint8_t u8data);
+uint8_t i2c_readACK(void);
+uint8_t i2c_readNACK(void);
+uint8_t i2c_get_status(void);
+	
+#endif //ARCHI2C_H
+	
 #ifdef __cplusplus
 }
 #endif

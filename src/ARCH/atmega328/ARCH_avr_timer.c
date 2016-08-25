@@ -31,7 +31,7 @@ extern "C" {
 
 void init_timer(void)
 {	
-	TCCR2B |= (1 << CS21) | (1 << CS20);
+	TCCR2B |= (1 << CS21) | (1 << CS20); //Prescaler = 32
 	TCNT2 = 0;
 	TIMSK2 |= (1 << TOIE2);
 	sei();

@@ -22,34 +22,11 @@
 extern "C" {
 #endif
 	
-#ifndef ARCH_MOVEMENT
-#define ARCH_MOVEMENT
+#ifndef ARCH_IMU
+#define ARCH_IMU
 	
-void ahead(void);
-void turn_left(void);
-void turn_right(void);
-void setup_movement(void);
-
-void reset_variables();
-
-void ahead_L(int power);
-void ahead_R(int power);
-void back_R(int power);
-void back_L(int power);
-void stop_motor_L(void);//Turn off left motor
-void stop_motor_R(void);//Turn off right motor 
-void control(void);
-void PID(void);
-void PID_ON(void);
-void set_targetRPM_R(int rpm);
-void set_targetRPM_L(int rpm);
-
-void tick_PID_r(void);
-void tick_PID_l(void);
-extern int desired_tick_r;
-
-void theta_control(void);
-extern int desired_theta;
+void read_IMU(void);
+void init_IMU(void);
 
 #endif
 

@@ -22,37 +22,62 @@
 extern "C" {
 #endif
 	
-#ifndef ARCH_MOVEMENT
-#define ARCH_MOVEMENT
+#include <stdint.h>
+#include <timer.h>
+#include <avr/io.h>
+#include <avr/interrupt.h>
+#include <ARCH_i2c.h>
 	
-void ahead(void);
-void turn_left(void);
-void turn_right(void);
-void setup_movement(void);
+void i2c_init(void) {
+	//set SCL to 400kHz
+    TWSR = 0x00;
+    TWBR = 0x0C;
+    //enable TWI
+    TWCR = (1<<TWEN);
+}
 
-void reset_variables();
+void i2c_start(void)
+{
+    TWCR = (1<<TWINT)|(1<<TWSTA)|(1<<TWEN);
+    while ((TWCR & (1<<TWINT)) == 0);
+}
+//send stop signal
+void i2c_stop(void)
+{
+    TWCR = (1<<TWINT)|(1<<TWSTO)|(1<<TWEN);
+	while(TWCR & (1<<TWSTO));
+	// while ((TWCR & (1<<TWINT)) == 0);
+}
 
-void ahead_L(int power);
-void ahead_R(int power);
-void back_R(int power);
-void back_L(int power);
-void stop_motor_L(void);//Turn off left motor
-void stop_motor_R(void);//Turn off right motor 
-void control(void);
-void PID(void);
-void PID_ON(void);
-void set_targetRPM_R(int rpm);
-void set_targetRPM_L(int rpm);
+void i2c_write(uint8_t u8data)
+{
+    TWDR = u8data;
+    TWCR = (1<<TWINT)|(1<<TWEN);
+    while ((TWCR & (1<<TWINT)) == 0);
+}
 
-void tick_PID_r(void);
-void tick_PID_l(void);
-extern int desired_tick_r;
+uint8_t i2c_readACK(void)
+{
+    TWCR = (1<<TWINT)|(1<<TWEN)|(1<<TWEA);
+    while ((TWCR & (1<<TWINT)) == 0);
+    return TWDR;
+}
+//read byte with NACK
+uint8_t i2c_readNACK(void)
+{
+    TWCR = (1<<TWINT)|(1<<TWEN);
+    while ((TWCR & (1<<TWINT)) == 0);
+    return TWDR;
+}
 
-void theta_control(void);
-extern int desired_theta;
-
-#endif
-
+uint8_t i2c_get_status(void)
+{
+    uint8_t status;
+    //mask status
+    status = TWSR & 0xF8;
+    return status;
+}
+	
 #ifdef __cplusplus
 }
 #endif

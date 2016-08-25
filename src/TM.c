@@ -29,6 +29,11 @@ extern "C" {
 #include <vm.h>
 #include <stdutils.h>
 #include <inttypes.h>
+#include <i2c.h>
+// #include <magnetometer.h>
+#include <math.h>
+#include <IMU.h>
+#define PI (3.141592653589793)
 
 uint32_t tm_counter = 0;
 uint16_t tot_size = 0;
@@ -189,19 +194,71 @@ void tm_init(void) {
 #if HAS_ULTRASONIC
 	init_ultrassonic();
 #endif
-	
+	print("Will Init\n");
+	i2c_init();
+	// mag_init();
 	// while(1) {
 // 		printnum(read_ultrassonic());
 // 		print("\n");
 // 	}
 	// ahead_R(235);
-// 	ahead_L(218);
+	// ahead_L(218);
+	init_IMU();
+	
+	
+	uint32_t timestamp = 0;
+	// reset_counter(RIGHT);
+	// reset_counter(LEFT);
+	while(1) {
+		if (timer_get_ticks() - timestamp > 30000) {
+			read_IMU();
+			timestamp = timer_get_ticks();
+		}
+	}
+	// while(1) {
+	// 	mag_read();
+	// 	printnum((atan2(mag_x,mag_y) * 180 / PI));
+	// 	print("\n");
+	// 	if (timer_get_ticks() - timestamp > 3000000) {
+	// 		//ahead_L(250);
+	// 		//ahead_R(250);
+	// 	}
+	// }
+	// desired_theta = (atan2(mag_x,mag_y) * 180 / PI) + 90;
+	// printnum(desired_theta);
+	// print("\n");
+	while(1) {
+		if (timer_get_ticks() - timestamp > 5000) {
+			// print("Inside\n");
+// 			tick_PID_l();
+			// theta_control();
+// 			tick_PID_r();
+			// mag_read();
+			timestamp = timer_get_ticks();
+// 			printnum(read_encoder_counter(LEFT));
+// 			print("\t");
+// 			printnum(read_encoder_counter(RIGHT));
+// 			print("\n");
+			// printnum(atan2(mag_x,mag_y) * 180 / PI);
+			// printnum(mag_x);
+			// print("\t");
+			// printnum(atan2(mag_y,mag_z) * 180 / PI);
+			// printnum(mag_y);
+			// print("<<\t");
+			// printnum(atan2(mag_x,mag_z) * 180 / PI);
+			// printnum(mag_z);
+			// print("\n");
+		}
+	}
+	
+	// ahead_L(218);
+// 	back_R(218);
 // 	while(read_encoder_counter(RIGHT) < 18);
 // 	reset_counter(RIGHT);
 // 	reset_counter(LEFT);
-// 	ahead_L(218);
-// 	back_R(235);
-// 	while(read_encoder_counter(RIGHT) < 8);
+// 	ahead_R(218);
+// 	back_L(218);
+// 	while(read_encoder_counter(RIGHT) < 18);
 // 	ahead_R(0);
 // 	ahead_L(0);
 // 	while(1);
