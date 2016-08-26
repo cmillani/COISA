@@ -30,7 +30,7 @@ extern "C" {
 #include <stdutils.h>
 #include <inttypes.h>
 #include <i2c.h>
-// #include <magnetometer.h>
+#include <magnetometer.h>
 #include <math.h>
 #include <IMU.h>
 #define PI (3.141592653589793)
@@ -121,15 +121,25 @@ void moving(void) {
 // 		vm_release();
 // 		state = breaking;
 //}
-	if (read_encoder_counter(RIGHT) >= encd_movdone){
+	if (isTurning) return;
+	else if (isMoving && read_encoder_counter(RIGHT) >= encd_movdone){
 		ahead_R(0);
 		ahead_L(0);
+		set_targetRPM_R(0);
+		set_targetRPM_R(0);
+		isMoving = 0;
 		vm_release();
+		state = executing;
 		// printnum(read_encoder_counter(LEFT));
 		// print("\t");
 		// printnum(read_encoder_counter(RIGHT));
 		// print("\n");
-		state = breaking;
+		// state = breaking;	
+	} 
+	else if (isMoving) return;
+	else {
+		vm_release();
+		state = executing;
 	}
 }
 
@@ -196,25 +206,25 @@ void tm_init(void) {
 #endif
 	print("Will Init\n");
 	i2c_init();
-	// mag_init();
+	mag_init();
 	// while(1) {
 // 		printnum(read_ultrassonic());
 // 		print("\n");
 // 	}
 	// ahead_R(235);
 	// ahead_L(218);
-	init_IMU();
+	// init_IMU();
 	
 	
 	uint32_t timestamp = 0;
 	// reset_counter(RIGHT);
 	// reset_counter(LEFT);
-	while(1) {
-		if (timer_get_ticks() - timestamp > 30000) {
-			read_IMU();
-			timestamp = timer_get_ticks();
-		}
-	}
+	// while(1) {
+	// 	if (timer_get_ticks() - timestamp > 30000) {
+	// 		read_IMU();
+	// 		timestamp = timer_get_ticks();
+	// 	}
+	// }
 	// while(1) {
 	// 	mag_read();
 	// 	printnum((atan2(mag_x,mag_y) * 180 / PI));
@@ -227,14 +237,14 @@ void tm_init(void) {
 	// desired_theta = (atan2(mag_x,mag_y) * 180 / PI) + 90;
 	// printnum(desired_theta);
 	// print("\n");
-	while(1) {
-		if (timer_get_ticks() - timestamp > 5000) {
+	// while(1) {
+	// }
 			// print("Inside\n");
 // 			tick_PID_l();
-			// theta_control();
+
 // 			tick_PID_r();
 			// mag_read();
-			timestamp = timer_get_ticks();
+			
 // 			printnum(read_encoder_counter(LEFT));
 // 			print("\t");
 // 			printnum(read_encoder_counter(RIGHT));
@@ -248,8 +258,7 @@ void tm_init(void) {
 			// printnum(atan2(mag_x,mag_z) * 180 / PI);
 			// printnum(mag_z);
 			// print("\n");
-		}
-	}
+
 	
 	// ahead_L(218);
 // 	back_R(218);
@@ -270,6 +279,10 @@ void tm_init(void) {
 	/*Coisa VM cpu, HAL, EH and TM loop*/
     while(1)
     {
+		if (isTurning && timer_get_ticks() - timestamp > 30000) {
+			theta_control();
+			timestamp = timer_get_ticks();
+		}
 		if (has_command) {
 			parse_Command(buff_in);
 		}
@@ -278,15 +291,18 @@ void tm_init(void) {
 			if (state == breaking) {
 				breaking_count++;
 			}
-			// tm_counter++;
+			tm_counter++;
 			timed_polling();
 			timer_flag = 0;
 		#if HAS_MOTORS
-			// if (tm_counter >= 4) //Every 4 timer interruptions, should check for PID controlling
-			// {
-				// PID();
-				// tm_counter = 0;
-			// }
+			if (isTurning) {
+				theta_control();
+			}
+			else if (tm_counter >= 4 && isMoving) //Every 4 timer interruptions, should check for PID controlling
+			{
+				PID();
+				tm_counter = 0;
+			}
 		#endif
 			if (state == idle) //Doesn't interrupts other functions - All funcs must be non blocking
 			{

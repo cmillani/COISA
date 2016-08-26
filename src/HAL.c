@@ -25,6 +25,9 @@ extern "C" {
 #include <HAL.h>
 #include "vm.h"
 #include <stdutils.h>
+#include <magnetometer.h>
+#include <math.h>
+#define PI (3.141592653589793)
 	
 #if PRINTING
 #include <stdio.h>
@@ -197,32 +200,37 @@ uint8_t hal_call(uint32_t sensid, char identifier[])//Call to hardware I/O
 			}
 			case 21: { //Forward
 				// reset_variables();
-				// set_targetRPM_L(80);
-				// set_targetRPM_R(80);
-				reset_counter(RIGHT);
-				reset_counter(LEFT);
-				ahead_L(218);
-				ahead_R(228);
+				set_targetRPM_L(80);
+				set_targetRPM_R(80);
+				isMoving = 1;
+				// reset_counter(RIGHT);
+				// reset_counter(LEFT);
+				// ahead_L(218);
+				// ahead_R(228);
 				break;
 			}
 			case 22: { //Left
 				// reset_variables();
 				// set_targetRPM_L(-80);
 				// set_targetRPM_R(80);
-				reset_counter(RIGHT);
-				reset_counter(LEFT);
-				back_L(235);
-				ahead_R(218);
+				// reset_counter(RIGHT);
+				// reset_counter(LEFT);
+				desired_theta = (atan2(mag_x,mag_y) * 180 / PI) + 90;
+				isTurning = 1;
+				// back_L(235);
+				// ahead_R(218);
 				break;
 			}
 			case 23: { //Right
 				// reset_variables();
 				// set_targetRPM_L(80);
 				// set_targetRPM_R(-80);
-				reset_counter(RIGHT);
-				reset_counter(LEFT);
-				ahead_L(235);
-				back_R(218);
+				// reset_counter(RIGHT);
+				// reset_counter(LEFT);
+				desired_theta = (atan2(mag_x,mag_y) * 180 / PI) - 90;
+				isTurning = 1;
+				// ahead_L(235);
+				// back_R(218);
 				break;
 			}
 			case 24: { //Stop

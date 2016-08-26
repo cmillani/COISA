@@ -25,6 +25,9 @@ extern "C" {
 #ifndef ARCH_MOVEMENT
 #define ARCH_MOVEMENT
 	
+extern uint8_t isTurning;
+extern uint8_t isMoving;
+	
 void ahead(void);
 void turn_left(void);
 void turn_right(void);

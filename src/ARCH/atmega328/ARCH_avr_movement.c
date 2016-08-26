@@ -32,6 +32,7 @@ extern "C" {
 #include <stdbool.h>
 #include <math.h>
 #include <magnetometer.h>
+#include <i2c.h>
 #define PI (3.141592653589793)
 	
 #define MOVE_DURATION 30
@@ -77,8 +78,10 @@ void setup_movement(void)
 	target_l = 0;
 	
 	start_encoder();
-	// mag_read();
-	// desired_theta = atan2(mag_x,mag_y) * 180 / PI;
+	i2c_init();
+	mag_init();
+	mag_read();
+	desired_theta = atan2(mag_x,mag_y) * 180 / PI;
 }
 /**************************************************************/
 
@@ -154,6 +157,9 @@ extern int desired_theta = 0;
 int32_t ac_theta = 0;
 int last_err_theta = 0;
 
+uint8_t isTurning = 0;
+uint8_t isMoving = 0;
+
 void theta_control(void) {
 	mag_read();
 	if (desired_theta > 180) {
@@ -172,36 +178,46 @@ void theta_control(void) {
 	}
 	
 	ac_theta += error;
-	if (ac_theta > 120) ac_theta = 120;
-	else if (ac_theta < -120) ac_theta = -120;
+	if (ac_theta > 100) ac_theta = 100;
+	else if (ac_theta < -100) ac_theta = -100;
 	
-	int newPow = int(error * 4.25 + ac_theta * 0.5 + (error - last_err_theta) * 2);
+	int newPow = int(error * 4.0 + ac_theta * 0.0 + (error - last_err_theta) * 10.0);
+	
+	if (newPow > 0) newPow += 120;
+	else if (newPow < 0) newPow -= 120;
 	// int newPow = int(ac_theta * 2.0);
 	newPow = newPow > 255? 255:(newPow < -255? -255:newPow);
 	
+	if ((error < 0?-error:error) < 3) newPow = 0;
 	
-	printnum(theta);
-	print("\t");
-	printnum(desired_theta);
-	print("\t");
-	printnum(error);
-	print("\t");
-	printnum(newPow);
-	print("\t");
-	printnum(ac_theta);
-	print("\n");
+	if ((error < 0?-error:error) < 3 && (error - last_err_theta) == 0) {
+		isTurning = 0;
+	}
+	
+	// printnum(theta);
+	// print("\t");
+	// printnum(desired_theta);
+	// print("\t");
+	// printnum(error);
+	// print("\t");
+	// printnum(newPow);
+	// print("\t");
+	// printnum(ac_theta);
+	// print("\n");
+	// printnum(error - last_err_theta);
+	// print("\n");
 	
 	
-	return;
+	// return;
 	if (newPow > 0)
 	{
-		ahead_L(newPow);
-		back_R(newPow);
+		ahead_R(newPow);
+		back_L(newPow);
 	} 
 	else if (newPow < 0)
 	{
-		back_L(-newPow);
-		ahead_R(-newPow);
+		back_R(-newPow);
+		ahead_L(-newPow);
 	} else {
 		stop_motor_L();
 		stop_motor_R();
@@ -293,11 +309,11 @@ void tick_PID_r(void) {
 	last_err_r = error;
 }
 
-float KpL = 1.0;
+float KpL = 1.3;
 float KiL = 0.35;
 float KdL = 0.8;
 
-float KpR = 1.1;
+float KpR = 1.5;
 float KiR = 0.37;
 float KdR = 0.82;
 
@@ -371,8 +387,8 @@ void PID(void)
 	float dr = pr - last_pl;
 	float dl = pl - last_pr;
 	
-	resl = (KpL * pl + KiL * il + KdL * dl) + (KpT * xdiff + KiT * i_xdiff);
-	resr = (KpR * pr + KiR * ir + KdR * dr) - (KpT * xdiff + KiT * i_xdiff);
+	resl = (KpL * pl + KiL * il + KdL * dl);// + (KpT * xdiff + KiT * i_xdiff);
+	resr = (KpR * pr + KiR * ir + KdR * dr);// - (KpT * xdiff + KiT * i_xdiff);
 	
 	// printnum(KpL * pl);
 	// print("\t");
@@ -391,6 +407,12 @@ void PID(void)
 	
 	pow_right = (int)resr;
 	pow_left = (int)resl;
+	
+	// if (pow_right > 0) pow_right += 120;
+	// else if (pow_right < 0) pow_right -= 120;
+	//
+	// if (pow_left > 0) pow_left += 120;
+	// else if (pow_left < 0) pow_left -= 120;
 	
 	if (pow_right > 255) pow_right = 255;
 	else if (pow_right < -255) pow_right = -255;
