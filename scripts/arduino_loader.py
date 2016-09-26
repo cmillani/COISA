@@ -2,6 +2,8 @@ import serial
 import sys
 import time
 
+import signal
+
 # print sys.argv[1]
 print "Starting"
 file = open(sys.argv[1], 'rb')
@@ -9,13 +11,24 @@ executable = file.read()
 # print len(executable)
 
 # zero = serial.Serial("/dev/tty.Zero-DevB") # Upload using bluetooth
-if len(sys.argv) >= 3 and sys.argv[2] == "-bt":
-    # zero = serial.Serial("/dev/tty.CoisaBot-DevB") # Upload using bluetooth
-    zero = serial.Serial("/dev/tty.COLABOT2-DevB") # Upload using bluetooth
-elif len(sys.argv) >= 4 and sys.argv[2] == "-sim":
-    zero = serial.Serial(sys.argv[3])
-else:
-    zero = serial.Serial("/dev/cu.usbmodem1411") # Upload using USB
+try:
+	if len(sys.argv) >= 3 and sys.argv[2] == "-bt":
+	    # zero = serial.Serial("/dev/tty.CoisaBot-DevB") # Upload using bluetooth
+	    zero = serial.Serial("/dev/tty.COLABOT2-DevB") # Upload using bluetooth
+	elif len(sys.argv) >= 4 and sys.argv[2] == "-sim":
+	    zero = serial.Serial(sys.argv[3])
+	else:
+	    zero = serial.Serial("/dev/cu.usbmodem1411") # Upload using USB
+except Exception:
+		print('Unable to connect')
+		sys.exit(0)
+	
+def should_stop(signal, frame):
+	print('\nExiting!')
+	zero.close()
+	sys.exit(0)
+signal.signal(signal.SIGINT, should_stop)
+
 time.sleep(2) # make sure the connection is ok
 
 print len(executable)
@@ -63,5 +76,3 @@ while True:
     
     # if (received == '\0'):
     #     break
-zero.close()
-print "End"

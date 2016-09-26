@@ -37,3 +37,4 @@ tests/*.o*
 #Binaries
 bin/*[!avr_static]
 benchmarks/models/*
+benchmarks/blockly/*
