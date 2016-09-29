@@ -212,27 +212,47 @@ uint8_t hal_call(uint32_t sensid, char identifier[])//Call to hardware I/O
 				break;
 			}
 			case 22: { //Left
+				reset_variables();
+				set_targetRPM_L(110);
+				set_targetRPM_R(110);
+				isMoving = 1;
+				isMoving_l = 1;
+				isMoving_r = 1;
+				set_target_tick_L(-18);
+				set_target_tick_R(18);
+				reset_counter(RIGHT);
+				reset_counter(LEFT);
 				// reset_variables();
 				// set_targetRPM_L(-80);
 				// set_targetRPM_R(80);
 				// reset_counter(RIGHT);
 				// reset_counter(LEFT);
 				// mag_read();
-				desired_theta += 90;//(atan2(mag_x,mag_y) * 180 / PI) + 90;
-				isTurning = 1;
+				// desired_theta += 90;//(atan2(mag_x,mag_y) * 180 / PI) + 90;
+				// isTurning = 1;
 				// back_L(235);
 				// ahead_R(218);
 				break;
 			}
 			case 23: { //Right
+				reset_variables();
+				set_targetRPM_L(110);
+				set_targetRPM_R(110);
+				isMoving = 1;
+				isMoving_l = 1;
+				isMoving_r = 1;
+				set_target_tick_L(18);
+				set_target_tick_R(-18);
+				reset_counter(RIGHT);
+				reset_counter(LEFT);
 				// reset_variables();
 				// set_targetRPM_L(80);
 				// set_targetRPM_R(-80);
 				// reset_counter(RIGHT);
 				// reset_counter(LEFT);
 				// mag_read();
-				desired_theta -= 90;// (atan2(mag_x,mag_y) * 180 / PI) - 90;
-				isTurning = 1;
+				// desired_theta -= 90;// (atan2(mag_x,mag_y) * 180 / PI) - 90;
+				// isTurning = 1;
 				// ahead_L(235);
 				// back_R(218);
 				break;

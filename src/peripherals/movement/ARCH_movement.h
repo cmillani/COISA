@@ -49,6 +49,9 @@ void PID_ON(void);
 void set_targetRPM_R(int rpm);
 void set_targetRPM_L(int rpm);
 
+void set_target_tick_L(int ticks);
+void set_target_tick_R(int ticks);
+
 void tick_PID_r(void);
 void tick_PID_l(void);
 extern int desired_tick_r;

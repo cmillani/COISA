@@ -66,7 +66,7 @@ void setup_movement(void)
 {
 	DDRC |= (1 << DDC4);
 	DDRC |= (1 << DDC0);
-	PORTC |= (1 << PC2);
+	PORTC |= (1 << PC4);
 	PORTC |= (1 << PC0);
 	//a4 and a0 pc2 and pc0
 	set_PWM(LEF1, 0);
@@ -78,10 +78,10 @@ void setup_movement(void)
 	target_l = 0;
 	
 	start_encoder();
-	i2c_init();
-	mag_init();
-	mag_read();
-	desired_theta = atan2(mag_x,mag_y) * 180 / PI;
+	// i2c_init();
+	// mag_init();
+	// mag_read();
+	// desired_theta = atan2(mag_x,mag_y) * 180 / PI;
 }
 /**************************************************************/
 
@@ -164,7 +164,7 @@ uint8_t isMoving_r = 0;
 uint8_t isMoving_l = 0;
 
 void theta_control(void) {
-	mag_read();
+	// mag_read();
 	if (desired_theta > 180) {
 		desired_theta -= 360;
 	} else if (desired_theta < -179) {
@@ -217,7 +217,6 @@ void theta_control(void) {
 int pow_r_corr = 0;
 int pow_l_corr = 0;
 
-
 int tick_l = 0;
 int desired_tick_l = 40;
 long int ac_err_l = 0;
@@ -269,7 +268,7 @@ void tick_PID_l(void) {
 	}
 	
 	if (((int32_t)newPow)*last_pow_l < 0 && newPow != 0 && last_pow_l != 0) {
-		offset_l = tick_l;
+		offset_l = read_encoder_counter(LEFT);
 		desired_tick_l = desired_tick_l - tick_l;
 	}
 	
@@ -337,7 +336,7 @@ void tick_PID_r(void) {
 	}
 	
 	if (((int32_t)newPow)*last_pow_r < 0 && newPow != 0 && last_pow_r != 0) {
-		offset_r = tick_r;
+		offset_r = read_encoder_counter(RIGHT);
 		desired_tick_r = desired_tick_r - tick_r;
 	}
 	
@@ -353,6 +352,13 @@ void tick_PID_r(void) {
 	
 	last_err_r = error;
 	last_pow_r = newPow;
+}
+
+void set_target_tick_L(int ticks) {
+	desired_tick_l = ticks;
+}
+void set_target_tick_R(int ticks) {
+	desired_tick_r = ticks;
 }
 
 float KpL = 2.0;//0.25

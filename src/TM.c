@@ -181,8 +181,8 @@ void tm_init(void) {
 	init_ultrassonic();
 #endif
 	print("Will Init\n");
-	i2c_init();
-	mag_init();
+	// i2c_init();
+	// mag_init();
 	
 	uint32_t timestamp = 0;
 
