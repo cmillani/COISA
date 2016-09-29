@@ -254,8 +254,8 @@ void tick_PID_l(void) {
 	if ((error < 0?-error:error) < 2) newPow = 0;
 	
 	if ((error < 0?-error:error) < 2 && (error - last_err_l) == 0) {
-		printnum(tick_l);
-		print("L\n");
+		// printnum(tick_l);
+		// print("L\n");
 		isMoving_l = 0;
 		ac_err_l = 0;
 		last_err_l = 0;
@@ -322,8 +322,8 @@ void tick_PID_r(void) {
 	if ((error < 0?-error:error) < 2) newPow = 0;
 	
 	if ((error < 0?-error:error) < 2 && (error - last_err_r) == 0) {
-		printnum(tick_r);
-		print("R\n");
+		// printnum(tick_r);
+		// print("R\n");
 		isMoving_r = 0;
 		ac_err_r = 0;
 		last_err_r = 0;

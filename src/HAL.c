@@ -225,7 +225,6 @@ uint8_t hal_call(uint32_t sensid, char identifier[])//Call to hardware I/O
 				break;
 			}
 			case 23: { //Right
-				print("WillTurn\n");
 				// reset_variables();
 				// set_targetRPM_L(80);
 				// set_targetRPM_R(-80);
