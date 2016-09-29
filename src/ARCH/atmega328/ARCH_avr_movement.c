@@ -160,6 +160,9 @@ int last_err_theta = 0;
 uint8_t isTurning = 0;
 uint8_t isMoving = 0;
 
+uint8_t isMoving_r = 0;
+uint8_t isMoving_l = 0;
+
 void theta_control(void) {
 	mag_read();
 	if (desired_theta > 180) {
@@ -194,21 +197,6 @@ void theta_control(void) {
 		isTurning = 0;
 	}
 	
-	// printnum(theta);
-	// print("\t");
-	// printnum(desired_theta);
-	// print("\t");
-	// printnum(error);
-	// print("\t");
-	// printnum(newPow);
-	// print("\t");
-	// printnum(ac_theta);
-	// print("\n");
-	// printnum(error - last_err_theta);
-	// print("\n");
-	
-	
-	// return;
 	if (newPow > 0)
 	{
 		ahead_R(newPow);
@@ -226,96 +214,154 @@ void theta_control(void) {
 	last_err_theta = error;
 }
 
+int pow_r_corr = 0;
+int pow_l_corr = 0;
+
+
 int tick_l = 0;
-int desired_tick_l = 20;
+int desired_tick_l = 40;
 long int ac_err_l = 0;
 int last_err_l = 0;
+int last_pow_l = 0;
+int offset_l = 0;
 
 void tick_PID_l(void) {
-	tick_l = read_encoder_counter(LEFT);
+	tick_l = read_encoder_counter(LEFT) - offset_l;
+	
+	if (last_pow_l < 0) tick_l = -tick_l;
+	
 	int error = desired_tick_l - tick_l;
+	
 	ac_err_l += error;
 	
-	if (ac_err_l >= 1300) ac_err_l -= error;
-	//kp = 7.5 ou 10
-	//ki = 
-	int newPow = error * 4.5  + ac_err_l * 0.02 + (error - last_err_l) * 2.0;
-	newPow *= (40/desired_tick_l);
+	int newPow = int(error * 10.0 + (error - last_err_l) * 10.0);
+
+	if (newPow > 0) newPow += 150;
+	else if (newPow < 0 ) newPow -= 150;
+
+	newPow = newPow > 230? 230:(newPow < -230? -230:newPow);
+
+	if ((error < 0?-error:error) > 5) newPow += ((error < 0)?-pow_l_corr:pow_l_corr);
+	
+	// printnum(newPow);
 	// print("\t");
-	// printnum(ac_err);
+	// printnum(pow_l_corr);
 	// print("\n");
-	
 
+	newPow = newPow > 230? 230:(newPow < -230? -230:newPow);
 	
-	newPow = newPow > 255? 255:(newPow < -255? -255:newPow);
+	
+	if ((error < 0?-error:error) < 2) newPow = 0;
+	
+	if ((error < 0?-error:error) < 2 && (error - last_err_l) == 0) {
+		printnum(tick_l);
+		print("L\n");
+		isMoving_l = 0;
+		ac_err_l = 0;
+		last_err_l = 0;
+		desired_tick_l = 40;
+		offset_l = 0;
+		set_targetRPM_L(0);
+		// reset_counter(LEFT);
+		if (!isMoving) {
+			reset_variables();
+		}
+	}
+	
+	if (((int32_t)newPow)*last_pow_l < 0 && newPow != 0 && last_pow_l != 0) {
+		offset_l = tick_l;
+		desired_tick_l = desired_tick_l - tick_l;
+	}
+	
+	// printnum(tick_l);
+	// print("Ticks\n");
 	//
-	if (desired_tick_l <= tick_l) {
-		newPow = 0;
-		// print("HERE\n");
-	}
+	// printnum(desired_tick_l);
+	// print("desire\n");
 	
-	if (newPow > 0)
-	{
-		ahead_L(newPow);
-	} 
-	else if (newPow < 0)
-	{
-		back_L(-newPow);
-	} else {
-		stop_motor_L();
-	}
+	pow_left = newPow;
+	
+	update_powers();
+	
 	last_err_l = error;
+	last_pow_l = newPow;
 }
-
 
 int tick_r = 0;
-int desired_tick_r = 20;
+int desired_tick_r = 40;
 long int ac_err_r = 0;
 int last_err_r = 0;
+int last_pow_r = 0;
+int offset_r = 0;
+
 
 void tick_PID_r(void) {
-	// P 40 ticks 4.5, 0.02 e 2
-	tick_r = read_encoder_counter(RIGHT);
+	tick_r = read_encoder_counter(RIGHT) - offset_r;
+	
+	if (last_pow_r < 0) tick_r = -tick_r;
+	
 	int error = desired_tick_r - tick_r;
+	
 	ac_err_r += error;
 	
-	if (ac_err_r >= 1300) ac_err_r -= error;
-	//kp = 7.5 ou 10
-	//ki = 
-	int newPow = error * 4.5 + ac_err_r * 0.02 + (error - last_err_r) * 2.0;
-	newPow *= newPow *= (40/desired_tick_r);
+	int newPow = int(error * 12.0 + (error - last_err_r) * 10.0);
+
+	if (newPow > 0) newPow += 150;
+	else if (newPow < 0 ) newPow -= 150;
+
+	newPow = newPow > 230? 230:(newPow < -230? -230:newPow);
+	if ((error < 0?-error:error) > 5) newPow += ((error < 0)?-pow_r_corr:pow_r_corr);
+	
+	// printnum(newPow);
 	// print("\t");
-	// printnum(ac_err);
+	// printnum(pow_r_corr);
 	// print("\n");
+
+	newPow = newPow > 230? 230:(newPow < -230? -230:newPow);
 	
+	if ((error < 0?-error:error) < 2) newPow = 0;
 	
-	newPow = newPow > 255? 255:(newPow < -255? -255:newPow);
+	if ((error < 0?-error:error) < 2 && (error - last_err_r) == 0) {
+		printnum(tick_r);
+		print("R\n");
+		isMoving_r = 0;
+		ac_err_r = 0;
+		last_err_r = 0;
+		desired_tick_r = 40;
+		offset_r = 0;
+		set_targetRPM_R(0);
+		// reset_counter(RIGHT);
+		if (!isMoving) {
+			reset_variables();
+		}
+	}
+	
+	if (((int32_t)newPow)*last_pow_r < 0 && newPow != 0 && last_pow_r != 0) {
+		offset_r = tick_r;
+		desired_tick_r = desired_tick_r - tick_r;
+	}
+	
+	// printnum(tick_r);
+	// print("Ticks\n");
 	//
-	if (desired_tick_r <= tick_r) {
-		newPow = 0;
-		// print("HERE\n");
-	}
+	// printnum(desired_tick_r);
+	// print("desire\n");
 	
-	if (newPow > 0)
-	{
-		ahead_R(newPow);
-	} 
-	else if (newPow < 0)
-	{
-		back_R(-newPow);
-	} else {
-		stop_motor_R();
-	}
+	pow_right = newPow;
+	
+	update_powers();
+	
 	last_err_r = error;
+	last_pow_r = newPow;
 }
 
-float KpL = 1.3;
-float KiL = 0.35;
-float KdL = 0.8;
+float KpL = 2.0;//0.25
+float KiL = 0.50;//0.12
+float KdL = 0.05;
 
-float KpR = 1.5;
-float KiR = 0.37;
-float KdR = 0.82;
+float KpR = 2.00;//0.25
+float KiR = 0.50;//0.12-
+float KdR = 0.05;
 
 float KpT = 0.0;
 float KiT = 0.0;
@@ -361,7 +407,7 @@ void PID(void)
 	now_r = read_encoder_counter(RIGHT);
 	now_l = read_encoder_counter(LEFT);
 	
-	float xdiff = (now_r*(target_l) - now_l*(target_r))*0.8 + last_xdiff * 0.2;
+	float xdiff = (now_r*(target_l) - now_l*(target_r))/*0.8 + last_xdiff * 0.2*/;
 	i_xdiff += xdiff;
 	float d_xdiff = xdiff - last_xdiff;
 	//Ver relação entre rpms pra definir relação entre ticks e fazer essa conta aqui de cima direito
@@ -372,13 +418,13 @@ void PID(void)
 	if (now_time != last_time)
 	{
 		rpm_r = (now_r-last_r)*23437.5/(now_time-last_time);
-		if (resr < 0) rpm_r *= -1;
+		// if (resr < 0) rpm_r *= -1;
 		rpm_l = (now_l-last_l)*23437.5/(now_time-last_time);
-		if (resl < 0) rpm_l *= -1;
-	}
+		// if (resl < 0) rpm_l *= -1;
+	} else return;
 
-	float filtered_r = 0.5*last_rpm_r + 0.5*rpm_r;
-	float filtered_l = 0.5*last_rpm_l + 0.5*rpm_l;
+	float filtered_r = /*0.5*last_rpm_r + 0.5*/rpm_r;
+	float filtered_l = /*0.5*last_rpm_l + 0.5*/rpm_l;
 	
 	float pl = target_l - filtered_l;
 	float pr = target_r - filtered_r;
@@ -405,8 +451,24 @@ void PID(void)
 	// printnum(now_l);
 	// print("\r\n");
 	
-	pow_right = (int)resr;
-	pow_left = (int)resl;
+	if (rpm_r > 10) {
+		pow_r_corr = (int)resr;
+	} else pow_r_corr = 0;
+	if (rpm_l > 10) {
+		pow_l_corr = (int)resl;
+	} else pow_l_corr = 0;
+	
+	// printnum(rpm_l);
+	// print("\t");
+	// printnum(pow_l_corr);
+	// print("\t");
+	// printnum(rpm_r);
+	// print("\t");
+	// printnum(pow_r_corr);
+	// print("\n");
+	
+	// pow_right = (int)resr;
+	// pow_left = (int)resl;
 	
 	// if (pow_right > 0) pow_right += 120;
 	// else if (pow_right < 0) pow_right -= 120;
@@ -422,7 +484,7 @@ void PID(void)
 	else if (pow_left < -255) pow_left = -255;
 	else if (filtered_l < 5 && target_l == 0) pow_left = 0;
 
-	update_powers();
+	// update_powers();
 	
 	last_r = now_r;
 	last_l = now_l;
