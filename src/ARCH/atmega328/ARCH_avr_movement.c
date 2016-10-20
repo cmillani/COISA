@@ -233,7 +233,7 @@ void tick_PID_l(void) {
 	
 	ac_err_l += error;
 	
-	int newPow = int(error * 10.0 + (error - last_err_l) * 10.0);
+	int newPow = int(error * 13.0 + (error - last_err_l) * 10.0);
 
 	if (newPow > 0) newPow += 150;
 	else if (newPow < 0 ) newPow -= 150;
@@ -303,7 +303,7 @@ void tick_PID_r(void) {
 	
 	ac_err_r += error;
 	
-	int newPow = int(error * 12.0 + (error - last_err_r) * 10.0);
+	int newPow = int(error * 15.0 + (error - last_err_r) * 10.0);
 
 	if (newPow > 0) newPow += 150;
 	else if (newPow < 0 ) newPow -= 150;

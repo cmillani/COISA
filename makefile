@@ -33,6 +33,9 @@ FLAGS_avr = -c -g -Os -w -fno-exceptions -ffunction-sections -fdata-sections -fn
 INCLUDE_avr = -I$(ARDUINO_AVR)/cores/arduino -I$(ARDUINO_AVR)/variants/standard -I src/ -I src/peripherals/encoder/ -I src/peripherals/movement/ -I src/peripherals/PWM/ -I src/peripherals/serial/ -I src/peripherals/ultrasonic/ -I src/peripherals/timer/ -I src/peripherals/button/ -I src/peripherals/leds/ -I src/ARCH/atmega328/ -I src/peripherals/magnetometer -I src/peripherals/i2c -I src/peripherals/IMU
 REQOBJ_avr = $(addprefix $(OBJDIR)/, avr_static/core.a atmega328.o $(ARCHFILES_avr) vm.o syscall.o HAL.o TM.o EH.o CONFIG_timer.o ArduinoLoader.o CONFIG_ultrasonic.o stdutils.o CONFIG_encoder.o)
 CC_avr = $(ARDUINO_BIN)/avr-g++
+
+PORT = /dev/cu.wchusbserial1410 
+#/dev/cu.usbmodem1411
 #############################################################
 
 ################# Mips Guest Code Variables #################
@@ -132,7 +135,7 @@ link: $(REQOBJ_avr)
 	@echo ">>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<"
 
 atmega328_write:
-	$(AVRDUDE) -C$(AVRDUDE_CONF) -v -patmega328p -carduino -P/dev/cu.usbmodem1411 -b115200 -D -Uflash:w:$(OBJDIR)/$(NAME).hex:i 	
+	$(AVRDUDE) -C$(AVRDUDE_CONF) -v -patmega328p -carduino -P$(PORT) -b115200 -D -Uflash:w:$(OBJDIR)/$(NAME).hex:i 	
 	
 avrsim_write:
 	$(AVRDUDE) -C$(AVRDUDE_CONF) -v -patmega328p -carduino -P$(DEVICEPATH) -b115200 -D -Uflash:w:$(OBJDIR)/$(NAME).hex:i 	
