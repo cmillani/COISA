@@ -233,10 +233,10 @@ void tick_PID_l(void) {
 	
 	ac_err_l += error;
 	
-	int newPow = int(error * 13.0 + (error - last_err_l) * 10.0);
+	int newPow = int(error * 5.0 + (error - last_err_l) * 0.0);
 
-	if (newPow > 0) newPow += 150;
-	else if (newPow < 0 ) newPow -= 150;
+	if (newPow > 0) newPow += 60;
+	else if (newPow < 0 ) newPow -= 60;
 
 	newPow = newPow > 230? 230:(newPow < -230? -230:newPow);
 
@@ -303,14 +303,15 @@ void tick_PID_r(void) {
 	
 	ac_err_r += error;
 	
-	int newPow = int(error * 15.0 + (error - last_err_r) * 10.0);
+	int newPow = int(error * 6.0 + (error - last_err_r) * 0.0);
 
-	if (newPow > 0) newPow += 150;
-	else if (newPow < 0 ) newPow -= 150;
+	if (newPow > 0) newPow += 60;
+	else if (newPow < 0 ) newPow -= 60;
 
 	newPow = newPow > 230? 230:(newPow < -230? -230:newPow);
 	if ((error < 0?-error:error) > 5) newPow += ((error < 0)?-pow_r_corr:pow_r_corr);
-	
+	// printnum(tick_r);
+	// print("R\n");
 	// printnum(newPow);
 	// print("\t");
 	// printnum(pow_r_corr);
@@ -361,13 +362,13 @@ void set_target_tick_R(int ticks) {
 	desired_tick_r = ticks;
 }
 
-float KpL = 2.0;//0.25
-float KiL = 0.50;//0.12
-float KdL = 0.05;
+float KpL = 0.5;//0.25
+float KiL = 0.00;//0.12
+float KdL = 0.00;
 
-float KpR = 2.00;//0.25
-float KiR = 0.50;//0.12-
-float KdR = 0.05;
+float KpR = 0.50;//0.25
+float KiR = 0.00;//0.12-
+float KdR = 0.00;
 
 float KpT = 0.0;
 float KiT = 0.0;
