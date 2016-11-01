@@ -34,6 +34,7 @@ extern "C" {
 #include <math.h>
 #include <IMU.h>
 #include <stepper.h>
+	
 #define PI (3.141592653589793)
 
 uint32_t tm_counter = 0;
@@ -207,8 +208,9 @@ void tm_init(void) {
 	print("Will Init\n");
 	// i2c_init();
 	// mag_init();
-	
+		
 	// uint32_t timestamp = 0;
+
 
 	/*Everything initialized*/
 	

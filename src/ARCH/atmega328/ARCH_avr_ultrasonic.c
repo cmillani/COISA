@@ -38,7 +38,7 @@ uint32_t us_timestamp = 0;
 uint8_t init_ultrassonic(void)
 {
 	us_timestamp = timer_get_ticks();
-	DDRD |= (1 << PD4); //Trig as Output
+	DDRD |= (1 << PD4); //Trig as Output -- Arduino pin
 	DDRD &= ~(1 << PD7); //Echo as Input
 }
 

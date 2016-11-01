@@ -47,9 +47,9 @@ extern "C" {
 	
 #define HAS_MOTORS 0
 	
-#define HAS_BUTTON 0
+#define HAS_BUTTON 1
 
-#define HAS_LEDS 0
+#define HAS_LEDS 1
 
 #define HAS_ACCELEROMETER 0 //  TODO Define pins
 	
@@ -63,7 +63,7 @@ extern "C" {
 #define PIN_ENCODER2
 #endif
 	
-#define HAS_ULTRASONIC 0
+#define HAS_ULTRASONIC 1
 #if HAS_ULTRASONIC
 #define PIN_ECHO
 #define PIN_TRIG
