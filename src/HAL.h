@@ -75,6 +75,10 @@ uint8_t hal_call(uint32_t sensid, char identifier[]);//Call to hardware I/O
 
 #endif
 
+#if HAS_STEPPER
+#include "stepper.h"
+#endif
+
 #if HAS_SERIAL
 #include "serial.h"
 #endif

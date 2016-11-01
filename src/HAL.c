@@ -161,7 +161,77 @@ uint8_t hal_call(uint32_t sensid, char identifier[])//Call to hardware I/O
 	}
 	else if (!strcmp(identifier,"MOVM"))
 	{
-#if HAS_MOTORS
+#if HAS_STEPPER
+		switch (sensid)
+		{
+			case 18: {
+	#if PRINTING
+				printf("(HAL)Mov. Setup called\n");
+	#endif		
+				init_stepper();
+				break;
+			}
+			case 21: { //Forward
+				uint32_t timestamp_steps = 0;
+				int x = 2000;
+				int steps = 0;
+				while(steps < x) {
+					uint32_t now = timer_get_ticks();
+					if (now - timestamp_steps > 1000) {
+						forward_stepper(LEFT_STEPPER);
+						forward_stepper(RIGHT_STEPPER);
+						timestamp_steps = now;
+						steps++;
+						// print("-\n");
+					}
+				}
+				stop_stepper(LEFT_STEPPER);
+				stop_stepper(RIGHT_STEPPER);
+				break;
+			}
+			case 22: { //Left
+				uint32_t timestamp_steps = 0;
+				int x = 2200;
+				int steps = 0;
+				while(steps < x) {
+					uint32_t now = timer_get_ticks();
+					if (now - timestamp_steps > 1000) {
+						backward_stepper(LEFT_STEPPER);
+						forward_stepper(RIGHT_STEPPER);
+						timestamp_steps = now;
+						steps++;
+						// print("-\n");
+					}
+				}
+				stop_stepper(LEFT_STEPPER);
+				stop_stepper(RIGHT_STEPPER);
+				break;
+			}
+			case 23: { //Right
+				uint32_t timestamp_steps = 0;
+				int x = 2200;
+				int steps = 0;
+				while(steps < x) {
+					uint32_t now = timer_get_ticks();
+					if (now - timestamp_steps > 1000) {
+						forward_stepper(LEFT_STEPPER);
+						backward_stepper(RIGHT_STEPPER);
+						timestamp_steps = now;
+						steps++;
+						// print("-\n");
+					}
+				}
+				stop_stepper(LEFT_STEPPER);
+				stop_stepper(RIGHT_STEPPER);
+				break;
+			}
+			case 24: { //Stop
+				stop_stepper(LEFT_STEPPER);
+				stop_stepper(LEFT_STEPPER);
+				break;
+			}
+		}
+#elif HAS_MOTORS
 		switch (sensid)
 		{
 			case 15: {

@@ -33,6 +33,7 @@ extern "C" {
 #include <magnetometer.h>
 #include <math.h>
 #include <IMU.h>
+#include <stepper.h>
 #define PI (3.141592653589793)
 
 uint32_t tm_counter = 0;
@@ -101,6 +102,7 @@ void executing(void) {
 }
 
 void moving(void) {
+#if HAS_MOTORS
 	if (isTurning) return;
 	// else if (isMoving && read_encoder_counter(RIGHT) >= encd_movdone){
 	// 	ahead_R(0);
@@ -117,6 +119,9 @@ void moving(void) {
 		vm_release();
 		state = breaking;
 	}
+#else
+	state = breaking;
+#endif
 }
 
 uint16_t breaking_count = 0;
@@ -130,12 +135,17 @@ void breaking(void) {
 
 void reseting(void) {
 	eh_init();
-	serial_configure(9600);
 	init_timer();
+#if HAS_SERIAL
+	serial_configure(9600);
+#endif 
+#if HAS_MOTORS
 	setup_movement();
+#endif
+#if HAS_LEDS
 	ledoff(1);
 	ledoff(2);
-	
+#endif
 #if HAS_ENCODER
 	start_encoder();
 #endif
@@ -169,55 +179,69 @@ void parse_Command(volatile unsigned char * command) {
 }
 
 void tm_init(void) {
-	/*COISA's Initialization*/
+/*COISA's Initialization*/
+/*************************/
 	eh_init();
 	init_timer();
+/*************************/
+#if HAS_SERIAL
 	serial_configure(9600);
+#endif
+/*************************/
+#if HAS_MOTORS
 	setup_movement();
+#endif
+/*************************/
 #if HAS_ENCODER
 	start_encoder();
 #endif
+/*************************/
 #if HAS_ULTRASONIC
 	init_ultrassonic();
 #endif
+/*************************/
+#if HAS_STEPPER
+	init_stepper();
+#endif
+/*************************/
 	print("Will Init\n");
 	// i2c_init();
 	// mag_init();
 	
-	uint32_t timestamp = 0;
+	// uint32_t timestamp = 0;
 
 	/*Everything initialized*/
 	
 	/*Sets initial State*/
 	state = idle;
-	// isMoving = 1;
-// 	isMoving_r = 1;
-// 	isMoving_l = 1;
-// 	set_targetRPM_L(80);
-// 	set_targetRPM_R(80);
+	// while(1) {
+// 		uint32_t now = timer_get_ticks();
+// 		if (now - timestamp > 1000) {
+// 			forward_stepper(0);
+// 			timestamp = now;
+// 			// print("-\n");
+// 		}
+// 	}
 	/*Coisa VM cpu, HAL, EH and TM loop*/
     while(1)
     {
+#if HAS_MOTORS
 		if (isMoving && timer_get_ticks() - timestamp > 30000) {
-			// print("A");
 			if (isMoving_r) {
-				// print("B");
 				tick_PID_r();
 			}
 			if (isMoving_l) {
-				// print("C");
 				tick_PID_l();
 			}
 			if (!isMoving_r && !isMoving_l) {
-				// print("D");
 				isMoving = 0;
 			}
-			// print("\n");
 		}
 		if (isTurning && timer_get_ticks() - timestamp > 30000) {
 			theta_control();
 			timestamp = timer_get_ticks();
 		}
+#endif
 		if (has_command) {
 			parse_Command(buff_in);
 		}
