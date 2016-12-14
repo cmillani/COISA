@@ -99,7 +99,10 @@ void receiving_x(void) {
 void executing(void) {
 	uint8_t res = vm_cpu();
 	if (res == 1) state = idle;
-	else if (res == 2) state = moving;
+	else if (res == 2) {
+		vm_release();
+		state = breaking;
+	}
 }
 
 void moving(void) {

@@ -78,10 +78,11 @@ uint8_t syscall(uint8_t trap_code)
 		case 18: { // Hold for movement
 #if HAS_ENCODER
 			// encd_movdone = RF[4];
-			// print("Held!\n");
+			print("Held!\n");
 			hal_call(8, "ENCD");
 			return 2;
 #endif
+			return 2;
 			break;
 		}
 

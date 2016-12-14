@@ -45,7 +45,7 @@ uint32_t volatile timer_get_ticks(void) {
 ISR(TIMER2_OVF_vect)
 {
 	timerOvfcnt++;
-	if (timerOvfcnt%10000 == 0)
+	if (timerOvfcnt%10 == 0)
 	{
 		event_timer();
 	}
