@@ -34,6 +34,7 @@ void backward_stepper(int motor);
 void forward_stepper(int motor);
 
 extern uint16_t step_delay;
+extern uint16_t step_sz;
 
 #define LEFT_STEPPER 0
 #define RIGHT_STEPPER 1

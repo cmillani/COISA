@@ -173,9 +173,8 @@ uint8_t hal_call(uint32_t sensid, char identifier[])//Call to hardware I/O
 			}
 			case 21: { //Forward
 				uint32_t timestamp_steps = 0;
-				int x = 2000;
 				int steps = 0;
-				while(steps < x) {
+				while(steps < step_sz) {
 					uint32_t now = timer_get_ticks();
 					if (now - timestamp_steps > step_delay) {
 						forward_stepper(LEFT_STEPPER);
@@ -228,6 +227,10 @@ uint8_t hal_call(uint32_t sensid, char identifier[])//Call to hardware I/O
 			case 24: { //Stop
 				stop_stepper(LEFT_STEPPER);
 				stop_stepper(LEFT_STEPPER);
+				break;
+			}
+			case 25: { //Set step size
+				step_sz = RF[4];
 				break;
 			}
 		}

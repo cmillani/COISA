@@ -28,7 +28,7 @@ extern "C" {
 #include <avr/io.h>
 #include <avr/interrupt.h>
 
-#define TIMEOUT 50000
+#define TIMEOUT 500000
 
 volatile unsigned char buff_in[20];
 volatile uint8_t buff_in_pos = 0;

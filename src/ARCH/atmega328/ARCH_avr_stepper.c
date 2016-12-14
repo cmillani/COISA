@@ -28,6 +28,7 @@ extern "C" {
 	
 int current_position[] = {7,7};
 uint16_t step_delay = 150;
+uint16_t step_sz = 2000;
 
 void init_stepper() {
 	//Sets all pins to low - no movement -- RIGHT motor - But the one correspondent to the position 0 on the vector

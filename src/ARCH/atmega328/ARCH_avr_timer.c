@@ -38,11 +38,6 @@ void init_timer(void)
 }
 
 uint32_t volatile timer_get_ticks(void) {
-	// print("\t\t\t");
-	// printnum(timerOvfcnt);
-	// print("\t");
-	// printnum(TCNT2);
-	// print("\n");
 	// return ((uint32_t)timerOvfcnt) * (uint32_t)256UL; // + (uint32_t)TCNT2;
 	return timerOvfcnt*256 + TCNT2;
 }
