@@ -225,6 +225,15 @@ void tm_init(void) {
 // 		}
 // 	}
 	/*Coisa VM cpu, HAL, EH and TM loop*/
+	// uint32_t oldtime = 0;
+	// while(1) {
+	//         uint32_t newtimer = timer_get_ticks();
+	//         if (newtimer - oldtime > 5000) {
+	//                 oldtime = newtimer;
+	//                 printnum(newtimer);
+	//                 print("<<\n");
+	//         }
+	// }
     while(1)
     {
 #if HAS_MOTORS

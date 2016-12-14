@@ -34,8 +34,9 @@ INCLUDE_avr = -I$(ARDUINO_AVR)/cores/arduino -I$(ARDUINO_AVR)/variants/standard 
 REQOBJ_avr = $(addprefix $(OBJDIR)/, avr_static/core.a atmega328.o $(ARCHFILES_avr) vm.o syscall.o HAL.o TM.o EH.o CONFIG_timer.o ArduinoLoader.o CONFIG_ultrasonic.o stdutils.o CONFIG_encoder.o)
 CC_avr = $(ARDUINO_BIN)/avr-g++
 
-PORT = /dev/cu.wchusbserial1410 
-#/dev/cu.usbmodem1411
+# PORT = /dev/cu.usbmodem00076611
+PORT = /dev/cu.wchusbserial1410
+# PORT = /dev/cu.usbmodem1411
 #############################################################
 
 ################# Mips Guest Code Variables #################
@@ -136,6 +137,12 @@ link: $(REQOBJ_avr)
 
 atmega328_write:
 	$(AVRDUDE) -C$(AVRDUDE_CONF) -v -patmega328p -carduino -P$(PORT) -b115200 -D -Uflash:w:$(OBJDIR)/$(NAME).hex:i 	
+	
+atmega328_write_isp:
+	$(AVRDUDE) -C$(AVRDUDE_CONF) -v -patmega328p -cavrispv2 -P$(PORT) -b115200 -e -Uflash:w:$(OBJDIR)/$(NAME).hex:i
+	
+atmega328_fuse:
+	$(AVRDUDE) -C$(AVRDUDE_CONF) -v -patmega328p -u -cavrispv2 -P$(PORT) -b115200 -D -U lfuse:w:0xff:m -U hfuse:w:0xde:m -U efuse:w:0x05:m
 	
 avrsim_write:
 	$(AVRDUDE) -C$(AVRDUDE_CONF) -v -patmega328p -carduino -P$(DEVICEPATH) -b115200 -D -Uflash:w:$(OBJDIR)/$(NAME).hex:i 	

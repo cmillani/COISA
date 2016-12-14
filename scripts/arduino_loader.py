@@ -13,14 +13,14 @@ executable = file.read()
 # zero = serial.Serial("/dev/tty.Zero-DevB") # Upload using bluetooth
 try:
 	if len(sys.argv) >= 3 and sys.argv[2] == "-bt":
-	    # zero = serial.Serial("/dev/tty.CoisaBot-DevB") # Upload using bluetooth
-			zero = serial.Serial("/dev/cu.Zero2-DevB") # Upload using bluetooth
+        # zero = serial.Serial("/dev/tty.CoisaBot-DevB") # Upload using bluetooth
+            zero = serial.Serial("/dev/cu.Zero2-DevB") # Upload using bluetooth
 	    # zero = serial.Serial("/dev/tty.COLABOT2-DevB") # Upload using bluetooth
 	elif len(sys.argv) >= 4 and sys.argv[2] == "-sim":
 	    zero = serial.Serial(sys.argv[3])
 	else:
-	    # zero = serial.Serial("/dev/cu.usbmodem1411") # Upload using USB
-			zero = serial.Serial("/dev/cu.wchusbserial1410") # Upload using USB
+        # zero = serial.Serial("/dev/cu.usbmodem1411") # Upload using USB
+            zero = serial.Serial("/dev/cu.wchusbserial1410") # Upload using USB
 except Exception:
 		print(Exception)
 		print('Unable to connect')

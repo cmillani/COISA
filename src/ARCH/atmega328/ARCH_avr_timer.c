@@ -31,21 +31,26 @@ extern "C" {
 
 void init_timer(void)
 {	
-	TCCR2B |= (1 << CS21) | (1 << CS20); //Prescaler = 32
+	TCCR2B |= /*(1 << CS21) |*/ (1 << CS20) | (1 << CS22); //Prescaler = 64
 	TCNT2 = 0;
 	TIMSK2 |= (1 << TOIE2);
 	sei();
 }
 
-uint32_t timer_get_ticks(void) {
+uint32_t volatile timer_get_ticks(void) {
+	// print("\t\t\t");
+	// printnum(timerOvfcnt);
+	// print("\t");
+	// printnum(TCNT2);
+	// print("\n");
+	// return ((uint32_t)timerOvfcnt) * (uint32_t)256UL; // + (uint32_t)TCNT2;
 	return timerOvfcnt*256 + TCNT2;
 }
 
 ISR(TIMER2_OVF_vect)
 {
 	timerOvfcnt++;
-	int32_t temp = timerOvfcnt;
-	if ((int)temp % (50*(F_CPU/8192))==0)
+	if (timerOvfcnt%10000 == 0)
 	{
 		event_timer();
 	}

@@ -177,7 +177,7 @@ uint8_t hal_call(uint32_t sensid, char identifier[])//Call to hardware I/O
 				int steps = 0;
 				while(steps < x) {
 					uint32_t now = timer_get_ticks();
-					if (now - timestamp_steps > 1000) {
+					if (now - timestamp_steps > step_delay) {
 						forward_stepper(LEFT_STEPPER);
 						forward_stepper(RIGHT_STEPPER);
 						timestamp_steps = now;
@@ -195,7 +195,7 @@ uint8_t hal_call(uint32_t sensid, char identifier[])//Call to hardware I/O
 				int steps = 0;
 				while(steps < x) {
 					uint32_t now = timer_get_ticks();
-					if (now - timestamp_steps > 1000) {
+					if (now - timestamp_steps > step_delay) {
 						backward_stepper(LEFT_STEPPER);
 						forward_stepper(RIGHT_STEPPER);
 						timestamp_steps = now;
@@ -213,7 +213,7 @@ uint8_t hal_call(uint32_t sensid, char identifier[])//Call to hardware I/O
 				int steps = 0;
 				while(steps < x) {
 					uint32_t now = timer_get_ticks();
-					if (now - timestamp_steps > 1000) {
+					if (now - timestamp_steps > step_delay) {
 						forward_stepper(LEFT_STEPPER);
 						backward_stepper(RIGHT_STEPPER);
 						timestamp_steps = now;

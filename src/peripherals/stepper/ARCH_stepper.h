@@ -26,10 +26,14 @@ extern "C" {
 #ifndef ARCHSTEPPER_H
 #define ARCHSTEPPER_H
 	
+#include <stdint.h>
+	
 void init_stepper();
 void stop_stepper(int motor);
 void backward_stepper(int motor);
 void forward_stepper(int motor);
+
+extern uint16_t step_delay;
 
 #define LEFT_STEPPER 0
 #define RIGHT_STEPPER 1
