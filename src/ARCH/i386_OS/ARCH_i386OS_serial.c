@@ -25,8 +25,16 @@ extern "C" {
 #include <stdio.h>
 #include "ARCH_serial.h"
 
+volatile unsigned char buff_in[20];
+volatile uint8_t buff_in_pos = 0;
+volatile unsigned char buff_out[20];
+volatile uint8_t buff_out_pos = 0;
+
 volatile uint8_t has_command = 0;
-volatile char command[3] = {0};
+
+volatile uint8_t trash;
+volatile uint32_t serial_timestamp = 0;
+
 
 void send_byte(unsigned char byte)
 {
@@ -38,6 +46,16 @@ char read_byte(void)
 	scanf ("%c", &c);
 	return c;
 }
+
+void print_pckg(char * str) {
+	int i = 0;
+	while (i < 20)
+	{
+		send_byte(str[i++]);
+	}
+}
+
+
 void serial_configure(unsigned int baudrate)
 {
 

@@ -64,7 +64,9 @@ uint8_t hal_call(uint32_t sensid, char identifier[]);//Call to hardware I/O
 #endif
 
 #if HAS_GYROSCOPE
-
+#include <IMU.h>
+#include <i2c.h>
+#include <magnetometer.h>
 #endif
 
 #if HAS_LEDS
@@ -72,7 +74,8 @@ uint8_t hal_call(uint32_t sensid, char identifier[]);//Call to hardware I/O
 #endif
 
 #if HAS_ACCELEROMETER
-
+#include <IMU.h>
+#include <i2c.h>
 #endif
 
 #if HAS_STEPPER

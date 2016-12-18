@@ -23,9 +23,8 @@ extern "C" {
 #endif    
 
 #include <HAL.h>
-#include "vm.h"
+#include <vm.h>
 #include <stdutils.h>
-#include <magnetometer.h>
 #include <math.h>
 #define PI (3.141592653589793)
 	

@@ -28,7 +28,6 @@ extern "C" {
 #include <stdutils.h>
 #include <HAL.h>
 #include <timer.h>
-#include <avr/io.h>
 // #include <stdarg.h>
 //
 // #include <stdio.h>

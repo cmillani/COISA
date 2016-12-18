@@ -29,11 +29,7 @@ extern "C" {
 #include <vm.h>
 #include <stdutils.h>
 #include <inttypes.h>
-#include <i2c.h>
-#include <magnetometer.h>
 #include <math.h>
-#include <IMU.h>
-#include <stepper.h>
 	
 #define PI (3.141592653589793)
 
