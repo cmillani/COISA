@@ -28,7 +28,7 @@ extern "C" {
 #include <avr/io.h>
 #include <avr/interrupt.h>
 
-#define TIMEOUT 500000
+#define TIMEOUT 1000000
 
 volatile unsigned char buff_in[20];
 volatile uint8_t buff_in_pos = 0;
@@ -36,6 +36,7 @@ volatile unsigned char buff_out[20];
 volatile uint8_t buff_out_pos = 0;
 
 volatile uint8_t has_command = 0;
+volatile uint8_t timedOut = 0;
 
 volatile uint8_t trash;
 volatile uint32_t serial_timestamp = 0;
@@ -45,7 +46,10 @@ ISR(USART_RX_vect) {
 	if (has_command) {
 		trash = UDR0;
 	} else {
-		if (newtimer - serial_timestamp > TIMEOUT) buff_in_pos = 0;
+		if (newtimer - serial_timestamp > TIMEOUT) {
+			buff_in_pos = 0;
+			timedOut = 1;
+		}
 		serial_timestamp = newtimer;
 		buff_in[buff_in_pos++] = UDR0;
 		if (buff_in_pos >= 20) { //Buffer full!

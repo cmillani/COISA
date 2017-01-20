@@ -36,6 +36,7 @@ CC_avr = $(ARDUINO_BIN)/avr-g++
 
 # PORT = /dev/cu.usbmodem00076611
 PORT = /dev/cu.wchusbserial1410
+# PORT = /dev/cu.wchusbserial1420
 # PORT = /dev/cu.usbmodem1411
 #############################################################
 

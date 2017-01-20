@@ -20,6 +20,7 @@ try:
 	    zero = serial.Serial(sys.argv[3])
 	else:
         # zero = serial.Serial("/dev/cu.usbmodem1411") # Upload using USB
+        # zero = serial.Serial("/dev/cu.wchusbserial1420") # Upload using USB
             zero = serial.Serial("/dev/cu.wchusbserial1410") # Upload using USB
 except Exception:
 		print(Exception)
@@ -37,6 +38,10 @@ time.sleep(2) # make sure the connection is ok
 print len(executable)
 # print len(executable) & 0xFF
 print 'Waiting'
+
+hello = zero.read(20)
+print(hello)
+
 print '\nStarting'
 # print (len(executable) & 0xFF)
 # print ((len(executable) >> 8) & 0xFF)
@@ -56,6 +61,20 @@ zero.write(chr(len(executable) & 0xFF))
 # print(leng)
 resp = zero.read(20)
 print (resp)
+for i in range(5):
+    if (resp[0:5] == "OK-RD"):
+        break
+    else:
+        zero.write("R")# - R
+        zero.write("D")# - D
+        for i in range(16):
+            zero.write(chr(0))
+        zero.write(chr((len(executable) >> 8) & 0xFF))
+        zero.write(chr(len(executable) & 0xFF))
+        resp = zero.read(20)
+    if (i == 4):
+        print("Error sending package")
+        sys.exit(0)
     
 print "Sending"
 count = 0
@@ -69,6 +88,15 @@ while (count < len(executable)):
     
     resp = zero.read(20)
     print (resp)
+    for i in range(5):
+        if (resp[0:5] == "OK-PK"):
+            break
+        else:
+            zero.write(string)
+            resp = zero.read(20)
+        if (i == 4):
+            print("Error sending package")
+            sys.exit(0)
     
 print "###########################################"
 while True:

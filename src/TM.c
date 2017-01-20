@@ -162,7 +162,7 @@ void parse_Command(volatile unsigned char * command) {
 		// print_pckg("RD-OK\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"); //20 bytes - TODO: improve
 		state = receiving_sz;
 	} else if (!strcmpsz((char *)command,"RS", 2)) {
-		print_pckg("RS-OK\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0");
+		print_pckg("OK-RS\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0");
 		state = reseting;
 	// } else if (!strcmpsz((char *)command,"SZ", 2)) {
 		// state = receiving_sz;
@@ -174,7 +174,9 @@ void parse_Command(volatile unsigned char * command) {
 		send_byte('-');
 		send_byte(command[1]);
 		send_byte('-');
-		print_pckg("\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0");
+		send_byte('\0');send_byte('\0');send_byte('\0');send_byte('\0');send_byte('\0');
+		send_byte('\0');send_byte('\0');send_byte('\0');send_byte('\0');send_byte('\0');
+		send_byte('\0');send_byte('\0');send_byte('\0');send_byte('\0');send_byte('\0');
 	}
 }
 
@@ -204,7 +206,7 @@ void tm_init(void) {
 	init_stepper();
 #endif
 /*************************/
-	print("Will Init\n");
+	print_pckg("COISA ON\n\0\0\0\0\0\0\0\0\0\0\0");
 	// i2c_init();
 	// mag_init();
 		
@@ -252,6 +254,10 @@ void tm_init(void) {
 			timestamp = timer_get_ticks();
 		}
 #endif
+		if (timedOut) {
+			print_pckg("TMOUT\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0");
+			timedOut = 0;
+		}
 		if (has_command) {
 			parse_Command(buff_in);
 		}

@@ -27,6 +27,7 @@ extern "C" {
 #include <stdint.h>
 	
 extern volatile uint8_t has_command;
+extern volatile uint8_t timedOut;
 
 extern volatile unsigned char buff_in[20];
 extern volatile unsigned char buff_out[20];
