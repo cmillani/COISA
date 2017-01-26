@@ -35,8 +35,9 @@ REQOBJ_avr = $(addprefix $(OBJDIR)/, avr_static/core.a atmega328.o $(ARCHFILES_a
 CC_avr = $(ARDUINO_BIN)/avr-g++
 
 # PORT = /dev/cu.usbmodem00076611
-PORT = /dev/cu.wchusbserial1410
-# PORT = /dev/cu.wchusbserial1420
+# PORT = /dev/cu.wchusbserial1410
+PORT = /dev/cu.wchusbserial1420
+# PORT = /dev/cu.usbmodem1421
 # PORT = /dev/cu.usbmodem1411
 #############################################################
 

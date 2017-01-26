@@ -235,10 +235,32 @@ void tm_init(void) {
 	//                 print("<<\n");
 	//         }
 	// }
+	uint32_t now = timer_get_ticks();
     while(1)
     {
+		now = timer_get_ticks();
+		// printnum(receiving);
+// 		print("--\t");
+// 		printnum(has_command);
+// 		print("--\t");
+// 		printnum(buff_in_pos);
+// 		print("--\t");
+// 		printnum(now);
+// 		print("--\t");
+// 		printnum(serial_timestamp);
+// 		print("--\t");
+// 		printnum(now - serial_timestamp);
+// 		print("--\n");
+		if (now - serial_timestamp < 0); //If we get a byte after now is setted, this value will be negative
+		else if (now - serial_timestamp > 50000 && receiving ) {
+			serial_timeout();
+			print_pckg("TMOUT\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0");
+			// print("TIMEOUT\t");
+			// printnum(now - serial_timestamp);
+			// print("TIMEOUT\n");
+		}
 #if HAS_MOTORS
-		if (isMoving && timer_get_ticks() - timestamp > 30000) {
+		if (isMoving && now - timestamp > 30000) {
 			if (isMoving_r) {
 				tick_PID_r();
 			}
@@ -249,15 +271,15 @@ void tm_init(void) {
 				isMoving = 0;
 			}
 		}
-		if (isTurning && timer_get_ticks() - timestamp > 30000) {
+		if (isTurning && now - timestamp > 30000) {
 			theta_control();
 			timestamp = timer_get_ticks();
 		}
 #endif
-		if (timedOut) {
-			print_pckg("TMOUT\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0");
-			timedOut = 0;
-		}
+		// if (timedOut) {
+		// 	print_pckg("TMOUT\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0");
+		// 	timedOut = 0;
+		// }
 		if (has_command) {
 			parse_Command(buff_in);
 		}

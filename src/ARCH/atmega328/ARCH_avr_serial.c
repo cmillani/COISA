@@ -36,27 +36,29 @@ volatile unsigned char buff_out[20];
 volatile uint8_t buff_out_pos = 0;
 
 volatile uint8_t has_command = 0;
-volatile uint8_t timedOut = 0;
+volatile uint8_t receiving = 0;
 
 volatile uint8_t trash;
 volatile uint32_t serial_timestamp = 0;
 
-ISR(USART_RX_vect) {
-	uint32_t newtimer = timer_get_ticks();
+ISR(USART_RX_vect) {	
+	receiving = 1; 
+	serial_timestamp = timer_get_ticks();
 	if (has_command) {
 		trash = UDR0;
 	} else {
-		if (newtimer - serial_timestamp > TIMEOUT) {
-			buff_in_pos = 0;
-			timedOut = 1;
-		}
-		serial_timestamp = newtimer;
 		buff_in[buff_in_pos++] = UDR0;
 		if (buff_in_pos >= 20) { //Buffer full!
 			has_command = 1;
+			receiving = 0;
 			buff_in_pos = 0;
 		}
 	}
+}
+
+void serial_timeout(void) {
+	receiving = 0;
+	buff_in_pos = 0;
 }
 
 void send_byte(unsigned char byte)

@@ -27,7 +27,9 @@ extern "C" {
 #include <stdint.h>
 	
 extern volatile uint8_t has_command;
-extern volatile uint8_t timedOut;
+extern volatile uint8_t receiving;
+extern volatile uint32_t serial_timestamp;
+extern volatile uint8_t buff_in_pos;
 
 extern volatile unsigned char buff_in[20];
 extern volatile unsigned char buff_out[20];
@@ -38,6 +40,7 @@ void serial_configure(unsigned int baudrate); //Allow user to enable and disable
 void printnum(int32_t number);
 void print(char *str);
 void print_pckg(char *str);
+void serial_timeout(void);
 
 #endif //ARCH_SERIAL
 	

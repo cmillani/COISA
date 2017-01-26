@@ -20,8 +20,9 @@ try:
 	    zero = serial.Serial(sys.argv[3])
 	else:
         # zero = serial.Serial("/dev/cu.usbmodem1411") # Upload using USB
-        # zero = serial.Serial("/dev/cu.wchusbserial1420") # Upload using USB
-            zero = serial.Serial("/dev/cu.wchusbserial1410") # Upload using USB
+            # zero = serial.Serial("/dev/cu.usbmodem1421") # Upload using USB
+            zero = serial.Serial("/dev/cu.wchusbserial1420") # Upload using USB
+            # zero = serial.Serial("/dev/cu.wchusbserial1410") # Upload using USB
 except Exception:
 		print(Exception)
 		print('Unable to connect')
@@ -46,57 +47,68 @@ print '\nStarting'
 # print (len(executable) & 0xFF)
 # print ((len(executable) >> 8) & 0xFF)
 
-zero.write("R")# - R
-zero.write("D")# - D
-for i in range(16):
-    zero.write(chr(0))
-    
-    
-# zero.write(chr(0))
-# zero.write(chr(1))
-zero.write(chr((len(executable) >> 8) & 0xFF))
-zero.write(chr(len(executable) & 0xFF))
-
-# leng = zero.readline();
-# print(leng)
-resp = zero.read(20)
-print (resp)
+# zero.write("R")# - R
+# zero.write("D")# - D
+# for i in range(16):
+#     zero.write(chr(0))
+#
+#
+# # zero.write(chr(0))
+# # zero.write(chr(1))
+# zero.write(chr((len(executable) >> 8) & 0xFF))
+# zero.write(chr(len(executable) & 0xFF))
+#
+# # leng = zero.readline();
+# # print(leng)
+# resp = zero.read(20)
+# print (resp)
 for i in range(5):
+    zero.write("R")# - R
+    zero.write("D")# - D
+    for j in range(16):
+        zero.write(chr(0))
+    zero.write(chr((len(executable) >> 8) & 0xFF))
+    zero.write(chr(len(executable) & 0xFF))
+    resp = zero.read(20)
+    print (">" + resp + "<")
     if (resp[0:5] == "OK-RD"):
         break
-    else:
-        zero.write("R")# - R
-        zero.write("D")# - D
-        for i in range(16):
-            zero.write(chr(0))
-        zero.write(chr((len(executable) >> 8) & 0xFF))
-        zero.write(chr(len(executable) & 0xFF))
-        resp = zero.read(20)
     if (i == 4):
         print("Error sending package")
         sys.exit(0)
+    else:
+        print("Package Fail - Trying again!");
+        time.sleep(0.5)
+        zero.flushInput()
     
-print "Sending"
+print "*******Sending*******"
 count = 0
-
+package_num = 0
 while (count < len(executable)):
+    
+    print("*******SENDING PACKAGE #" + str(package_num) + "*******")
     string = "PK"+executable[count:min(count+18, len(executable))]
     while (len(string) < 20) :
         string += "\0" #To complete last package if needed
     count = count + min(18, len(executable) - count)
-    zero.write(string)
+    # zero.write(string)
     
-    resp = zero.read(20)
-    print (resp)
+    # resp = zero.read(20)
+    # print (resp)
     for i in range(5):
+        zero.write(string)
+        resp = zero.read(20)
+        print (">" + resp + "<")
         if (resp[0:5] == "OK-PK"):
             break
-        else:
-            zero.write(string)
-            resp = zero.read(20)
         if (i == 4):
             print("Error sending package")
             sys.exit(0)
+        else:
+            print("Package Fail - Trying again!");
+            time.sleep(0.5)
+            zero.flushInput()
+    package_num += 1
     
 print "###########################################"
 while True:
