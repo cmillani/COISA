@@ -18,66 +18,18 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
+
 #ifdef __cplusplus
 extern "C" {
 #endif
-    
-
-#ifndef CONFIG
-#define CONFIG
-
-/*Debuging and testing info*/
-#define DEBUGING 0
+	 
+#ifndef SERVO_H
+#define SERVO_H
 	
-#define PRINTING 0
+#include <ARCH_servo.h>
 	
-#define PRINTING_INST 0
-/*-------------------------*/
-
-/*Selects which arch will be used*/
-#if ARCH
-#include "ARCH/i386_OS/i386_OS.h"
-#else
-#include "ARCH/atmega328/atmega328.h"
-#endif
-/*-------------------------------*/
-
-/*Define which sensors and peripherals are available*/
-#define HAS_SERVO 1
+#endif //STEPPER_H
 	
-#define HAS_STEPPER 1
-	
-#define HAS_MOTORS 0
-	
-#define HAS_BUTTON 1
-
-#define HAS_LEDS 1
-
-#define HAS_ACCELEROMETER 0 //  TODO Define pins
-	
-#define HAS_GYROSCOPE 0
-	
-#define HAS_INFRARED 0
-	
-#define HAS_ENCODER 0
-#if HAS_ENCODER
-#define PIN_ENCODER1 
-#define PIN_ENCODER2
-#endif
-	
-#define HAS_ULTRASONIC 1
-#if HAS_ULTRASONIC
-#define PIN_ECHO
-#define PIN_TRIG
-#endif
-
-#define HAS_SERIAL 1
-#if HAS_SERIAL
-#endif 
-/*--------------------------------------------------*/
-	
-#endif /*CONFIG*/
-    
 #ifdef __cplusplus
 }
 #endif

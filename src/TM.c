@@ -206,6 +206,10 @@ void tm_init(void) {
 	init_stepper();
 #endif
 /*************************/
+#if HAS_SERVO
+	init_servo();
+#endif
+/*************************/
 	// print_pckg("COISA ON\n\0\0\0\0\0\0\0\0\0\0\0");
 	// i2c_init();
 	// mag_init();
@@ -217,14 +221,17 @@ void tm_init(void) {
 	
 	/*Sets initial State*/
 	state = idle;
+	// int boole = 0;
+	// servo_down();
 	// while(1) {
-	// 	uint32_t now = timer_get_ticks();
-	// 	if (now - timestamp > step_delay) {
-	// 		forward_stepper(LEFT_STEPPER);
-	// 		forward_stepper(RIGHT_STEPPER);
-	// 		timestamp = now;
-	// 		// print("-\n");
-	// 	}
+		// uint32_t now = timer_get_ticks();
+		// if (now - timestamp > 100000) {
+			// if (boole) servo_down();
+			// else servo_up();
+			// boole = !boole;
+			// timestamp = now;
+			// print("-\n");
+		// }
 	// }
 	/*Coisa VM cpu, HAL, EH and TM loop*/
 	// uint32_t oldtime = 0;

@@ -1,5 +1,5 @@
 ###################### i386 Variables ######################
-INCLUDE_i386 = -I src/ -I src/peripherals/encoder/ -I src/peripherals/movement/ -I src/peripherals/PWM/ -I src/peripherals/serial/ -I src/peripherals/ultrasonic/ -I src/ARCH/i386_OS/ -I src/peripherals/timer/ -I src/peripherals/button/ -I src/peripherals/leds/ -I src/peripherals/stepper/
+INCLUDE_i386 = -I src/ -I src/peripherals/encoder/ -I src/peripherals/movement/ -I src/peripherals/PWM/ -I src/peripherals/serial/ -I src/peripherals/ultrasonic/ -I src/ARCH/i386_OS/ -I src/peripherals/timer/ -I src/peripherals/button/ -I src/peripherals/leds/ -I src/peripherals/stepper/ -I src/peripherals/servo/
 CC_i386 = gcc
 CFLAGS_i386 = -DARCH=1  -DMEASURING=0 -DRUN_VM=1 -DCOUNTING=0 -DCOUNTING_STACK=0 -Os
 ############################################################
@@ -28,9 +28,9 @@ AVRDUDE = $(ARDUINO_BIN)/avrdude
 AVR_OBJCPY = $(ARDUINO_BIN)/avr-objcopy
 AVR_SIZE = $(ARDUINO_BIN)/avr-size
 
-ARCHFILES_avr = ARCH_avr_timer.o ARCH_avr_encoder.o ARCH_avr_movement.o ARCH_avr_PWM.o ARCH_avr_serial.o ARCH_avr_ultrasonic.o ARCH_avr_button.o ARCH_avr_leds.o ARCH_avr_magnetometer.o ARCH_avr_i2c.o ARCH_avr_IMU.o ARCH_avr_stepper.o
+ARCHFILES_avr = ARCH_avr_timer.o ARCH_avr_encoder.o ARCH_avr_movement.o ARCH_avr_PWM.o ARCH_avr_serial.o ARCH_avr_ultrasonic.o ARCH_avr_button.o ARCH_avr_leds.o ARCH_avr_magnetometer.o ARCH_avr_i2c.o ARCH_avr_IMU.o ARCH_avr_stepper.o ARCH_avr_servo.o
 FLAGS_avr = -c -g -Os -w -fno-exceptions -ffunction-sections -fdata-sections -fno-threadsafe-statics -MMD -mmcu=atmega328p -DF_CPU=16000000L -DARDUINO=10603 -DARDUINO_AVR_UNO -DARDUINO_ARCH_A -DRUN_VM=1 -DMEASURING=0 -DEVENT_ON=1 -DSIMAVR=0 -lm
-INCLUDE_avr = -I$(ARDUINO_AVR)/cores/arduino -I$(ARDUINO_AVR)/variants/standard -I src/ -I src/peripherals/encoder/ -I src/peripherals/movement/ -I src/peripherals/PWM/ -I src/peripherals/serial/ -I src/peripherals/ultrasonic/ -I src/peripherals/timer/ -I src/peripherals/button/ -I src/peripherals/leds/ -I src/ARCH/atmega328/ -I src/peripherals/magnetometer -I src/peripherals/i2c -I src/peripherals/IMU -I src/peripherals/stepper
+INCLUDE_avr = -I$(ARDUINO_AVR)/cores/arduino -I$(ARDUINO_AVR)/variants/standard -I src/ -I src/peripherals/encoder/ -I src/peripherals/movement/ -I src/peripherals/PWM/ -I src/peripherals/serial/ -I src/peripherals/ultrasonic/ -I src/peripherals/timer/ -I src/peripherals/button/ -I src/peripherals/leds/ -I src/ARCH/atmega328/ -I src/peripherals/magnetometer -I src/peripherals/i2c -I src/peripherals/IMU -I src/peripherals/stepper -I src/peripherals/servo
 REQOBJ_avr = $(addprefix $(OBJDIR)/, avr_static/core.a atmega328.o $(ARCHFILES_avr) vm.o syscall.o HAL.o TM.o EH.o CONFIG_timer.o ArduinoLoader.o CONFIG_ultrasonic.o stdutils.o CONFIG_encoder.o)
 CC_avr = $(ARDUINO_BIN)/avr-g++
 

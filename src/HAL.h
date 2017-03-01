@@ -51,6 +51,10 @@ uint8_t hal_call(uint32_t sensid, char identifier[]);//Call to hardware I/O
 
 #include <timer.h>
 
+#if HAS_SERVO
+#include "servo.h"
+#endif
+
 #if HAS_ULTRASONIC
 #include "ultrasonic.h"
 #endif
