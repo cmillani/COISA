@@ -32,15 +32,15 @@ uint16_t step_sz = 2000;
 
 void init_stepper() {
 	//Sets all pins to low - no movement -- RIGHT motor - But the one correspondent to the position 0 on the vector
-	PORTD &= ~(1 << PD2);
-	PORTD &= ~(1 << PD5);
+	PORTD &= ~(1 << PD4);
+	PORTC &= ~(1 << PC2);
 	PORTD &= ~(1 << PD6);
-	PORTD &= ~(1 << PD3);
+	PORTD &= ~(1 << PD7);
 	//Sets all pins to output
-	DDRD |= (1 << DDD2);
-	DDRD |= (1 << DDD5);
+	DDRD |= (1 << DDD4);
+	DDRC |= (1 << DDC2);
 	DDRD |= (1 << DDD6);
-	DDRD |= (1 << DDD3);
+	DDRD |= (1 << DDD7);
 	
 	//Repeat the above process on the LEFT motor
 	PORTB &= ~(1 << PB0);
@@ -117,58 +117,58 @@ void update_stepper(int motor) {
 		case 1: //RIGHT
 			switch(current_position[motor]) {
 				case 0:
-					PORTD &= ~(1 << PD2);
-					PORTD &= ~(1 << PD5);
+					PORTD &= ~(1 << PD4);
+					PORTC &= ~(1 << PC2);
 					PORTD &= ~(1 << PD6);
-					PORTD |= (1 << PD3);
+					PORTD |= (1 << PD7);
 					break;
 				case 1:
-					PORTD &= ~(1 << PD2);
-					PORTD &= ~(1 << PD5);
+					PORTD &= ~(1 << PD4);
+					PORTC &= ~(1 << PC2);
 					PORTD |= (1 << PD6);
-					PORTD |= (1 << PD3);
+					PORTD |= (1 << PD7);
 					break;
 				case 2:
-					PORTD &= ~(1 << PD2);
-					PORTD &= ~(1 << PD5);
+					PORTD &= ~(1 << PD4);
+					PORTC &= ~(1 << PC2);
 					PORTD |= (1 << PD6);
-					PORTD &= ~(1 << PD3);
+					PORTD &= ~(1 << PD7);
 					break;
 				case 3:
-					PORTD &= ~(1 << PD2);
-					PORTD |= (1 << PD5);
+					PORTD &= ~(1 << PD4);
+					PORTC |= (1 << PC2);
 					PORTD |= (1 << PD6);
-					PORTD &= ~(1 << PD3);
+					PORTD &= ~(1 << PD7);
 					break;
 				case 4:
-					PORTD &= ~(1 << PD2);
-					PORTD |= (1 << PD5);
+					PORTD &= ~(1 << PD4);
+					PORTC |= (1 << PC2);
 					PORTD &= ~(1 << PD6);
-					PORTD &= ~(1 << PD3);
+					PORTD &= ~(1 << PD7);
 					break;
 				case 5:
-					PORTD |= (1 << PD2);
-					PORTD |= (1 << PD5);
+					PORTD |= (1 << PD4);
+					PORTC |= (1 << PC2);
 					PORTD &= ~(1 << PD6);
-					PORTD &= ~(1 << PD3);
+					PORTD &= ~(1 << PD7);
 					break;
 				case 6:
-					PORTD |= (1 << PD2);
-					PORTD &= ~(1 << PD5);
+					PORTD |= (1 << PD4);
+					PORTC &= ~(1 << PC2);
 					PORTD &= ~(1 << PD6);
-					PORTD &= ~(1 << PD3);
+					PORTD &= ~(1 << PD7);
 					break;
 				case 7:
-					PORTD |= (1 << PD2);
-					PORTD &= ~(1 << PD5);
+					PORTD |= (1 << PD4);
+					PORTC &= ~(1 << PC2);
 					PORTD &= ~(1 << PD6);
-					PORTD |= (1 << PD3);
+					PORTD |= (1 << PD7);
 					break;
 				default:
-					PORTD &= ~(1 << PD2);
-					PORTD &= ~(1 << PD5);
+					PORTD &= ~(1 << PD4);
+					PORTC &= ~(1 << PC2);
 					PORTD &= ~(1 << PD6);
-					PORTD &= ~(1 << PD3);
+					PORTD &= ~(1 << PD7);
 					break;
 			}
 			break;
@@ -201,10 +201,10 @@ void stop_stepper(int motor) {
 			PORTB &= ~(1 << PB3);
 			break;
 		case 1: //RIGHT
-			PORTD &= ~(1 << PB2);
-			PORTD &= ~(1 << PB5);
-			PORTD &= ~(1 << PB6);
-			PORTD &= ~(1 << PB3);
+			PORTD &= ~(1 << PD4);
+			PORTC &= ~(1 << PC2);
+			PORTD &= ~(1 << PD6);
+			PORTD &= ~(1 << PD7);
 			break;
 	}
 }

@@ -36,7 +36,7 @@ extern volatile unsigned char buff_out[20];
 
 void send_byte(unsigned char byte);
 // char read_byte(void);
-void serial_configure(unsigned int baudrate); //Allow user to enable and disable interruptions later
+void serial_configure(unsigned int ubrr); //Allow user to enable and disable interruptions later
 void printnum(int32_t number);
 void print(char *str);
 void print_pckg(char *str);

@@ -42,8 +42,8 @@ volatile uint8_t trash;
 volatile uint32_t serial_timestamp = 0;
 
 ISR(USART_RX_vect) {	
-	receiving = 1; 
 	serial_timestamp = timer_get_ticks();
+	receiving = 1; 
 	if (has_command) {
 		trash = UDR0;
 	} else {
@@ -72,10 +72,10 @@ void send_byte(unsigned char byte)
 // 	return UDR0;
 // }
 
-void serial_configure(unsigned int baudrate)
+void serial_configure(unsigned int ubrr)
 {
-	UBRR0H = (16000000/16/baudrate -1 >> 8); //Configure baudrate generator
-	UBRR0L = (16000000/16/baudrate -1); //Configure baudrate generator
+	UBRR0H = (ubrr >> 8); //Configure baudrate generator
+	UBRR0L = (ubrr); //Configure baudrate generator
 	
 	UCSR0B |= (1 << RXEN0) | (1 << TXEN0) | (1 << RXCIE0);// | (1 << TXCIE0); //TODO: Use TX interrupt too
 	sei(); //Enables interruption

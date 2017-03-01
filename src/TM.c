@@ -137,7 +137,7 @@ void reseting(void) {
 	eh_init();
 	init_timer();
 #if HAS_SERIAL
-	serial_configure(9600);
+	serial_configure(103);
 #endif 
 #if HAS_MOTORS
 	setup_movement();
@@ -187,7 +187,7 @@ void tm_init(void) {
 	init_timer();
 /*************************/
 #if HAS_SERIAL
-	serial_configure(9600);
+	serial_configure(103);
 #endif
 /*************************/
 #if HAS_MOTORS
@@ -206,7 +206,7 @@ void tm_init(void) {
 	init_stepper();
 #endif
 /*************************/
-	print_pckg("COISA ON\n\0\0\0\0\0\0\0\0\0\0\0");
+	// print_pckg("COISA ON\n\0\0\0\0\0\0\0\0\0\0\0");
 	// i2c_init();
 	// mag_init();
 		
@@ -218,13 +218,14 @@ void tm_init(void) {
 	/*Sets initial State*/
 	state = idle;
 	// while(1) {
-// 		uint32_t now = timer_get_ticks();
-// 		if (now - timestamp > 1000) {
-// 			forward_stepper(0);
-// 			timestamp = now;
-// 			// print("-\n");
-// 		}
-// 	}
+	// 	uint32_t now = timer_get_ticks();
+	// 	if (now - timestamp > step_delay) {
+	// 		forward_stepper(LEFT_STEPPER);
+	// 		forward_stepper(RIGHT_STEPPER);
+	// 		timestamp = now;
+	// 		// print("-\n");
+	// 	}
+	// }
 	/*Coisa VM cpu, HAL, EH and TM loop*/
 	// uint32_t oldtime = 0;
 	// while(1) {
@@ -236,9 +237,13 @@ void tm_init(void) {
 	//         }
 	// }
 	uint32_t now = timer_get_ticks();
+	uint32_t serial_timestamp_lock = now;
     while(1)
     {
+		// printnum(read_ultrassonic());
+		// print("\n");
 		now = timer_get_ticks();
+		serial_timestamp_lock = serial_timestamp;
 		// printnum(receiving);
 // 		print("--\t");
 // 		printnum(has_command);
@@ -251,13 +256,26 @@ void tm_init(void) {
 // 		print("--\t");
 // 		printnum(now - serial_timestamp);
 // 		print("--\n");
-		if (now - serial_timestamp < 0); //If we get a byte after now is setted, this value will be negative
-		else if (now - serial_timestamp > 50000 && receiving ) {
-			serial_timeout();
-			print_pckg("TMOUT\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0");
+		if (now < serial_timestamp_lock); //If we get a byte from serial after now is setted, this value will be negative
+		else if (now - serial_timestamp_lock > 70000 && receiving ) {
+			// serial_timeout();
+			// print_pckg("TMOUT\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0");
 			// print("TIMEOUT\t");
-			// printnum(now - serial_timestamp);
-			// print("TIMEOUT\n");
+// 			printnum(now-serial_timestamp_lock & (1<<31));
+// 			print("--\t");
+// 			printnum(now < serial_timestamp_lock);
+// 			print("--\t");
+// 			printnum(has_command);
+// 			print("--\t");
+// 			printnum(buff_in_pos);
+// 			print("--\t");
+// 			printnum(now);
+// 			print("--\t");
+// 			printnum(serial_timestamp_lock);
+// 			print("--\t");
+// 			printnum(now - serial_timestamp_lock);
+// 			print("--\n");
+// 			print("TIMEOUT\n");
 		}
 #if HAS_MOTORS
 		if (isMoving && now - timestamp > 30000) {

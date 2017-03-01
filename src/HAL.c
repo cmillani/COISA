@@ -189,7 +189,7 @@ uint8_t hal_call(uint32_t sensid, char identifier[])//Call to hardware I/O
 			}
 			case 22: { //Left
 				uint32_t timestamp_steps = 0;
-				int x = 2200;
+				int x = 2400;
 				int steps = 0;
 				while(steps < x) {
 					uint32_t now = timer_get_ticks();
@@ -207,7 +207,7 @@ uint8_t hal_call(uint32_t sensid, char identifier[])//Call to hardware I/O
 			}
 			case 23: { //Right
 				uint32_t timestamp_steps = 0;
-				int x = 2200;
+				int x = 2400;
 				int steps = 0;
 				while(steps < x) {
 					uint32_t now = timer_get_ticks();
