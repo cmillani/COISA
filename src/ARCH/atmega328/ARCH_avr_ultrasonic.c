@@ -69,7 +69,7 @@ uint8_t read_ultrassonic(void)
 	temp = timer_get_ticks();
 	while (PIND & (1 << PD3)) if (timer_get_ticks() >= temp + timeout) return 255; //Starts counting until echo is low again
 	temp = timer_get_ticks() - temp;//Gets the high time of the pulse
-	last_read = temp/conversion_factor;
+	last_read = temp/conversion_factor*4;
 	return last_read;//Converts it to the configured Unit System
 }
 	

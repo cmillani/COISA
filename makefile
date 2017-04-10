@@ -34,8 +34,8 @@ INCLUDE_avr = -I$(ARDUINO_AVR)/cores/arduino -I$(ARDUINO_AVR)/variants/standard 
 REQOBJ_avr = $(addprefix $(OBJDIR)/, avr_static/core.a atmega328.o $(ARCHFILES_avr) vm.o syscall.o HAL.o TM.o EH.o CONFIG_timer.o ArduinoLoader.o CONFIG_ultrasonic.o stdutils.o CONFIG_encoder.o)
 CC_avr = $(ARDUINO_BIN)/avr-g++
 
-# PORT = /dev/cu.usbmodem00076611
-PORT = /dev/cu.wchusbserial1410
+PORT = /dev/cu.usbmodem00076611
+# PORT = /dev/cu.wchusbserial1410
 # PORT = /dev/cu.wchusbserial1420
 # PORT = /dev/cu.usbmodem1421
 # PORT = /dev/cu.usbmodem1411

@@ -44,6 +44,21 @@ uint8_t hal_call(uint32_t sensid, char identifier[])//Call to hardware I/O
 	// printnum(RF[4]);
 	// print("\n");
 	uint8_t retval = 0;
+	if (!strcmp(identifier,"SERV"))
+	{
+#if HAS_SERVO
+		switch (sensid) {
+			case 0: { //Servo Up
+				servo_up();
+				break;
+			}
+			case 1: { //Servo Down
+				servo_down();
+				break;
+			}
+		}
+#endif
+	}
 	if (!strcmp(identifier,"US_S"))
 	{
 #if HAS_ULTRASONIC
@@ -176,7 +191,7 @@ uint8_t hal_call(uint32_t sensid, char identifier[])//Call to hardware I/O
 				while(steps < step_sz) {
 					uint32_t now = timer_get_ticks();
 					if (now - timestamp_steps > step_delay) {
-						forward_stepper(LEFT_STEPPER);
+						backward_stepper(LEFT_STEPPER);
 						forward_stepper(RIGHT_STEPPER);
 						timestamp_steps = now;
 						steps++;
@@ -189,13 +204,12 @@ uint8_t hal_call(uint32_t sensid, char identifier[])//Call to hardware I/O
 			}
 			case 22: { //Left
 				uint32_t timestamp_steps = 0;
-				int x = 2400;
 				int steps = 0;
-				while(steps < x) {
+				while(steps < step_sz) {
 					uint32_t now = timer_get_ticks();
 					if (now - timestamp_steps > step_delay) {
 						backward_stepper(LEFT_STEPPER);
-						forward_stepper(RIGHT_STEPPER);
+						backward_stepper(RIGHT_STEPPER);
 						timestamp_steps = now;
 						steps++;
 						// print("-\n");
@@ -207,13 +221,12 @@ uint8_t hal_call(uint32_t sensid, char identifier[])//Call to hardware I/O
 			}
 			case 23: { //Right
 				uint32_t timestamp_steps = 0;
-				int x = 2400;
 				int steps = 0;
-				while(steps < x) {
+				while(steps < step_sz) {
 					uint32_t now = timer_get_ticks();
 					if (now - timestamp_steps > step_delay) {
 						forward_stepper(LEFT_STEPPER);
-						backward_stepper(RIGHT_STEPPER);
+						forward_stepper(RIGHT_STEPPER);
 						timestamp_steps = now;
 						steps++;
 						// print("-\n");

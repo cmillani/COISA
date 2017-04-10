@@ -27,7 +27,7 @@ extern "C" {
 #include <avr/io.h>
 	
 int current_position[] = {7,7};
-uint16_t step_delay = 150;
+uint16_t step_delay = 400;
 uint16_t step_sz = 2000;
 
 void init_stepper() {

@@ -168,6 +168,8 @@ void parse_Command(volatile unsigned char * command) {
 		// state = receiving_sz;
 	} else if (!strcmpsz((char *)command,"PK", 2)) {
 		state = receiving_x;
+	} else if (!strcmpsz((char *)command,"SS", 2)){
+		step_sz = (uint16_t)command[19] | ((uint16_t)command[18] << 8);
 	} else {
 		send_byte('-');
 		send_byte(command[0]);
@@ -215,7 +217,6 @@ void tm_init(void) {
 	// mag_init();
 		
 	// uint32_t timestamp = 0;
-
 
 	/*Everything initialized*/
 	
