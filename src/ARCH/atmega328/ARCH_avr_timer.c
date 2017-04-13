@@ -31,6 +31,7 @@ extern "C" {
 
 void init_timer(void)
 {	
+	timerOvfcnt = 0;
 	TCCR2B |= /*(1 << CS21) |*/ (1 << CS20) | (1 << CS22); //Prescaler = 64
 	TCNT2 = 0;
 	TIMSK2 |= (1 << TOIE2);

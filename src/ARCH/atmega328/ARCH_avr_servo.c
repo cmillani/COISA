@@ -27,6 +27,7 @@ extern "C" {
 #include <avr/io.h>
 #include <stdint.h>
 #include <timer.h>
+#include <serial.h>
 	
 void init_servo(void) {
 	DDRD |= (1 << PD5); //OUTPUT
@@ -41,9 +42,18 @@ void servo_up(void) {
 	OCR0B = 10;
 	uint32_t timestamp_servo = timer_get_ticks();
 	uint32_t now = timestamp_servo;
-	while (now - timestamp_servo < 100000){
+	// printnum(timestamp_servo);
+	// print("\n");
+	// printnum(now);
+	// print("\n");
+	while (now - timestamp_servo < 300000UL){
+		// print("In");
 		now = timer_get_ticks();
 	}
+	// printnum(timestamp_servo);
+	// print("\n");
+	// printnum(now);
+	// print("\n");
 	TCCR0A &= ~(1 << COM0B1);
 }
 
@@ -52,9 +62,18 @@ void servo_down(void) {
 	OCR0B = 25;
 	uint32_t timestamp_servo = timer_get_ticks();
 	uint32_t now = timestamp_servo;
-	while (now - timestamp_servo < 100000){
+	// printnum(timestamp_servo);
+	// print("\n");
+	// printnum(now);
+	// print("\n");
+	while (now - timestamp_servo < 300000UL){
+		// print("In");
 		now = timer_get_ticks();
 	}
+	// printnum(timestamp_servo);
+	// print("\n");
+	// printnum(now);
+	// print("\n");
 	TCCR0A &= ~(1 << COM0B1);
 }
 	

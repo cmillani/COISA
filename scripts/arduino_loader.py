@@ -13,7 +13,7 @@ executable = file.read()
 # zero = serial.Serial("/dev/tty.Zero-DevB") # Upload using bluetooth
 try:
 	if len(sys.argv) >= 3 and sys.argv[2] == "-bt":
-            zero = serial.Serial("/dev/cu.ZE002-DevB")
+            zero = serial.Serial("/dev/cu.ZE003-DevB")
             # zero = serial.Serial("/dev/tty.CoisaBot-DevB") # Upload using bluetooth
             # zero = serial.Serial("/dev/cu.Zero2-DevB") # Upload using bluetooth
 	    # zero = serial.Serial("/dev/tty.COLABOT2-DevB") # Upload using bluetooth

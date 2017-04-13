@@ -170,6 +170,7 @@ void parse_Command(volatile unsigned char * command) {
 		state = receiving_x;
 	} else if (!strcmpsz((char *)command,"SS", 2)){
 		step_sz = (uint16_t)command[19] | ((uint16_t)command[18] << 8);
+		print_pckg("SS-RS\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0");
 	} else {
 		send_byte('-');
 		send_byte(command[0]);
@@ -210,6 +211,8 @@ void tm_init(void) {
 /*************************/
 #if HAS_SERVO
 	init_servo();
+	servo_up();
+	servo_down();
 #endif
 /*************************/
 	// print_pckg("COISA ON\n\0\0\0\0\0\0\0\0\0\0\0");
